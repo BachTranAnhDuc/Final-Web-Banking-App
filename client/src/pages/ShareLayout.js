@@ -1,7 +1,14 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const ShareLayout = () => {
-  return <div>ShareLayout</div>;
+  return (
+    <>
+      <Navbar></Navbar>
+      <Outlet></Outlet>
+    </>
+  );
 };
 
 export default ShareLayout;

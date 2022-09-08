@@ -88,6 +88,12 @@
 
   --color-black: #000000;
   --color-white: #ffffff;
+
+  --background-gradient-1: linear-gradient(
+    90deg,
+    rgba(144, 228, 203, 0.7906512946975666) 0%,
+    rgba(22, 141, 106, 0.7934524151457458) 100%
+  );
 }
 
 /* GLOBAL SETUP */
@@ -114,4 +120,154 @@ body {
 
   background-color: var(--color-white);
   /* background-color: var(--color-grey-light-9); */
+}
+
+.container {
+}
+
+/* TEXT */
+
+.heading--primary {
+  font-size: 3.6rem;
+  font-weight: 700;
+  color: var(--color-grey);
+}
+
+/* NAVIGATION */
+
+.nav-bar {
+  /* background-color: var(--color-secondary-light-2); */
+  height: 15vh;
+  padding: 1.2rem 6.2rem;
+  display: grid;
+
+  grid-template-columns: min-content 1fr max-content;
+
+  gap: 12rem;
+}
+
+.nav-logo {
+  height: 8rem;
+}
+
+.nav-list {
+  list-style-type: none;
+  display: grid;
+
+  align-items: center;
+
+  grid-template-columns: repeat(2, max-content);
+
+  gap: 4rem;
+}
+
+.nav-list__item {
+}
+
+.nav-link:link,
+.nav-link:visited {
+  text-decoration: none;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  color: var(--color-grey-light-2);
+}
+
+/* HEADER */
+.header {
+  /* background-color: var(--color-tertiary-light-2); */
+  padding: 0 12rem;
+  height: 85vh;
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  align-items: center;
+
+  gap: 6.2rem 0;
+  /* grid-template-rows: repeat(2, min-content); */
+}
+
+.header__heading {
+  align-self: end;
+  /* margin-top: 3.2rem; */
+}
+
+.header__text {
+  font-size: 1.4rem;
+  line-height: 1.8;
+  grid-row: 2 / 3;
+
+  align-self: start;
+
+  color: var(--color-grey-light-2);
+}
+
+.heading__highlight {
+  position: relative;
+
+  font-size: 4rem;
+  color: var(--color-white);
+  /* padding: 0.8rem 0; */
+  margin: 0 0.8rem;
+}
+
+.heading__highlight::after {
+  content: '';
+
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 100%;
+
+  background-color: var(--color-primary-dark-1);
+
+  z-index: -1;
+
+  padding: 0.8rem;
+
+  background: var(--background-gradient-1);
+
+  transform: scale(1.1) skewX(-15deg);
+}
+
+.header__image {
+  /* grid-column: 2 / 3;
+  grid-row: 1 / 3; */
+
+  justify-self: center;
+  /* align-self: center; */
+
+  grid-area: 1 / 2 / 3 / 3;
+
+  height: 40rem;
+}
+
+/* BUTTON */
+.btn {
+  font-size: 1.8rem;
+  font-weight: 700;
+
+  border: none;
+  padding: 1.6rem 3.2rem;
+
+  border-radius: 4px;
+
+  background-color: var(--color-primary);
+  color: var(--color-white);
+
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--color-primary-dark-2);
+}
+
+.btn-login {
+  align-self: center;
 }
