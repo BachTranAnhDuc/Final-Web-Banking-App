@@ -4,10 +4,10 @@ import Navbar from './Navbar';
 
 const ShareLayout = () => {
   return (
-    <>
+    <div className="container">
       <Navbar></Navbar>
       <Outlet></Outlet>
-    </>
+    </div>
   );
 };
 

@@ -123,6 +123,8 @@ body {
 }
 
 .container {
+  /* max-width: 120rem;
+  margin: 0 auto; */
 }
 
 /* TEXT */
@@ -137,17 +139,26 @@ body {
 
 .nav-bar {
   /* background-color: var(--color-secondary-light-2); */
+  /* width: 100vw; */
   height: 15vh;
-  padding: 1.2rem 6.2rem;
+  padding: 0rem 6.2rem;
   display: grid;
 
   grid-template-columns: min-content 1fr max-content;
 
   gap: 12rem;
+
+  align-items: center;
 }
 
 .nav-logo {
   height: 8rem;
+
+  transition: all 0.3s;
+}
+
+.nav-logo:hover {
+  transform: scale(1.05);
 }
 
 .nav-list {
@@ -172,6 +183,48 @@ body {
   text-transform: uppercase;
 
   color: var(--color-grey-light-2);
+
+  position: relative;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+  top: 2rem;
+  left: 0;
+  transform-origin: right;
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-link:hover::before {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+.nav-link__active {
+  border-bottom: 2px solid var(--color-primary-dark-5);
+  color: var(--color-primary-dark-2);
+}
+
+.sticky {
+  position: fixed;
+
+  z-index: 100;
+
+  background-color: var(--color-white);
+
+  width: 100%;
+
+  transition: all 0.3s;
+
+  opacity: 0.9;
+
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 /* HEADER */
@@ -185,7 +238,7 @@ body {
 
   align-items: center;
 
-  gap: 6.2rem 0;
+  gap: 4.8rem 0;
   /* grid-template-rows: repeat(2, min-content); */
 }
 
@@ -242,9 +295,39 @@ body {
   justify-self: center;
   /* align-self: center; */
 
-  grid-area: 1 / 2 / 3 / 3;
+  grid-area: 1 / 2 / 4 / 3;
 
   height: 40rem;
+}
+
+.header__buttons {
+  align-self: start;
+
+  transform: translateY(-6.2rem);
+
+  display: grid;
+
+  grid-template-columns: repeat(2, max-content);
+
+  gap: 0 3.2rem;
+}
+
+/* SECTION FEATURES */
+.section-features {
+  padding: 0 12rem;
+}
+
+.features__images {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.features__image {
+  width: 12rem;
+
+  filter: brightness(0);
+  opacity: 50%;
 }
 
 /* BUTTON */
@@ -253,9 +336,11 @@ body {
   font-weight: 700;
 
   border: none;
+
+  display: inline-block;
   padding: 1.6rem 3.2rem;
 
-  border-radius: 4px;
+  border-radius: 10rem;
 
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -265,9 +350,105 @@ body {
 }
 
 .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   background-color: var(--color-primary-dark-2);
 }
 
 .btn-login {
   align-self: center;
+}
+
+.btn-contact {
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #1a1a1a;
+  border-radius: 15px;
+  box-sizing: border-box;
+  color: #3b3b3b;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0;
+  min-height: 60px;
+  min-width: 0;
+  outline: none;
+  padding: 16px 24px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 100%;
+  will-change: transform;
+}
+
+.btn-contact:disabled {
+  pointer-events: none;
+}
+
+.btn-contact:hover {
+  color: #fff;
+  background-color: var(--color-primary-light-6);
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+.btn-contact:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+/* CSS */
+/* .btn-download {
+  display: grid;
+
+  align-items: center;
+}
+
+.logo-playstore {
+}
+
+.btn-text {
+} */
+
+.logo-playstore {
+  transform: translateY(0.2rem);
+}
+.btn-download {
+  background-color: var(--color-primary-light-7);
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 18px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-download:hover {
+  background-color: #fff;
+}
+
+.btn-download:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .btn-download {
+    min-width: 120px;
+    padding: 0 25px;
+  }
 }

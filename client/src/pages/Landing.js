@@ -1,11 +1,22 @@
 import React from 'react';
 import Landing1 from '../assets/images/landing-page-1.svg';
+import { IoLogoGooglePlaystore } from 'react-icons/io5';
+import Logo1 from '../assets/images/logos/logo-Franke.svg';
+import Logo2 from '../assets/images/logos/logo-Zenlink.svg';
+import Logo3 from '../assets/images/logos/logo-Mensa-Brands.svg';
+import Logo4 from '../assets/images/logos/logo-TaskRabbit.svg';
+import Logo5 from '../assets/images/logos/logo-XBox-Black.svg';
+import Logo6 from '../assets/images/logos/logo-Unity-New-2021.svg';
+import Logo7 from '../assets/images/logos/Brussels-Airlines-New-2021.svg';
+import Logo8 from '../assets/images/logos/logo-Alegra.svg';
+
+import 'animate.css';
 
 const Landing = () => {
   return (
     <>
       <header className="header">
-        <h1 className="heading--primary header__heading">
+        <h1 className="heading--primary header__heading animate__animated animate__lightSpeedInLeft">
           Easy way to <span className="heading__highlight">manage</span> to your
           money
         </h1>
@@ -20,9 +31,38 @@ const Landing = () => {
           enim vulputate ornare.
         </p>
 
+        <div className="header__buttons">
+          <button className="btn btn-download">
+            <IoLogoGooglePlaystore className="logo-playstore"></IoLogoGooglePlaystore>
+            <span className="btn-text"> Download app</span>
+          </button>
+          <button className="btn btn-contact">Contact us</button>
+        </div>
+
         <img src={Landing1} alt="landing 1" className="header__image" />
       </header>
-      <main></main>
+      <main>
+        <section className="section-features">
+          <div className="features__images">
+            <img src={Logo7} alt="Brand 1" className="features__image" />
+            <img src={Logo2} alt="Brand 2" className="features__image" />
+            <img src={Logo3} alt="Brand 3" className="features__image" />
+            <img src={Logo8} alt="Brand 4" className="features__image" />
+            <img src={Logo5} alt="Brand 5" className="features__image" />
+            <img src={Logo6} alt="Brand 6" className="features__image" />
+          </div>
+        </section>
+        <section className="section-features">
+          <div className="features__images">
+            <img src={Logo7} alt="Brand 1" className="features__image" />
+            <img src={Logo2} alt="Brand 2" className="features__image" />
+            <img src={Logo3} alt="Brand 3" className="features__image" />
+            <img src={Logo8} alt="Brand 4" className="features__image" />
+            <img src={Logo5} alt="Brand 5" className="features__image" />
+            <img src={Logo6} alt="Brand 6" className="features__image" />
+          </div>
+        </section>
+      </main>
     </>
   );
 };
