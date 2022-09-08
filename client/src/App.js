@@ -1,8 +1,17 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { About, ShareLayout, Landing } from './pages';
+
 const App = () => {
   return (
-    <div className="App">
-      <h1>Banking app</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ShareLayout></ShareLayout>}>
+          <Route index element={<Landing></Landing>}></Route>
+          <Route path="/about" element={<About></About>}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 
