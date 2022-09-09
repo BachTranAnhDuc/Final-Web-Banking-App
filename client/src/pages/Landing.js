@@ -11,8 +11,16 @@ import Logo7 from '../assets/images/logos/Brussels-Airlines-New-2021.svg';
 import Logo8 from '../assets/images/logos/logo-Alegra.svg';
 
 import 'animate.css';
+import { useGlobalContext } from '../context/appContext';
+import { Loading } from '../components';
 
 const Landing = () => {
+  const { isLoading } = useGlobalContext();
+
+  if (isLoading) {
+    return <Loading></Loading>;
+  }
+
   return (
     <>
       <header className="header">

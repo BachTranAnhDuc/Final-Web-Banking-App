@@ -1,11 +1,21 @@
 import React from 'react';
+import { Loading } from '../components';
+import { useGlobalContext } from '../context/appContext';
 
 const About = () => {
-  return (
-    <section className="section-about">
-      <h1>About me</h1>
-    </section>
-  );
+  const { isLoading } = useGlobalContext();
+
+  if (isLoading) {
+    return (
+      <section className="section-about">
+        <Loading></Loading>
+      </section>
+    );
+  }
+
+  if (!isLoading) {
+    return <section className="section-about">About me</section>;
+  }
 };
 
 export default About;

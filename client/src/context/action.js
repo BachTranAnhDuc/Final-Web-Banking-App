@@ -1,1 +1,2 @@
 export const SHOW_HIDE_LOADING = 'SHOW_HIDE_LOADING';
+export const SWITCH_PAGE = 'SWITCH_PAGE';

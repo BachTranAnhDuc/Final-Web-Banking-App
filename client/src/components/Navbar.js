@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import Logo from '../assets/images/logos/bankist.svg';
+import { useGlobalContext } from '../context/appContext';
 
 const Navbar = () => {
   const [stickyClass, setStickyClass] = useState('nav-bar');
+  const { switchPage } = useGlobalContext();
 
   const stickyNavbar = () => {
     if (window !== undefined) {
@@ -27,7 +29,7 @@ const Navbar = () => {
   }, []);
   return (
     <nav className={stickyClass}>
-      <NavLink to={'/'}>
+      <NavLink to={'/'} onClick={() => switchPage()}>
         <img src={Logo} alt="" className="nav-logo" />
       </NavLink>
 
@@ -49,14 +51,19 @@ const Navbar = () => {
               isActive ? 'nav-link nav-link__active' : 'nav-link'
             }
           >
-            About me
+            <span>About me</span>
           </NavLink>
         </li>
       </ul>
 
-      <button className="btn btn-login btn-white btn-animate">
-        SignIn / Signout
-      </button>
+      <NavLink to={'/about'}>
+        <button
+          className="btn btn-login btn-white btn-animate"
+          onClick={() => switchPage()}
+        >
+          SignIn / Signout
+        </button>
+      </NavLink>
     </nav>
   );
 };

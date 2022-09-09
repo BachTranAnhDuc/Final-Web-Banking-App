@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { About, ShareLayout, Landing } from './pages';
+import { About, Landing } from './pages';
+import { ShareLayout } from './components';
 
 const App = () => {
   return (
