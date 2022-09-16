@@ -40,6 +40,7 @@ const Navbar = () => {
             className={({ isActive }) =>
               isActive ? 'nav-link nav-link__active' : 'nav-link'
             }
+            onClick={() => switchPage()}
           >
             Home
           </NavLink>
@@ -50,13 +51,14 @@ const Navbar = () => {
             className={({ isActive }) =>
               isActive ? 'nav-link nav-link__active' : 'nav-link'
             }
+            onClick={() => switchPage()}
           >
             <span>About me</span>
           </NavLink>
         </li>
       </ul>
 
-      <NavLink to={'/about'}>
+      <NavLink to={'/register'}>
         <button
           className="btn btn-login btn-white btn-animate"
           onClick={() => switchPage()}

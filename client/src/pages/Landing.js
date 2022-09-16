@@ -47,7 +47,11 @@ const Landing = () => {
           <button className="btn btn-contact">Contact us</button>
         </div>
 
-        <img src={Landing1} alt="landing 1" className="header__image" />
+        <img
+          src={Landing1}
+          alt="landing 1"
+          className="header__image animate__animated animate__fadeInRight"
+        />
       </header>
       <main>
         <section className="section-features">
