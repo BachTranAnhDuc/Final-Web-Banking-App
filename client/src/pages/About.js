@@ -19,7 +19,9 @@ const About = () => {
   if (!isLoading) {
     return (
       <section className="section-about">
-        <h1 className="heading--primary about-heading">About me</h1>
+        <h1 className="heading--primary about-heading">
+          <span className="heading__highlight">About</span> me
+        </h1>
         {/* <h4 className="about-name">Bach Tran Anh Duc</h4> */}
 
         <TypeWriterEffect
