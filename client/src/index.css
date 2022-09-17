@@ -564,6 +564,20 @@ body {
 
   gap: 2.4rem;
 }
+/* ERROR */
+.section-error {
+  height: 85vh;
+
+  padding: 8rem 16rem;
+
+  display: grid;
+
+  justify-items: center;
+}
+
+.error-image {
+  height: 50rem;
+}
 
 /* FOOTER */
 .footer {
