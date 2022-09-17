@@ -53,7 +53,7 @@ const Register = () => {
       setPercent(100);
     } else {
       setNext(getNext + 1);
-      setPercent(getPercent + 20);
+      setPercent(getPercent + 50);
     }
 
     console.log(typeof defaultImage);
