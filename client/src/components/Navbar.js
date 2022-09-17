@@ -58,12 +58,12 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <NavLink to={'/register'}>
+      <NavLink to={'/login'}>
         <button
           className="btn btn-login btn-white btn-animate"
           onClick={() => switchPage()}
         >
-          SignIn / Signout
+          Sign In
         </button>
       </NavLink>
     </nav>

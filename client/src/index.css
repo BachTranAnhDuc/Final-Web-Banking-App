@@ -475,6 +475,58 @@ body {
   background-color: var(--color-primary-light-9);
 }
 
+.form-control__2 {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.form__error {
+  font-size: 1.4rem;
+  color: var(--color-tertiary-dark-1);
+}
+
+.form__success {
+  font-size: 1.4rem;
+  color: var(--color-primary-light-1);
+}
+
+/* LOGIN */
+.section-login {
+  height: 85vh;
+  padding: 8rem 16rem;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  justify-content: center;
+  justify-items: center;
+}
+
+.login__container-image {
+}
+
+.login__content {
+  justify-self: start;
+
+  width: 75%;
+
+  display: grid;
+
+  grid-template-rows: min-content 1fr;
+}
+
+.login__container-image img {
+  height: 47rem;
+}
+
+.login__form {
+  align-self: center;
+  display: grid;
+
+  gap: 2.4rem;
+}
+
 /* BUTTON */
 .btn {
   font-size: 1.8rem;
@@ -545,6 +597,10 @@ body {
 .btn-contact:active {
   box-shadow: none;
   transform: translateY(0);
+}
+
+.btn-link {
+  text-decoration: none;
 }
 
 /* CSS */
