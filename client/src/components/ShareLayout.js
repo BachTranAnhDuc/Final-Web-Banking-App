@@ -1,13 +1,17 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
+import { Navbar, Footer } from '../components';
+import { useGlobalContext } from '../context/appContext';
 
 const ShareLayout = () => {
+  const { isLoading } = useGlobalContext();
+
   return (
-    <div className="container">
+    <main className="container">
       <Navbar></Navbar>
       <Outlet></Outlet>
-    </div>
+      {!isLoading && <Footer></Footer>}
+    </main>
   );
 };
 

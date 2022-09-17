@@ -76,15 +76,23 @@ const Register = () => {
 
           <FormProcessing getPercent={getPercent}></FormProcessing>
 
-          <form className="register-form">
+          <form
+            className={
+              getNext === 5 ? 'register-form__images' : 'register-form'
+            }
+          >
             {getNext === 0 && (
-              <div className="form-control">
-                <label htmlFor="phone" className="form-label">
+              <div className="form-control form-control__register">
+                <label
+                  htmlFor="phone"
+                  className="form-label form-label__register"
+                >
                   Phone number
                 </label>
+                <span className="form__error">Something went wrong!</span>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-input form-input__register"
                   id="phone"
                   value={values.phone}
                   onChange={handleChangeValue}
@@ -94,13 +102,17 @@ const Register = () => {
             )}
 
             {getNext === 1 && (
-              <div className="form-control">
-                <label htmlFor="name" className="form-label">
+              <div className="form-control form-control__register">
+                <label
+                  htmlFor="name"
+                  className="form-label form-label__register"
+                >
                   Full Name
                 </label>
+                <span className="form__error">Something went wrong!</span>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-input form-input__register"
                   id="name"
                   value={values.name}
                   onChange={handleChangeValue}
@@ -109,13 +121,17 @@ const Register = () => {
               </div>
             )}
             {getNext === 2 && (
-              <div className="form-control">
-                <label htmlFor="email" className="form-label">
+              <div className="form-control form-control__register">
+                <label
+                  htmlFor="email"
+                  className="form-label form-label__register"
+                >
                   Email
                 </label>
+                <span className="form__error">Something went wrong!</span>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-input form-input__register"
                   id="email"
                   value={values.email}
                   onChange={handleChangeValue}
@@ -124,13 +140,17 @@ const Register = () => {
               </div>
             )}
             {getNext === 3 && (
-              <div className="form-control">
-                <label htmlFor="address" className="form-label">
+              <div className="form-control form-control__register">
+                <label
+                  htmlFor="address"
+                  className="form-label form-label__register"
+                >
                   Address
                 </label>
+                <span className="form__error">Something went wrong!</span>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-input form-input__register"
                   id="address"
                   value={values.address}
                   onChange={handleChangeValue}
@@ -139,13 +159,17 @@ const Register = () => {
               </div>
             )}
             {getNext === 4 && (
-              <div className="form-control">
-                <label htmlFor="birth" className="form-label">
+              <div className="form-control form-control__register">
+                <label
+                  htmlFor="birth"
+                  className="form-label form-label__register"
+                >
                   Date of birth
                 </label>
+                <span className="form__error">Something went wrong!</span>
                 <input
                   type="date"
-                  className="form-input"
+                  className="form-input form-input__register"
                   id="birth"
                   value={values.birth}
                   onChange={handleChangeValue}
@@ -155,6 +179,8 @@ const Register = () => {
             )}
             {getNext === 5 && (
               <>
+                <span className="form__error">Something went wrong!</span>
+
                 <div className="form-control__image">
                   <label htmlFor="image1" className="form-label">
                     Image front
@@ -177,6 +203,7 @@ const Register = () => {
                     alt="default image"
                   />
                 </div>
+
                 <div className="form-control__image">
                   <label htmlFor="image2" className="form-label">
                     Image back
