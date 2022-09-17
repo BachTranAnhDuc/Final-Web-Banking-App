@@ -22,7 +22,14 @@ const initState = {
 };
 
 const Register = () => {
-  const { isLoading } = useGlobalContext();
+  const {
+    isLoading,
+    switchPage,
+    isErrorForm,
+    messageErrorForm,
+    typeErrorForm,
+    login,
+  } = useGlobalContext();
 
   const [getNext, setNext] = useState(0);
   const [getPercent, setPercent] = useState(0);
@@ -53,7 +60,7 @@ const Register = () => {
       setPercent(100);
     } else {
       setNext(getNext + 1);
-      setPercent(getPercent + 50);
+      setPercent(getPercent + 20);
     }
 
     console.log(typeof defaultImage);
@@ -89,7 +96,15 @@ const Register = () => {
                 >
                   Phone number
                 </label>
-                <span className="form__error">Something went wrong!</span>
+                {isErrorForm === null ? (
+                  <span></span>
+                ) : (
+                  <span
+                    className={isErrorForm ? 'form__error' : 'form__success'}
+                  >
+                    {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+                  </span>
+                )}
                 <input
                   type="text"
                   className="form-input form-input__register"
@@ -109,7 +124,15 @@ const Register = () => {
                 >
                   Full Name
                 </label>
-                <span className="form__error">Something went wrong!</span>
+                {isErrorForm === null ? (
+                  <span></span>
+                ) : (
+                  <span
+                    className={isErrorForm ? 'form__error' : 'form__success'}
+                  >
+                    {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+                  </span>
+                )}
                 <input
                   type="text"
                   className="form-input form-input__register"
@@ -128,7 +151,15 @@ const Register = () => {
                 >
                   Email
                 </label>
-                <span className="form__error">Something went wrong!</span>
+                {isErrorForm === null ? (
+                  <span></span>
+                ) : (
+                  <span
+                    className={isErrorForm ? 'form__error' : 'form__success'}
+                  >
+                    {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+                  </span>
+                )}
                 <input
                   type="text"
                   className="form-input form-input__register"
@@ -147,7 +178,15 @@ const Register = () => {
                 >
                   Address
                 </label>
-                <span className="form__error">Something went wrong!</span>
+                {isErrorForm === null ? (
+                  <span></span>
+                ) : (
+                  <span
+                    className={isErrorForm ? 'form__error' : 'form__success'}
+                  >
+                    {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+                  </span>
+                )}
                 <input
                   type="text"
                   className="form-input form-input__register"
@@ -166,7 +205,15 @@ const Register = () => {
                 >
                   Date of birth
                 </label>
-                <span className="form__error">Something went wrong!</span>
+                {isErrorForm === null ? (
+                  <span></span>
+                ) : (
+                  <span
+                    className={isErrorForm ? 'form__error' : 'form__success'}
+                  >
+                    {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+                  </span>
+                )}
                 <input
                   type="date"
                   className="form-input form-input__register"
@@ -179,7 +226,15 @@ const Register = () => {
             )}
             {getNext === 5 && (
               <>
-                <span className="form__error">Something went wrong!</span>
+                {isErrorForm === null ? (
+                  <span></span>
+                ) : (
+                  <span
+                    className={isErrorForm ? 'form__error' : 'form__success'}
+                  >
+                    {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+                  </span>
+                )}
 
                 <div className="form-control__image">
                   <label htmlFor="image1" className="form-label">

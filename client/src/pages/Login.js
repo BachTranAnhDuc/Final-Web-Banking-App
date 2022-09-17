@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
-import { Loading } from '../components';
+import { Loading, Alert } from '../components';
 import { useGlobalContext } from '../context/appContext';
 import loginImage from '../assets/images/login_1.svg';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
-  const { isLoading, switchPage } = useGlobalContext();
-  const [isErrorForm, setErrorForm] = useState(true);
+  const {
+    isLoading,
+    switchPage,
+    isErrorForm,
+    messageErrorForm,
+    typeErrorForm,
+    login,
+  } = useGlobalContext();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    login();
+  };
 
   if (isLoading) {
     return <Loading></Loading>;
@@ -22,19 +34,19 @@ const Login = () => {
           <span className="heading__highlight">Log</span>in
         </h1>
 
-        <form className="login__form">
+        <form className="login__form" onSubmit={handleSubmit}>
           <div className="form-control__2">
             <label htmlFor="name" className="form-label">
               Username
             </label>
-            {/* {isErrorForm ? (
-              <span className="form__error">Something went wrong</span>
+
+            {isErrorForm === null ? (
+              <span></span>
             ) : (
-              <span className="form__success">It OK</span>
-            )} */}
-            <span className={isErrorForm ? 'form__error' : 'form__success'}>
-              {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-            </span>
+              <span className={isErrorForm ? 'form__error' : 'form__success'}>
+                {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+              </span>
+            )}
 
             <input type="text" className="form-input" id="name" name="name" />
           </div>
@@ -43,9 +55,13 @@ const Login = () => {
               Password
             </label>
 
-            <span className={isErrorForm ? 'form__error' : 'form__success'}>
-              {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-            </span>
+            {isErrorForm === null ? (
+              <span></span>
+            ) : (
+              <span className={isErrorForm ? 'form__error' : 'form__success'}>
+                {isErrorForm ? 'Something went wrong!' : 'It OK!'}
+              </span>
+            )}
 
             <input
               type="password"
