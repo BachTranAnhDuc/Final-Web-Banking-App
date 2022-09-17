@@ -209,6 +209,7 @@ const Register = () => {
               <button
                 className="btn btn-contact btn-register"
                 onClick={handleClickPre}
+                type="button"
               >
                 {getNext === 6 ? (
                   <GrCaretPrevious className="icon-pre"></GrCaretPrevious>
@@ -220,6 +221,7 @@ const Register = () => {
               <button
                 className="btn btn-contact btn-register"
                 onClick={handleClickNext}
+                type={getNext === 6 ? 'submit' : 'button'}
               >
                 {getNext === 6 ? (
                   'Submit'
