@@ -15,6 +15,10 @@ import connectDB from './db/connect.js';
 import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 
+// error
+import errorHandler from './middleware/error-handle.js';
+import notFound from './middleware/not-found.js';
+
 // cookies
 
 // morgan
@@ -27,6 +31,9 @@ app.use(express.json());
 
 // routes
 app.use('/api/v1/auth', authRouter);
+
+app.use(notFound);
+app.use(errorHandler);
 
 const port = process.env.PORT || 4000;
 

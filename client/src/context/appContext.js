@@ -2,6 +2,8 @@ import React, { useContext, useState, useReducer } from 'react';
 
 import reducer from './reducer';
 
+import axios from 'axios';
+
 import {
   SHOW_HIDE_LOADING,
   SWITCH_PAGE,
@@ -18,6 +20,7 @@ const defaultState = {
   isErrorForm: null,
   messageErrorForm: '',
   typeErrorForm: '',
+  user: {},
 };
 
 const AppContext = React.createContext();
@@ -37,10 +40,32 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
-  const login = () => {
+  const login = async () => {
     dispatch({ type: LOGIN_BEGIN });
 
-    setTimeout(() => {
+    setTimeout(async () => {
+      try {
+        const postUser = await axios.post('/api/v1/auth/register');
+      } catch (error) {
+        dispatch({ type: LOGIN_ERROR });
+      }
+      dispatch({ type: LOGIN_SUCCESS });
+    }, 2000);
+  };
+
+  const register = async (user) => {
+    dispatch({ type: LOGIN_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const postUser = await axios.post('/api/v1/auth/register', user);
+
+        console.log(postUser);
+
+        dispatch({ type: LOGIN_SUCCESS, payload: postUser });
+      } catch (error) {
+        dispatch({ type: LOGIN_ERROR });
+      }
       dispatch({ type: LOGIN_SUCCESS });
     }, 2000);
   };
