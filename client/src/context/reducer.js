@@ -35,6 +35,7 @@ const reducer = (state, action) => {
       isErrorForm: false,
       messageErrorForm: 'Valid user',
       typeErrorForm: 'form__success',
+      user: action.payload,
     };
   }
 
