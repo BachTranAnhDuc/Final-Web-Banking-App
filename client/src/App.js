@@ -1,13 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import {
-  About,
-  Landing,
-  Register,
-  Login,
-  Error,
-  RegisterSuccess,
-} from './pages';
+import { About, Landing, Register, Login, Error, VerifyEmail } from './pages';
 import { ShareLayout } from './components';
 
 const App = () => {
@@ -20,7 +13,7 @@ const App = () => {
           <Route path="/register" element={<Register></Register>}></Route>
           <Route
             path="/register/verify-email"
-            element={<RegisterSuccess></RegisterSuccess>}
+            element={<VerifyEmail></VerifyEmail>}
           ></Route>
           <Route path="/login" element={<Login></Login>}></Route>
           <Route path="*" element={<Error></Error>}></Route>

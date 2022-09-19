@@ -445,14 +445,39 @@ body {
 
   gap: 2.8rem 0;
 }
-
 .register__container-image {
 }
 
-.section-register__success {
+/* SECTION REGISTER VERIFY */
+
+.section-register__verify {
   height: 100vh;
 
   padding: 8rem 16rem;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  justify-items: center;
+}
+
+.section-register__verify-image img {
+  height: 50rem;
+}
+
+.section-register__verify-content {
+  padding-top: 4.8rem;
+  justify-self: start;
+
+  display: grid;
+
+  grid-template-rows: repeat(2, max-content);
+
+  gap: 3.2rem;
+}
+
+.register__verify--text {
 }
 
 .form-control {

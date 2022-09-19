@@ -4,6 +4,6 @@ import Error from './Error';
 import Register from './Register';
 import About from './About';
 import Login from './Login';
-import RegisterSuccess from './RegisterSuccess';
+import VerifyEmail from './VerifyEmail';
 
-export { Landing, Dashboard, Error, Register, About, Login, RegisterSuccess };
+export { Landing, Dashboard, Error, Register, About, Login, VerifyEmail };
