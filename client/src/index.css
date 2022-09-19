@@ -449,6 +449,12 @@ body {
 .register__container-image {
 }
 
+.section-register__success {
+  height: 100vh;
+
+  padding: 8rem 16rem;
+}
+
 .form-control {
   display: grid;
 

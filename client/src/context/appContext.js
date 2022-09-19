@@ -12,6 +12,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_ERROR,
   LOGIN_BEGIN,
+  REGISTER_BEGIN,
 } from './action';
 
 const defaultState = {
@@ -54,7 +55,9 @@ const AppProvider = ({ children }) => {
   };
 
   const register = async (user) => {
-    dispatch({ type: LOGIN_BEGIN });
+    dispatch({ type: REGISTER_BEGIN });
+
+    console.log('register begin');
 
     setTimeout(async () => {
       try {
@@ -62,16 +65,18 @@ const AppProvider = ({ children }) => {
 
         console.log(postUser);
 
-        dispatch({ type: LOGIN_SUCCESS, payload: postUser });
+        dispatch({ type: REGISTER_SUCCESS, payload: postUser });
       } catch (error) {
-        dispatch({ type: LOGIN_ERROR });
+        dispatch({ type: REGISTER_ERROR });
+        console.log(`Cannot register ${error}`);
       }
-      dispatch({ type: LOGIN_SUCCESS });
     }, 2000);
   };
 
   return (
-    <AppContext.Provider value={{ ...state, showLoading, switchPage, login }}>
+    <AppContext.Provider
+      value={{ ...state, showLoading, switchPage, login, register }}
+    >
       {children}
     </AppContext.Provider>
   );

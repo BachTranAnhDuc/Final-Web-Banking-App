@@ -48,7 +48,7 @@ const reducer = (state, action) => {
   }
 
   if (action.type === REGISTER_SUCCESS) {
-    return { ...state };
+    return { ...state, user: action.payload };
   }
 
   if (action.type === REGISTER_ERROR) {

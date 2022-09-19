@@ -3,6 +3,7 @@ import { useGlobalContext } from '../context/appContext';
 import { Loading, FormProcessing } from '../components';
 import loginImg from '../assets/images/login.svg';
 import defaultImage from '../assets/images/avt/hacker.png';
+import { useNavigate } from 'react-router-dom';
 
 import {
   GrFormPrevious,
@@ -29,6 +30,7 @@ const Register = () => {
     messageErrorForm,
     typeErrorForm,
     login,
+    register,
   } = useGlobalContext();
 
   const [getNext, setNext] = useState(0);
@@ -38,8 +40,6 @@ const Register = () => {
 
   const handleChangeValue = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-
-    console.log(values);
   };
 
   const handleClickPre = (e) => {
@@ -62,8 +62,22 @@ const Register = () => {
       setNext(getNext + 1);
       setPercent(getPercent + 20);
     }
+  };
 
-    console.log(typeof defaultImage);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log('Submit success');
+
+    register({
+      name: values.name,
+      email: values.email,
+      phone: values.phone,
+      birth: values.birth,
+      address: values.address,
+      imageFront: values.imageFront,
+      imageBack: values.imageBack,
+    });
   };
 
   if (isLoading) {
@@ -87,6 +101,7 @@ const Register = () => {
             className={
               getNext === 5 ? 'register-form__images' : 'register-form'
             }
+            // onSubmit={handleSubmit}
           >
             {getNext === 0 && (
               <div className="form-control form-control__register">
@@ -300,9 +315,9 @@ const Register = () => {
                 )}
               </button>
 
-              <button
+              {/* <button
                 className="btn btn-contact btn-register"
-                onClick={handleClickNext}
+                onClick={getNext === 6 ? handleClickNext : handleSubmit}
                 type={getNext === 6 ? 'submit' : 'button'}
               >
                 {getNext === 6 ? (
@@ -310,7 +325,29 @@ const Register = () => {
                 ) : (
                   <GrCaretNext className="icon-pre"></GrCaretNext>
                 )}
-              </button>
+              </button> */}
+
+              {getNext === 6 ? (
+                <button
+                  className="btn btn-contact btn-register"
+                  onClick={handleSubmit}
+                  type="submit"
+                >
+                  Submit
+                </button>
+              ) : (
+                <button
+                  className="btn btn-contact btn-register"
+                  onClick={handleClickNext}
+                  type="button"
+                >
+                  <GrCaretNext className="icon-pre"></GrCaretNext>
+                </button>
+              )}
+
+              {/* <button className="btn" type="submit">
+                submit
+              </button> */}
             </div>
           </form>
         </div>

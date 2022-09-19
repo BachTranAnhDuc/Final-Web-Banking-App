@@ -24,10 +24,11 @@ import notFound from './middleware/not-found.js';
 // morgan
 import morgan from 'morgan';
 
-if (process.env.NODE_ENV === 'dev') app.use(morgan('dev'));
+// if (process.env.NODE_ENV === 'dev') app.use(morgan('dev'));
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan('tiny'));
 
 // routes
 app.use('/api/v1/auth', authRouter);
