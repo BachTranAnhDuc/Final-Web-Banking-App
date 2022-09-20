@@ -22,6 +22,7 @@ const defaultState = {
   messageErrorForm: '',
   typeErrorForm: '',
   user: {},
+  isError: false,
 };
 
 const AppContext = React.createContext();

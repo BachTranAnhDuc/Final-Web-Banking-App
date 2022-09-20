@@ -40,7 +40,7 @@ const reducer = (state, action) => {
   }
 
   if (action.type === LOGIN_ERROR) {
-    return { ...state };
+    return { ...state, isError: true };
   }
 
   if (action.type === REGISTER_BEGIN) {
@@ -52,7 +52,7 @@ const reducer = (state, action) => {
   }
 
   if (action.type === REGISTER_ERROR) {
-    return { ...state };
+    return { ...state, isError: true };
   }
 };
 

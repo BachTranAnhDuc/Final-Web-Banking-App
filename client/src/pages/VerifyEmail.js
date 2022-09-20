@@ -15,7 +15,7 @@ function useQuery() {
 const VerifyEmail = () => {
   const [error, setError] = useState(false);
   const query = useQuery();
-  const { isLoading, switchPage } = useGlobalContext();
+  const { isLoading, switchPage, isError } = useGlobalContext();
 
   const verifyToken = async () => {
     try {
@@ -26,6 +26,7 @@ const VerifyEmail = () => {
 
       console.log(user);
     } catch (error) {
+      setError(true);
       console.log(error);
     }
   };
@@ -34,7 +35,7 @@ const VerifyEmail = () => {
     verifyToken();
   }, []);
 
-  if (error) {
+  if (isError || error) {
     return <Error></Error>;
   } else {
     return (
@@ -44,7 +45,7 @@ const VerifyEmail = () => {
         </div>
 
         <div className="section-register__verify-content">
-          <h2 className="heading--secondary">Register success</h2>
+          <h2 className="heading--secondary">Validation success</h2>
           <Link
             to={'/login'}
             className="register__verify--text"
