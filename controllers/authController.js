@@ -3,7 +3,12 @@ import User from '../models/User.js';
 import uniqueRandom from 'unique-random';
 import crypto from 'crypto';
 
-import { sendVerificationEmail } from '../utils/index.js';
+import {
+  sendVerificationEmail,
+  createJWT,
+  isTokenValid,
+  attachCookiesToResponse,
+} from '../utils/index.js';
 
 import {
   errorHandler,
@@ -15,7 +20,38 @@ import {
 } from '../error/index.js';
 
 const login = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: 'Login success' });
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    throw new badRequestError('Please provide email and password');
+  }
+
+  const user = await User.findOne({ username });
+
+  if (!user) {
+    throw new badRequestError('Can not find user');
+  }
+
+  const isPassword = await user.comparePassword(password);
+
+  if (!isPassword) {
+    throw new unauthenticationError('Invalid password');
+  }
+
+  if (!user.isVerified) {
+    throw new unauthenticationError('Please verify your email');
+  }
+
+  const tokeUser = {
+    userId: user._id,
+    phone: user.phone,
+    email: user.email,
+    role: user.role,
+  };
+
+  attachCookiesToResponse({ res, user: tokeUser });
+
+  res.status(StatusCodes.OK).json({ msg: 'Login success', user: user });
 };
 
 const register = async (req, res) => {
@@ -29,6 +65,9 @@ const register = async (req, res) => {
     imageBack,
   } = req.body;
 
+  const isFirstAccount = (await User.countDocuments({})) === 0;
+  const role = isFirstAccount ? 'admin' : 'user';
+
   const randomUsername = uniqueRandom(100000000, 999999999);
   const randomPassword = uniqueRandom(100000, 999999);
 
@@ -39,16 +78,16 @@ const register = async (req, res) => {
   const isEmailExist = await User.findOne({ email: emailReq });
   const isPhoneExist = await User.findOne({ phone: phoneReq });
 
-  console.log(
-    isPhoneExist,
-    phoneReq,
-    emailReq,
-    name,
-    address,
-    birth,
-    imageFront,
-    imageBack
-  );
+  // console.log(
+  //   isPhoneExist,
+  //   phoneReq,
+  //   emailReq,
+  //   name,
+  //   address,
+  //   birth,
+  //   imageFront,
+  //   imageBack
+  // );
 
   if (isPhoneExist) {
     throw new badRequestError(
@@ -86,6 +125,7 @@ const register = async (req, res) => {
     password: randomPassword(),
     imageFront,
     imageBack,
+    role,
   });
 
   const origin = 'http://localhost:3000';
@@ -108,6 +148,15 @@ const register = async (req, res) => {
 
   console.log(test);
 
+  const tokeUser = {
+    userId: user._id,
+    phone: user.phone,
+    email: user.email,
+    role: user.role,
+  };
+
+  attachCookiesToResponse({ res, user: tokeUser });
+
   res.status(StatusCodes.OK).json({ msg: 'Register success', user: user });
 };
 
@@ -116,6 +165,10 @@ const updateUser = async (req, res) => {
 };
 
 const logout = async (req, res) => {
+  res.cookie('accessToken', 'logout', {
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000),
+  });
   res.status(StatusCodes.OK).json({ msg: 'Logout success' });
 };
 
@@ -144,3 +197,6 @@ const verifyEmail = async (req, res) => {
 };
 
 export { login, register, updateUser, logout, forgotPassword, verifyEmail };
+
+// admin: 620277
+// anna: 778364
