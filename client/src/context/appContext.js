@@ -18,11 +18,12 @@ import {
 const defaultState = {
   isLoading: false,
   showAlert: false,
-  isErrorForm: null,
+  isErrorForm: false,
   messageErrorForm: '',
   typeErrorForm: '',
-  user: {},
+  user: null,
   isError: false,
+  isLogin: false,
 };
 
 const AppContext = React.createContext();
@@ -42,17 +43,30 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
-  const login = async () => {
+  const login = async (userInput) => {
     dispatch({ type: LOGIN_BEGIN });
 
     setTimeout(async () => {
       try {
-        const postUser = await axios.post('/api/v1/auth/register');
+        const postUser = await axios.post('/api/v1/auth/login', userInput);
+
+        const { data } = postUser;
+
+        const { msg, user } = data;
+
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payloadMsg: msg,
+          payloadUser: user,
+        });
       } catch (error) {
-        dispatch({ type: LOGIN_ERROR });
+        const { response } = error;
+        const { data } = response;
+        const { msg } = data;
+
+        dispatch({ type: LOGIN_ERROR, payload: msg });
       }
-      dispatch({ type: LOGIN_SUCCESS });
-    }, 2000);
+    }, 1500);
   };
 
   const register = async (user) => {
@@ -63,13 +77,17 @@ const AppProvider = ({ children }) => {
     setTimeout(async () => {
       try {
         const postUser = await axios.post('/api/v1/auth/register', user);
-
         console.log(postUser);
-
         dispatch({ type: REGISTER_SUCCESS, payload: postUser });
       } catch (error) {
         dispatch({ type: REGISTER_ERROR });
         console.log(`Cannot register ${error}`);
+
+        const { response } = error;
+        const { data } = response;
+        const { msg } = data;
+
+        dispatch({ type: REGISTER_ERROR, payload: msg });
       }
     }, 2000);
   };

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useGlobalContext } from '../context/appContext';
-import { Loading, FormProcessing } from '../components';
+import { Loading, FormProcessing, AlertRegister } from '../components';
 import loginImg from '../assets/images/login.svg';
 import defaultImage from '../assets/images/avt/hacker.png';
 import { useNavigate } from 'react-router-dom';
@@ -124,15 +124,7 @@ const Register = () => {
                   >
                     Phone number
                   </label>
-                  {isErrorForm === null ? (
-                    <span></span>
-                  ) : (
-                    <span
-                      className={isErrorForm ? 'form__error' : 'form__success'}
-                    >
-                      {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-                    </span>
-                  )}
+
                   <input
                     type="text"
                     className="form-input form-input__register"
@@ -152,15 +144,7 @@ const Register = () => {
                   >
                     Full Name
                   </label>
-                  {isErrorForm === null ? (
-                    <span></span>
-                  ) : (
-                    <span
-                      className={isErrorForm ? 'form__error' : 'form__success'}
-                    >
-                      {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-                    </span>
-                  )}
+
                   <input
                     type="text"
                     className="form-input form-input__register"
@@ -179,15 +163,7 @@ const Register = () => {
                   >
                     Email
                   </label>
-                  {isErrorForm === null ? (
-                    <span></span>
-                  ) : (
-                    <span
-                      className={isErrorForm ? 'form__error' : 'form__success'}
-                    >
-                      {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-                    </span>
-                  )}
+
                   <input
                     type="text"
                     className="form-input form-input__register"
@@ -206,15 +182,7 @@ const Register = () => {
                   >
                     Address
                   </label>
-                  {isErrorForm === null ? (
-                    <span></span>
-                  ) : (
-                    <span
-                      className={isErrorForm ? 'form__error' : 'form__success'}
-                    >
-                      {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-                    </span>
-                  )}
+
                   <input
                     type="text"
                     className="form-input form-input__register"
@@ -233,15 +201,7 @@ const Register = () => {
                   >
                     Date of birth
                   </label>
-                  {isErrorForm === null ? (
-                    <span></span>
-                  ) : (
-                    <span
-                      className={isErrorForm ? 'form__error' : 'form__success'}
-                    >
-                      {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-                    </span>
-                  )}
+
                   <input
                     type="date"
                     className="form-input form-input__register"
@@ -254,16 +214,6 @@ const Register = () => {
               )}
               {getNext === 5 && (
                 <>
-                  {isErrorForm === null ? (
-                    <span></span>
-                  ) : (
-                    <span
-                      className={isErrorForm ? 'form__error' : 'form__success'}
-                    >
-                      {isErrorForm ? 'Something went wrong!' : 'It OK!'}
-                    </span>
-                  )}
-
                   <div className="form-control__image">
                     <label htmlFor="image1" className="form-label">
                       Image front
@@ -350,10 +300,11 @@ const Register = () => {
               </div>
             </form>
           ) : (
-            <div className="register__result">
-              <h2 className="heading--primary">Register success</h2>
-              <p>Please check your email to validation</p>
-            </div>
+            <AlertRegister
+              isError={isErrorForm}
+              typeError={typeErrorForm}
+              msgError={messageErrorForm}
+            ></AlertRegister>
           )}
         </div>
       </section>

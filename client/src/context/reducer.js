@@ -24,8 +24,8 @@ const reducer = (state, action) => {
     return {
       ...state,
       isErrorForm: false,
-      messageErrorForm: 'Valid user',
-      typeErrorForm: 'form__success',
+      messageErrorForm: 'Login is processing...',
+      typeErrorForm: 'processing',
     };
   }
 
@@ -33,14 +33,21 @@ const reducer = (state, action) => {
     return {
       ...state,
       isErrorForm: false,
-      messageErrorForm: 'Valid user',
-      typeErrorForm: 'form__success',
-      user: action.payload,
+      messageErrorForm: action.payloadMsg,
+      typeErrorForm: 'success',
+      user: action.payloadUser,
+      isLogin: true,
     };
   }
 
   if (action.type === LOGIN_ERROR) {
-    return { ...state, isError: true };
+    return {
+      ...state,
+      isErrorForm: true,
+      messageErrorForm: action.payload,
+      typeErrorForm: 'error',
+      user: null,
+    };
   }
 
   if (action.type === REGISTER_BEGIN) {
@@ -48,11 +55,21 @@ const reducer = (state, action) => {
   }
 
   if (action.type === REGISTER_SUCCESS) {
-    return { ...state, user: action.payload };
+    return {
+      ...state,
+      isErrorForm: false,
+      messageErrorForm: 'Login success',
+      typeErrorForm: 'success',
+    };
   }
 
   if (action.type === REGISTER_ERROR) {
-    return { ...state, isError: true };
+    return {
+      ...state,
+      isErrorForm: true,
+      messageErrorForm: action.payload,
+      typeErrorForm: 'form__error',
+    };
   }
 };
 

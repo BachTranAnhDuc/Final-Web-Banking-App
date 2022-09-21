@@ -1,6 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { About, Landing, Register, Login, Error, VerifyEmail } from './pages';
+import {
+  About,
+  Landing,
+  Register,
+  Login,
+  Error,
+  VerifyEmail,
+  Dashboard,
+  ProtectedRoute,
+} from './pages';
 import { ShareLayout } from './components';
 
 const App = () => {
@@ -17,6 +26,17 @@ const App = () => {
           ></Route>
           <Route path="/login" element={<Login></Login>}></Route>
           <Route path="*" element={<Error></Error>}></Route>
+        </Route>
+
+        <Route path="/dashboard">
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Dashboard></Dashboard>
+              </ProtectedRoute>
+            }
+          ></Route>
         </Route>
       </Routes>
     </BrowserRouter>
