@@ -49,12 +49,18 @@ const Login = () => {
 
     setAlert(!isAlert);
 
-    if (isLogin) {
-      // switchPage();
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 4000);
-    }
+    // if (isLogin) {
+    //   // switchPage();
+    //   setTimeout(() => {
+    //     navigate('/dashboard');
+    //   }, 3000);
+    // } else {
+    // }
+
+    // switchPage();
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 3000);
   };
 
   if (isLoading) {

@@ -49,9 +49,13 @@ const login = async (req, res) => {
     role: user.role,
   };
 
-  attachCookiesToResponse({ res, user: tokeUser });
+  const token = createJWT({ payload: tokeUser });
 
-  res.status(StatusCodes.OK).json({ msg: 'Login success', user: user });
+  attachCookiesToResponse({ res, token });
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Login success', user: user, token: token });
 };
 
 const register = async (req, res) => {
@@ -155,7 +159,9 @@ const register = async (req, res) => {
     role: user.role,
   };
 
-  attachCookiesToResponse({ res, user: tokeUser });
+  const token = createJWT({ payload: tokeUser });
+
+  attachCookiesToResponse({ res, token });
 
   res.status(StatusCodes.OK).json({ msg: 'Register success', user: user });
 };

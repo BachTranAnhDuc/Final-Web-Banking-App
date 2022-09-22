@@ -5,6 +5,9 @@ import FormProcessing from './FormProcessing';
 import Footer from './Footer';
 import Alert from './Alert';
 import AlertRegister from './AlertRegister';
+import NavDashboard from './NavDashboard';
+import ShareLayoutDash from './ShareLayoutDash';
+import SideBar from './SideBar';
 
 export {
   Navbar,
@@ -14,4 +17,7 @@ export {
   Footer,
   Alert,
   AlertRegister,
+  NavDashboard,
+  ShareLayoutDash,
+  SideBar,
 };

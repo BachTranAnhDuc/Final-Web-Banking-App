@@ -8,14 +8,18 @@ const Dashboard = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 5000);
+    }, 1500);
   }, []);
 
   if (getLoading) {
     return <Loading></Loading>;
   }
 
-  return <div>Dashboard</div>;
+  return (
+    <section className="section-dashboard">
+      <h1 className="heading--primary">This is dashboard</h1>
+    </section>
+  );
 };
 
 export default Dashboard;

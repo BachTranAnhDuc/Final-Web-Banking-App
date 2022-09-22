@@ -10,7 +10,7 @@ import {
   Dashboard,
   ProtectedRoute,
 } from './pages';
-import { ShareLayout } from './components';
+import { ShareLayout, ShareLayoutDash } from './components';
 
 const App = () => {
   return (
@@ -28,7 +28,7 @@ const App = () => {
           <Route path="*" element={<Error></Error>}></Route>
         </Route>
 
-        <Route path="/dashboard">
+        <Route path="/dashboard" element={<ShareLayoutDash></ShareLayoutDash>}>
           <Route
             index
             element={

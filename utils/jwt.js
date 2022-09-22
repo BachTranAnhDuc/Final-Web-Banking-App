@@ -7,13 +7,13 @@ const createJWT = ({ payload }) => {
 
 const isTokenValid = (token) => jwt.verify(token, process.env.JWT_SECRET);
 
-const attachCookiesToResponse = ({ res, user }) => {
-  const accessTokenJWT = createJWT({ payload: { user } });
+const attachCookiesToResponse = ({ res, token }) => {
+  // const accessTokenJWT = createJWT({ payload: { user } });
 
   const oneDay = 1000 * 60 * 60 * 24;
   const longerExp = 1000 * 60 * 60 * 24 * 30;
 
-  res.cookie('accessToken', accessTokenJWT, {
+  res.cookie('accessToken', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     signed: true,

@@ -24,9 +24,12 @@ const VerifyEmail = () => {
         email: query.get('email'),
       });
 
+      console.log('Success');
+
       console.log(user);
     } catch (error) {
       setError(true);
+      console.log('Something went wrong');
       console.log(error);
     }
   };
@@ -35,7 +38,7 @@ const VerifyEmail = () => {
     verifyToken();
   }, []);
 
-  if (isError || error) {
+  if (error) {
     return <Error></Error>;
   } else {
     return (

@@ -9,6 +9,11 @@ import {
   REGISTER_BEGIN,
   REGISTER_SUCCESS,
   REGISTER_ERROR,
+  OPEN_SIDE_BAR,
+  OPEN_MODAL,
+  CLOSE_MODAL,
+  CLOSE_SIDE_BAR,
+  LOGOUT,
 } from './action';
 
 const reducer = (state, action) => {
@@ -35,8 +40,10 @@ const reducer = (state, action) => {
       isErrorForm: false,
       messageErrorForm: action.payloadMsg,
       typeErrorForm: 'success',
-      user: action.payloadUser,
+      // user: action.payloadUser,
       isLogin: true,
+      user: action.payloadUser,
+      token: action.payloadToken,
     };
   }
 
@@ -46,7 +53,7 @@ const reducer = (state, action) => {
       isErrorForm: true,
       messageErrorForm: action.payload,
       typeErrorForm: 'error',
-      user: null,
+      // user: null,
     };
   }
 
@@ -60,6 +67,7 @@ const reducer = (state, action) => {
       isErrorForm: false,
       messageErrorForm: 'Login success',
       typeErrorForm: 'success',
+      // isError: false,
     };
   }
 
@@ -69,6 +77,28 @@ const reducer = (state, action) => {
       isErrorForm: true,
       messageErrorForm: action.payload,
       typeErrorForm: 'form__error',
+      // isError: true,
+    };
+  }
+
+  if (action.type === OPEN_SIDE_BAR) {
+    return {
+      ...state,
+      isSidebarOpen: true,
+    };
+  }
+  if (action.type === CLOSE_SIDE_BAR) {
+    return {
+      ...state,
+      isSidebarOpen: false,
+    };
+  }
+
+  if (action.type === LOGOUT) {
+    return {
+      ...state,
+      user: null,
+      token: '',
     };
   }
 };
