@@ -17,17 +17,27 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    const { user } = isTokenValid(token);
-    req.user = user;
+    // const { user } = isTokenValid(token);
+    // req.user = user;
 
     // console.log(user);
 
+    const { userId, phone, email } = isTokenValid(token);
+
+    const user = { userId, phone, email };
+
+    // console.log(isTokenValid(token));
+
+    console.log('Authen user here');
+    console.log(user);
+
+    req.user = user;
+
+    console.log(`Token is present: ${token}`);
     next();
   } catch (error) {
     throw new unauthenticationError('Authentication payload Invalid');
   }
-
-  console.log(`Token is present: ${token}`);
 };
 
 const authorizePermissions = (roles) => {

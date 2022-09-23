@@ -28,6 +28,10 @@ const login = async (req, res) => {
 
   const user = await User.findOne({ username });
 
+  const { isFirstLogin } = user;
+
+  console.log(`Is first login: ${isFirstLogin}`);
+
   if (!user) {
     throw new badRequestError('Can not find user');
   }
@@ -53,9 +57,12 @@ const login = async (req, res) => {
 
   attachCookiesToResponse({ res, token });
 
-  res
-    .status(StatusCodes.OK)
-    .json({ msg: 'Login success', user: user, token: token });
+  res.status(StatusCodes.OK).json({
+    msg: 'Login success',
+    user: user,
+    token: token,
+    isFirstLogin: isFirstLogin,
+  });
 };
 
 const register = async (req, res) => {
@@ -118,6 +125,9 @@ const register = async (req, res) => {
     verificationToken
   );
 
+  const rdUsername = randomUsername();
+  const rdPwd = randomPassword();
+
   const user = await User.create({
     name,
     phone: phoneReq,
@@ -125,8 +135,8 @@ const register = async (req, res) => {
     address,
     birth,
     verificationToken,
-    username: randomUsername(),
-    password: randomPassword(),
+    username: rdUsername,
+    password: rdPwd,
     imageFront,
     imageBack,
     role,
@@ -134,23 +144,27 @@ const register = async (req, res) => {
 
   const origin = 'http://localhost:3000';
 
+  console.log(`pwd random: ${rdPwd}`);
+
   await sendVerificationEmail({
     name: user.name,
     email: user.email,
     verificationToken: user.verificationToken,
     origin,
+    username: rdUsername,
+    password: rdPwd,
   });
 
-  const test = {
-    name: user.name,
-    email: user.email,
-    username: user.username,
-    password: user.password,
-    verificationToken: user.verificationToken,
-    origin,
-  };
+  // const test = {
+  //   name: user.name,
+  //   email: user.email,
+  //   username: user.username,
+  //   password: user.password,
+  //   verificationToken: user.verificationToken,
+  //   origin,
+  // };
 
-  console.log(test);
+  // console.log(test);
 
   const tokeUser = {
     userId: user._id,
@@ -194,7 +208,9 @@ const verifyEmail = async (req, res) => {
     throw new CustomError.unauthenticationError('Verification Failed');
   }
 
-  (user.isVerified = true), (user.verified = Date.now());
+  // (user.isVerified = true), (user.verifiedDay = Date.now());
+  user.isVerified = true;
+  user.verifiedDate = Date.now();
   user.verificationToken = '';
 
   await user.save();
@@ -202,7 +218,39 @@ const verifyEmail = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Email Verified' });
 };
 
-export { login, register, updateUser, logout, forgotPassword, verifyEmail };
+const firstLogin = async (req, res) => {
+  const { pwd, pwdConfirm } = req.body;
+  const { user } = req;
+  const { userId } = user;
+
+  const getUser = await User.findById({ _id: userId });
+
+  if (pwd !== pwdConfirm) {
+    throw new badRequestError('Confirm password is not correct!');
+  }
+
+  // console.log('first login get user');
+  // console.log(user);
+  // const { password } = user;
+  // console.log(`pwd: ${password}`);
+
+  // user.password = pwd;
+
+  getUser.password = pwd;
+  getUser.save();
+
+  res.status(StatusCodes.OK).json({ msg: 'Update password success' });
+};
+
+export {
+  login,
+  register,
+  updateUser,
+  logout,
+  forgotPassword,
+  verifyEmail,
+  firstLogin,
+};
 
 // admin: 620277
 // anna: 778364

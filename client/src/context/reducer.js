@@ -44,6 +44,7 @@ const reducer = (state, action) => {
       isLogin: true,
       user: action.payloadUser,
       token: action.payloadToken,
+      isFirstLogin: action.payloadIsFirst,
     };
   }
 
@@ -99,6 +100,7 @@ const reducer = (state, action) => {
       ...state,
       user: null,
       token: '',
+      isFirstLogin: true,
     };
   }
 };

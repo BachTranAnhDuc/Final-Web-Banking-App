@@ -22,6 +22,7 @@ import {
 
 const token = localStorage.getItem('token');
 const user = localStorage.getItem('user');
+const isFirstLogin = localStorage.getItem('isFirstLogin');
 
 const defaultState = {
   isLoading: false,
@@ -35,6 +36,7 @@ const defaultState = {
   isSidebarOpen: false,
   isModalOpen: false,
   token: token,
+  isFirstLogin: isFirstLogin,
 };
 
 const AppContext = React.createContext();
@@ -54,14 +56,16 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
-  const addUserToLocalStorage = ({ user, token }) => {
+  const addUserToLocalStorage = ({ user, token, isFirstLogin }) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', token);
+    localStorage.setItem('isFirstLogin', isFirstLogin);
   };
 
   const removeUserFromLocalStorage = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('isFirstLogin', isFirstLogin);
   };
 
   const login = async (userInput) => {
@@ -73,17 +77,18 @@ const AppProvider = ({ children }) => {
 
         const { data } = postUser;
 
-        const { msg, user, token } = data;
+        const { msg, user, token, isFirstLogin } = data;
 
         console.log(user);
 
-        addUserToLocalStorage({ user, token });
+        addUserToLocalStorage({ user, token, isFirstLogin });
 
         dispatch({
           type: LOGIN_SUCCESS,
           payloadMsg: msg,
           payloadUser: user,
           payloadToken: token,
+          payloadIsFirst: isFirstLogin,
         });
       } catch (error) {
         const { response } = error;

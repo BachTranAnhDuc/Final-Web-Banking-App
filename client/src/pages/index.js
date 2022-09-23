@@ -6,6 +6,7 @@ import About from './About';
 import Login from './Login';
 import VerifyEmail from './VerifyEmail';
 import ProtectedRoute from './ProtectedRoute';
+import FirstLogin from './FirstLogin';
 
 export {
   Landing,
@@ -16,4 +17,5 @@ export {
   Login,
   VerifyEmail,
   ProtectedRoute,
+  FirstLogin,
 };

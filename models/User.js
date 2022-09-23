@@ -64,6 +64,15 @@ const UserSchema = new mongoose.Schema({
   },
   verifiedDate: {
     type: Date,
+    default: Date.now(),
+  },
+  loginFail: {
+    type: Number,
+    default: 0,
+  },
+  isIdentify: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -72,6 +81,10 @@ UserSchema.methods.comparePassword = async function (inputPassword) {
 
   return isMatch;
 };
+
+// UserSchema.methods.compareTwoPassword = async function(pwd1, pwd2) {
+//   const isMatch = await bcr
+// }
 
 UserSchema.pre('save', async function () {
   if (!this.isModified('password')) return;

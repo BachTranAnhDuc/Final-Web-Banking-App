@@ -9,6 +9,7 @@ import {
   VerifyEmail,
   Dashboard,
   ProtectedRoute,
+  FirstLogin,
 } from './pages';
 import { ShareLayout, ShareLayoutDash } from './components';
 
@@ -25,6 +26,11 @@ const App = () => {
             element={<VerifyEmail></VerifyEmail>}
           ></Route>
           <Route path="/login" element={<Login></Login>}></Route>
+          <Route
+            path="/first-login"
+            element={<FirstLogin></FirstLogin>}
+          ></Route>
+
           <Route path="*" element={<Error></Error>}></Route>
         </Route>
 
