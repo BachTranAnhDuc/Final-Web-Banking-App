@@ -237,9 +237,28 @@ const firstLogin = async (req, res) => {
   // user.password = pwd;
 
   getUser.password = pwd;
+  getUser.isFirstLogin = false;
   getUser.save();
 
-  res.status(StatusCodes.OK).json({ msg: 'Update password success' });
+  const tokeUser = {
+    userId: user._id,
+    phone: user.phone,
+    email: user.email,
+    role: user.role,
+  };
+
+  const token = createJWT({ payload: tokeUser });
+
+  attachCookiesToResponse({ res, token });
+
+  res
+    .status(StatusCodes.OK)
+    .json({
+      msg: 'Update password success',
+      token: token,
+      user: getUser,
+      isFirstLogin: getUser.isFirstLogin,
+    });
 };
 
 export {

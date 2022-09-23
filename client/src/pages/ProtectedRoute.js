@@ -3,10 +3,11 @@ import { useGlobalContext } from '../context/appContext';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useGlobalContext();
-  if (!user) {
-    return <Navigate to="/login" />;
+  if (user) {
+    return children;
   }
-  return children;
+
+  return <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

@@ -14,6 +14,9 @@ import {
   CLOSE_MODAL,
   CLOSE_SIDE_BAR,
   LOGOUT,
+  FIRST_LOGIN_BEGIN,
+  FIRST_LOGIN_SUCCESS,
+  FIRST_LOGIN_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -102,6 +105,28 @@ const reducer = (state, action) => {
       token: '',
       isFirstLogin: true,
     };
+  }
+
+  if (action.type === FIRST_LOGIN_BEGIN) {
+    return {
+      ...state,
+      isErrorForm: false,
+      messageErrorForm: 'Loading is processing...',
+      typeErrorForm: 'processing',
+    };
+  }
+  if (action.type === FIRST_LOGIN_SUCCESS) {
+    return {
+      ...state,
+      isErrorForm: false,
+      messageErrorForm: 'Changing success',
+      typeErrorForm: 'success',
+      token: action.payloadToken,
+      user: action.payloadUser,
+      isFirstLogin: action.payloadIsFirst,
+    };
+  }
+  if (action.type === FIRST_LOGIN_ERROR) {
   }
 };
 

@@ -7,6 +7,7 @@ import Login from './Login';
 import VerifyEmail from './VerifyEmail';
 import ProtectedRoute from './ProtectedRoute';
 import FirstLogin from './FirstLogin';
+import ProtectedRouteDash from './ProtectedRouteDash';
 
 export {
   Landing,
@@ -18,4 +19,5 @@ export {
   VerifyEmail,
   ProtectedRoute,
   FirstLogin,
+  ProtectedRouteDash,
 };

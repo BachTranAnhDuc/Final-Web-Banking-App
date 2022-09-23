@@ -12,6 +12,10 @@ export const REGISTER_BEGIN = 'REGISTER_BEGIN';
 
 export const LOGOUT = 'LOGOUT';
 
+export const FIRST_LOGIN_SUCCESS = 'FIRST_LOGIN_SUCCESS';
+export const FIRST_LOGIN_ERROR = 'FIRST_LOGIN_ERROR';
+export const FIRST_LOGIN_BEGIN = 'FIRST_LOGIN_BEGIN';
+
 export const OPEN_SIDE_BAR = 'OPEN_SIDE_BAR';
 export const CLOSE_SIDE_BAR = 'CLOSE_SIDE_BAR';
 

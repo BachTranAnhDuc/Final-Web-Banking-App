@@ -18,6 +18,9 @@ import {
   CLOSE_MODAL,
   CLOSE_SIDE_BAR,
   LOGOUT,
+  FIRST_LOGIN_BEGIN,
+  FIRST_LOGIN_SUCCESS,
+  FIRST_LOGIN_ERROR,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -136,6 +139,37 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const firstLogin = async ({ pwd, pwdConfirm }) => {
+    dispatch({ type: FIRST_LOGIN_BEGIN });
+
+    try {
+      const changePwd = await axios.post('/api/v1/auth/first-login', {
+        pwd,
+        pwdConfirm,
+      });
+
+      const { data } = changePwd;
+
+      const { msg, token, user, isFirstLogin } = data;
+
+      addUserToLocalStorage({ user, token, isFirstLogin });
+
+      console.log('First login success');
+      console.log(data);
+
+      dispatch({
+        type: FIRST_LOGIN_SUCCESS,
+        payloadMsg: msg,
+        payloadUser: user,
+        payloadToken: token,
+        payloadIsFirst: isFirstLogin,
+      });
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: FIRST_LOGIN_ERROR });
+    }
+  };
+
   const openSidebar = () => {
     // setIsSidebarOpen(true);
 
@@ -165,6 +199,7 @@ const AppProvider = ({ children }) => {
         openModal,
         openSidebar,
         logout,
+        firstLogin,
       }}
     >
       {children}

@@ -10,6 +10,7 @@ import {
   Dashboard,
   ProtectedRoute,
   FirstLogin,
+  ProtectedRouteDash,
 } from './pages';
 import { ShareLayout, ShareLayoutDash } from './components';
 
@@ -26,20 +27,20 @@ const App = () => {
             element={<VerifyEmail></VerifyEmail>}
           ></Route>
           <Route path="/login" element={<Login></Login>}></Route>
-          <Route
-            path="/first-login"
-            element={<FirstLogin></FirstLogin>}
-          ></Route>
 
           <Route path="*" element={<Error></Error>}></Route>
         </Route>
+
+        <Route path="/first-login" element={<FirstLogin></FirstLogin>}></Route>
 
         <Route path="/dashboard" element={<ShareLayoutDash></ShareLayoutDash>}>
           <Route
             index
             element={
               <ProtectedRoute>
-                <Dashboard></Dashboard>
+                <ProtectedRouteDash>
+                  <Dashboard></Dashboard>
+                </ProtectedRouteDash>
               </ProtectedRoute>
             }
           ></Route>
