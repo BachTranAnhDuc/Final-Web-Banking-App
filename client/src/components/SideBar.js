@@ -45,8 +45,8 @@ const SideBar = () => {
 
       <ul className="sidebar__social-icons">
         <li>
-          <BiUserCircle></BiUserCircle>
-          <a href="#">Anh Duc</a>
+          <BiUserCircle className="sidebar__social-icon"></BiUserCircle>
+          <a href="#">Bach Tran Anh Duc</a>
         </li>
       </ul>
     </aside>

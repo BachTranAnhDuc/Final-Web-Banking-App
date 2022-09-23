@@ -239,6 +239,7 @@ body {
 }
 
 .nav__menu {
+  /* background-color: orange; */
 }
 
 .nav__menu--item {
@@ -985,6 +986,9 @@ body {
 
 .btn-account {
   /* margin-bottom: 2.4rem; */
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 1.2;
   border: none;
 
   background-color: inherit;
@@ -1043,6 +1047,7 @@ body {
 }
 
 .container__loading {
+  height: 100vh;
   grid-column: 1 / 3;
   margin: 0 auto;
   justify-self: center;
@@ -1085,9 +1090,9 @@ body {
 } */
 .sidebar-toggle {
   position: fixed;
-  top: 4rem;
-  left: 4rem;
-  font-size: 2rem;
+  top: 5.4rem;
+  left: 8rem;
+  font-size: 2.4rem;
   background: transparent;
   border-color: transparent;
   color: var(--color-primary-dark-5);
@@ -1187,13 +1192,13 @@ Sidebar
 }
 
 .close-btn {
-  font-size: 1.75rem;
+  font-size: 2rem;
   background: transparent;
   border-color: transparent;
   color: var(--color-primary);
   transition: all 0.3s linear;
   cursor: pointer;
-  color: var(--color-tertiary-dark-2);
+  color: var(--color-tertiary);
   /* margin-top: 0.2rem; */
 }
 .close-btn:hover {
@@ -1257,9 +1262,19 @@ Sidebar
   display: grid;
 }
 
+.sidebar__social-icons li {
+  display: grid;
+
+  grid-template-columns: min-content 1fr;
+
+  align-items: center;
+
+  gap: 1.6rem;
+}
+
 .sidebar__social-icons a {
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin: 0 0.5rem;
   color: var(--color-primary-dark-6);
   transition: all 0.3s linear;
@@ -1270,6 +1285,11 @@ Sidebar
 
 .sidebar-links__icon:hover {
   color: var(--color-primary-dark-7);
+}
+
+.sidebar__social-icon {
+  font-size: 2.9rem;
+  color: var(--color-primary-dark-3);
 }
 
 .sidebar {
