@@ -37,7 +37,11 @@ const errorHandler = async (err, req, res, next) => {
   if (inputUser.role !== 'admin') {
     const numberOfFail = inputUser.loginFail;
 
-    inputUser.loginFail = numberOfFail + 1;
+    if (numberOfFail < 6) {
+      inputUser.loginFail = numberOfFail + 1;
+    } else {
+      inputUser.loginFail = 6;
+    }
 
     inputUser.save();
   }

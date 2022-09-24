@@ -104,14 +104,23 @@ const AppProvider = ({ children }) => {
 
         // console.log(`Number of login fail: ${user.loginFail}`);
 
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payloadMsg: msg,
-          payloadUser: user,
-          payloadToken: token,
-          payloadIsFirst: isFirstLogin,
-          payloadFail: loginFail,
-        });
+        if (loginFail === 6) {
+          dispatch({
+            type: LOGIN_ERROR,
+            payloadMsg:
+              '6 fails, your account is blocked forever, please contact with admin',
+            payloadFail: loginFail,
+          });
+        } else {
+          dispatch({
+            type: LOGIN_SUCCESS,
+            payloadMsg: msg,
+            payloadUser: user,
+            payloadToken: token,
+            payloadIsFirst: isFirstLogin,
+            payloadFail: loginFail,
+          });
+        }
 
         // return <Navigate to={'/dashboard'}></Navigate>;
       } catch (error) {
@@ -141,7 +150,7 @@ const AppProvider = ({ children }) => {
 
         if (loginFail === 6) {
           message =
-            '6 fails, your account is lock 100 years, please contact with admin';
+            '6 fails, your account is blocked forever, please contact with admin';
         }
 
         // const checkIsCountdonw = loginFail === 3 ? true : false;

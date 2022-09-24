@@ -53,7 +53,10 @@ const login = async (req, res) => {
     throw new unauthenticationError('Please verify your email');
   }
 
-  user.loginFail = 0;
+  if (user.loginFail !== 6) {
+    user.loginFail = 0;
+  }
+
   user.save();
 
   const tokeUser = {

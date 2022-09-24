@@ -23,6 +23,7 @@ const Login = () => {
     isLoadingForm,
     isCountDown,
     isAlert,
+    numberOfLoginFail,
   } = useGlobalContext();
 
   const [values, setValues] = useState(defaultState);
@@ -86,7 +87,7 @@ const Login = () => {
         </h1>
 
         <form className="login__form" onSubmit={handleSubmit}>
-          {isAlert && isErrorForm && (
+          {isErrorForm && (
             <Alert
               isError={isErrorForm}
               typeError={typeErrorForm}
