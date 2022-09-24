@@ -8,6 +8,7 @@ import AlertRegister from './AlertRegister';
 import NavDashboard from './NavDashboard';
 import ShareLayoutDash from './ShareLayoutDash';
 import SideBar from './SideBar';
+import CountDown from './CountDown';
 
 export {
   Navbar,
@@ -20,4 +21,5 @@ export {
   NavDashboard,
   ShareLayoutDash,
   SideBar,
+  CountDown,
 };

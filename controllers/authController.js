@@ -28,23 +28,33 @@ const login = async (req, res) => {
 
   const user = await User.findOne({ username });
 
-  const { isFirstLogin } = user;
-
-  console.log(`Is first login: ${isFirstLogin}`);
+  // console.log(`Is first login: ${isFirstLogin}`);
 
   if (!user) {
     throw new badRequestError('Can not find user');
   }
 
+  const { isFirstLogin } = user;
+
   const isPassword = await user.comparePassword(password);
 
   if (!isPassword) {
+    // const numberOfFail = user.loginFail;
+
+    // user.loginFail = numberOfFail + 1;
+
+    // user.save();
+
     throw new unauthenticationError('Invalid password');
   }
 
   if (!user.isVerified) {
+    console.log('not verify');
     throw new unauthenticationError('Please verify your email');
   }
+
+  user.loginFail = 0;
+  user.save();
 
   const tokeUser = {
     userId: user._id,
@@ -155,17 +165,6 @@ const register = async (req, res) => {
     password: rdPwd,
   });
 
-  // const test = {
-  //   name: user.name,
-  //   email: user.email,
-  //   username: user.username,
-  //   password: user.password,
-  //   verificationToken: user.verificationToken,
-  //   origin,
-  // };
-
-  // console.log(test);
-
   const tokeUser = {
     userId: user._id,
     phone: user.phone,
@@ -208,10 +207,13 @@ const verifyEmail = async (req, res) => {
     throw new CustomError.unauthenticationError('Verification Failed');
   }
 
+  console.log('token:');
+  console.log(verificationToken);
+
   // (user.isVerified = true), (user.verifiedDay = Date.now());
   user.isVerified = true;
   user.verifiedDate = Date.now();
-  user.verificationToken = '';
+  // user.verificationToken = '';
 
   await user.save();
 
@@ -251,14 +253,12 @@ const firstLogin = async (req, res) => {
 
   attachCookiesToResponse({ res, token });
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      msg: 'Update password success',
-      token: token,
-      user: getUser,
-      isFirstLogin: getUser.isFirstLogin,
-    });
+  res.status(StatusCodes.OK).json({
+    msg: 'Update password success',
+    token: token,
+    user: getUser,
+    isFirstLogin: getUser.isFirstLogin,
+  });
 };
 
 export {

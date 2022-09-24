@@ -21,3 +21,12 @@ export const CLOSE_SIDE_BAR = 'CLOSE_SIDE_BAR';
 
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
+
+export const OPEN_COUNTDONW = 'OPEN_COUNTDOWN';
+export const CLOSE_COUNTDOWN = 'CLOSE_COUNTDOWN';
+
+export const HIDE_LOADING = 'HIDE_LOADING';
+
+export const IS_LOGIN = 'IS_LOGIN';
+
+export const IS_ALERT = 'IS_ALERT';

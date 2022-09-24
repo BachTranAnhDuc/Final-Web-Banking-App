@@ -598,6 +598,8 @@ body {
 .form-label {
   font-size: 1.8rem;
   font-weight: 400;
+
+  color: var(--color-primary-dark-6);
 }
 
 .form-label__register {
@@ -610,7 +612,20 @@ body {
   border: none;
   border-radius: 4px;
 
+  font-size: 1.4rem;
+
+  letter-spacing: 0.2rem;
+
   background-color: var(--color-primary-light-9);
+}
+
+.form-input__disabled {
+  border: 2px solid var(--color-tertiary-dark-3);
+}
+
+.form-input:focus {
+  outline: none;
+  border: 2px solid var(--color-primary-dark-5);
 }
 
 .form-input__register {
@@ -670,6 +685,7 @@ body {
 }
 
 .form__alert {
+  position: relative;
   border-radius: 4px;
 
   padding: 0.8rem 1.2rem;
@@ -697,6 +713,25 @@ body {
 
 .form__alert p {
   color: var(--color-white);
+}
+
+.form__alert button {
+  padding: 2px;
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  transform: translate(0, -50%);
+
+  border: none;
+  border-radius: 50%;
+  background-color: inherit;
+
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.form__alert--close {
 }
 
 /* LOGIN */
@@ -1036,6 +1071,8 @@ body {
 
 .btn-link {
   text-decoration: none;
+
+  color: var(--color-primary-dark-2);
 }
 
 /* CSS */

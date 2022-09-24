@@ -28,6 +28,8 @@ const NavDashboard = () => {
   const handleClickLog = () => {
     logout();
 
+    switchPage();
+
     setTimeout(() => {
       navigate('/login');
     }, 1000);

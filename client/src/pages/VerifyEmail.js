@@ -19,14 +19,14 @@ const VerifyEmail = () => {
 
   const verifyToken = async () => {
     try {
-      const { user } = await axios.post('/api/v1/auth/verify-email', {
+      const res = await axios.post('/api/v1/auth/verify-email', {
         verificationToken: query.get('verificationToken'),
         email: query.get('email'),
       });
 
       console.log('Success');
 
-      console.log(user);
+      console.log(res);
     } catch (error) {
       setError(true);
       console.log('Something went wrong');

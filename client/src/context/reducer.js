@@ -17,11 +17,20 @@ import {
   FIRST_LOGIN_BEGIN,
   FIRST_LOGIN_SUCCESS,
   FIRST_LOGIN_ERROR,
+  OPEN_COUNTDONW,
+  CLOSE_COUNTDOWN,
+  HIDE_LOADING,
+  IS_LOGIN,
+  IS_ALERT,
 } from './action';
 
 const reducer = (state, action) => {
   if (action.type === SHOW_HIDE_LOADING) {
     return { ...state, isLoading: true };
+  }
+
+  if (action.type === HIDE_LOADING) {
+    return { ...state, isLoading: false };
   }
 
   if (action.type === SWITCH_PAGE) {
@@ -31,16 +40,19 @@ const reducer = (state, action) => {
   if (action.type === LOGIN_BEGIN) {
     return {
       ...state,
-      isErrorForm: false,
+      isErrorForm: true,
       messageErrorForm: 'Login is processing...',
       typeErrorForm: 'processing',
+      isLoadingForm: true,
+      isLogin: false,
+      styleAlert: 'form__alert form__alert--processing',
     };
   }
 
   if (action.type === LOGIN_SUCCESS) {
     return {
       ...state,
-      isErrorForm: false,
+      isErrorForm: true,
       messageErrorForm: action.payloadMsg,
       typeErrorForm: 'success',
       // user: action.payloadUser,
@@ -48,6 +60,9 @@ const reducer = (state, action) => {
       user: action.payloadUser,
       token: action.payloadToken,
       isFirstLogin: action.payloadIsFirst,
+      isLoadingForm: false,
+      numberOfLoginFail: action.payloadFail,
+      styleAlert: 'form__alert form__alert--success',
     };
   }
 
@@ -55,9 +70,13 @@ const reducer = (state, action) => {
     return {
       ...state,
       isErrorForm: true,
-      messageErrorForm: action.payload,
+      messageErrorForm: action.payloadMsg,
       typeErrorForm: 'error',
-      // user: null,
+      isLoadingForm: false,
+      user: null,
+      isLogin: false,
+      numberOfLoginFail: action.payloadFail,
+      styleAlert: 'form__alert form__alert--error',
     };
   }
 
@@ -104,6 +123,9 @@ const reducer = (state, action) => {
       user: null,
       token: '',
       isFirstLogin: true,
+      isErrorForm: false,
+      messageErrorForm: '',
+      isLogin: false,
     };
   }
 
@@ -127,6 +149,39 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === FIRST_LOGIN_ERROR) {
+  }
+
+  if (action.type === OPEN_COUNTDONW) {
+    return {
+      ...state,
+      isCountDown: true,
+      isErrorForm: true,
+      messageErrorForm: 'You can login now',
+      styleAlert: 'form__alert form__alert--success',
+    };
+  }
+  if (action.type === CLOSE_COUNTDOWN) {
+    return {
+      ...state,
+      isCountDown: false,
+      isErrorForm: true,
+      messageErrorForm: 'You can login now',
+      styleAlert: 'form__alert form__alert--success',
+    };
+  }
+
+  if (action.type === IS_LOGIN) {
+    return {
+      ...state,
+      isLogin: true,
+    };
+  }
+
+  if (action.type === IS_ALERT) {
+    return {
+      ...state,
+      isAlert: false,
+    };
   }
 };
 

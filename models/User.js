@@ -70,9 +70,10 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  isIdentify: {
-    type: Boolean,
-    default: false,
+  identify: {
+    type: String,
+    emum: ['success', 'fail', 'processing', 'watting'],
+    default: 'processing',
   },
 });
 

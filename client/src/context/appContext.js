@@ -1,4 +1,5 @@
 import React, { useContext, useState, useReducer } from 'react';
+import { Navigate } from 'react-router-dom';
 
 import reducer from './reducer';
 
@@ -21,6 +22,11 @@ import {
   FIRST_LOGIN_BEGIN,
   FIRST_LOGIN_SUCCESS,
   FIRST_LOGIN_ERROR,
+  CLOSE_COUNTDOWN,
+  OPEN_COUNTDONW,
+  HIDE_LOADING,
+  IS_LOGIN,
+  IS_ALERT,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -40,6 +46,12 @@ const defaultState = {
   isModalOpen: false,
   token: token,
   isFirstLogin: isFirstLogin,
+  isLoadingForm: false,
+  isLockForm: false,
+  numberOfLoginFail: 0,
+  isCountDown: false,
+  styleAlert: '',
+  isAlert: true,
 };
 
 const AppContext = React.createContext();
@@ -49,6 +61,9 @@ const AppProvider = ({ children }) => {
 
   const showLoading = () => {
     dispatch({ type: SHOW_HIDE_LOADING });
+  };
+  const hideLoading = () => {
+    dispatch({ type: HIDE_LOADING });
   };
 
   const switchPage = () => {
@@ -81,10 +96,13 @@ const AppProvider = ({ children }) => {
         const { data } = postUser;
 
         const { msg, user, token, isFirstLogin } = data;
+        const { loginFail } = user;
 
         console.log(user);
 
         addUserToLocalStorage({ user, token, isFirstLogin });
+
+        // console.log(`Number of login fail: ${user.loginFail}`);
 
         dispatch({
           type: LOGIN_SUCCESS,
@@ -92,13 +110,47 @@ const AppProvider = ({ children }) => {
           payloadUser: user,
           payloadToken: token,
           payloadIsFirst: isFirstLogin,
+          payloadFail: loginFail,
         });
+
+        // return <Navigate to={'/dashboard'}></Navigate>;
       } catch (error) {
         const { response } = error;
         const { data } = response;
-        const { msg } = data;
+        const { msg, user } = data;
 
-        dispatch({ type: LOGIN_ERROR, payload: msg });
+        const { loginFail } = user;
+
+        // console.log('Something went wrong...');
+
+        // console.log(`Number of login fail: ${loginFail}`);
+
+        let message = msg;
+        // let checkIsCountDown = false;
+
+        if (loginFail === 3) {
+          message = '3 fails, your account is lock in 1 minute';
+          dispatch({ type: OPEN_COUNTDONW });
+        } else {
+          dispatch({ type: CLOSE_COUNTDOWN });
+        }
+
+        // loginFail === 3
+        //   ? dispatch({ type: OPEN_COUNTDONW })
+        //   : dispatch({ type: CLOSE_COUNTDOWN });
+
+        if (loginFail === 6) {
+          message =
+            '6 fails, your account is lock 100 years, please contact with admin';
+        }
+
+        // const checkIsCountdonw = loginFail === 3 ? true : false;
+
+        dispatch({
+          type: LOGIN_ERROR,
+          payloadMsg: message,
+          payloadFail: loginFail,
+        });
       }
     }, 1500);
   };
@@ -187,6 +239,22 @@ const AppProvider = ({ children }) => {
     // setIsModalOpen(false);
   };
 
+  const closeCountDown = () => {
+    dispatch({ type: CLOSE_COUNTDOWN });
+  };
+
+  const openCountDown = () => {
+    dispatch({ type: OPEN_COUNTDONW });
+  };
+
+  const logginSuccess = () => {
+    dispatch({ type: IS_LOGIN });
+  };
+
+  const closeAlert = () => {
+    dispatch({ type: IS_ALERT });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -200,6 +268,12 @@ const AppProvider = ({ children }) => {
         openSidebar,
         logout,
         firstLogin,
+        closeCountDown,
+        openCountDown,
+        showLoading,
+        hideLoading,
+        logginSuccess,
+        closeAlert,
       }}
     >
       {children}

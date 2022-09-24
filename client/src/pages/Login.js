@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Loading, Alert } from '../components';
+import React, { useState, useEffect } from 'react';
+import { Loading, Alert, CountDown } from '../components';
 import { useGlobalContext } from '../context/appContext';
 import loginImage from '../assets/images/login_1.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
@@ -20,14 +20,17 @@ const Login = () => {
     typeErrorForm,
     login,
     isLogin,
+    isLoadingForm,
+    isCountDown,
+    isAlert,
   } = useGlobalContext();
 
   const [values, setValues] = useState(defaultState);
 
-  const [isFirst, setFirst] = useState(true);
-  const [isAlert, setAlert] = useState(false);
+  const [getErrValue, setErrValue] = useState({});
   const [isShowPwd, setShowPwd] = useState(false);
   const [pwdTypeText, setPwdType] = useState(false);
+  const [btnText, setBtnText] = useState('Login');
 
   const navigate = useNavigate();
 
@@ -44,24 +47,29 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setBtnText('Login is processing...');
+
+    if (!values.username || !values.password) {
+      setErrValue({ isErrValue: true, msg: 'Please provide all values' });
+
+      return;
+    }
+
+    setErrValue({ isErrValue: false, msg: '' });
 
     login({ username: values.username, password: values.password });
-
-    setAlert(!isAlert);
-
-    // if (isLogin) {
-    //   // switchPage();
-    //   setTimeout(() => {
-    //     navigate('/dashboard');
-    //   }, 3000);
-    // } else {
-    // }
-
-    // switchPage();
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 3000);
   };
+
+  useEffect(() => {
+    if (isLogin) {
+      console.log('-----------navigate success here--------------');
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 3500);
+    } else {
+      console.log('navigate error here');
+    }
+  }, [isLogin]);
 
   if (isLoading) {
     return <Loading></Loading>;
@@ -78,7 +86,7 @@ const Login = () => {
         </h1>
 
         <form className="login__form" onSubmit={handleSubmit}>
-          {isAlert && (
+          {isAlert && isErrorForm && (
             <Alert
               isError={isErrorForm}
               typeError={typeErrorForm}
@@ -90,8 +98,19 @@ const Login = () => {
               Username
             </label>
 
+            <span
+              className={
+                getErrValue.isErrValue ? 'form__error' : 'form__success'
+              }
+            >
+              {getErrValue.msg}
+            </span>
+
             <input
               type="text"
+              // className={
+              //   isCountDown ? 'form-input form-input__disabled' : 'form-input'
+              // }
               className="form-input"
               id="name"
               name="username"
@@ -104,8 +123,21 @@ const Login = () => {
               Password
             </label>
 
+            <span
+              className={
+                getErrValue.isErrValue ? 'form__error' : 'form__success'
+              }
+            >
+              {getErrValue.msg}
+            </span>
+
             <input
               type={pwdTypeText ? 'text' : 'password'}
+              // className={
+              //   isCountDown
+              //     ? 'form-input form-input__pwd form-input__disabled'
+              //     : 'form-input form-input__pwd'
+              // }
               className="form-input form-input__pwd"
               id="password"
               name="password"
@@ -137,7 +169,17 @@ const Login = () => {
             </Link>
           </p>
 
-          <button className="btn">Login</button>
+          <button
+            type="submit"
+            className="btn"
+            disabled={isLoadingForm ? true : isCountDown ? true : false}
+          >
+            {isLoadingForm
+              ? 'Loading is process...'
+              : isCountDown
+              ? 'Cannot login now...'
+              : 'Login'}
+          </button>
         </form>
       </div>
     </section>

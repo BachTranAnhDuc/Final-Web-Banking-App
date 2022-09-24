@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
+import User from '../models/User.js';
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = async (err, req, res, next) => {
   // console.log(err);
   let customError = {
     // set default
@@ -27,7 +28,28 @@ const errorHandler = (err, req, res, next) => {
     customError.statusCode = 404;
   }
 
-  return res.status(customError.statusCode).json({ msg: customError.msg });
+  // console.log(req.body);
+
+  const { username } = req.body;
+
+  const inputUser = await User.findOne({ username: username });
+
+  if (inputUser.role !== 'admin') {
+    const numberOfFail = inputUser.loginFail;
+
+    inputUser.loginFail = numberOfFail + 1;
+
+    inputUser.save();
+  }
+
+  // console.log(username);
+  // console.log(inputUser);
+
+  // const loginFail = { inputUser };
+
+  return res
+    .status(customError.statusCode)
+    .json({ msg: customError.msg, user: inputUser });
 };
 
 export default errorHandler;
