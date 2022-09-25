@@ -22,6 +22,8 @@ import {
   HIDE_LOADING,
   IS_LOGIN,
   IS_ALERT,
+  RESET_LOGIN_FORM,
+  RESET_ALERT,
 } from './action';
 
 const reducer = (state, action) => {
@@ -63,6 +65,7 @@ const reducer = (state, action) => {
       isLoadingForm: false,
       numberOfLoginFail: action.payloadFail,
       styleAlert: 'form__alert form__alert--success',
+      styleInputLogin: action.payloadStyle,
     };
   }
 
@@ -77,6 +80,7 @@ const reducer = (state, action) => {
       isLogin: false,
       numberOfLoginFail: action.payloadFail,
       styleAlert: 'form__alert form__alert--error',
+      styleInputLogin: action.payloadStyle,
     };
   }
 
@@ -132,23 +136,34 @@ const reducer = (state, action) => {
   if (action.type === FIRST_LOGIN_BEGIN) {
     return {
       ...state,
-      isErrorForm: false,
+      isErrorForm: true,
       messageErrorForm: 'Loading is processing...',
       typeErrorForm: 'processing',
+      styleAlert: 'form__alert form__alert--processing',
     };
   }
   if (action.type === FIRST_LOGIN_SUCCESS) {
     return {
       ...state,
-      isErrorForm: false,
+      isErrorForm: true,
+      styleAlert: 'form__alert form__alert--success',
       messageErrorForm: 'Changing success',
       typeErrorForm: 'success',
       token: action.payloadToken,
       user: action.payloadUser,
       isFirstLogin: action.payloadIsFirst,
+      styleInputLogin: action.payloadStyle,
     };
   }
   if (action.type === FIRST_LOGIN_ERROR) {
+    return {
+      ...state,
+      isErrorForm: true,
+      messageErrorForm: action.payloadMsg,
+      styleInputLogin: action.payloadStyle,
+      styleAlert: 'form__alert form__alert--error',
+      isFirstLogin: true,
+    };
   }
 
   if (action.type === OPEN_COUNTDONW) {
@@ -180,7 +195,28 @@ const reducer = (state, action) => {
   if (action.type === IS_ALERT) {
     return {
       ...state,
-      isAlert: false,
+      isErrorForm: false,
+    };
+  }
+
+  if (action.type === RESET_LOGIN_FORM) {
+    return {
+      ...state,
+      styleInputLogin: {
+        isUserErr: 'default',
+        isPwdForm: 'default',
+        isFirstPwd: 'default',
+        isFirstPwdConfirm: 'default',
+        style: 'form-input',
+      },
+    };
+  }
+
+  if (action.type === RESET_ALERT) {
+    return {
+      ...state,
+      isErrorForm: false,
+      messageErrorForm: '',
     };
   }
 };

@@ -32,24 +32,31 @@ const errorHandler = async (err, req, res, next) => {
 
   const { username } = req.body;
 
+  // find user
   const inputUser = await User.findOne({ username: username });
 
-  if (inputUser.role !== 'admin') {
-    const numberOfFail = inputUser.loginFail;
+  // check if exist user
+  if (inputUser) {
+    // ckech is admin
+    if (inputUser.role !== 'admin') {
+      const numberOfFail = inputUser.loginFail;
 
-    if (numberOfFail < 6) {
-      inputUser.loginFail = numberOfFail + 1;
-    } else {
-      inputUser.loginFail = 6;
+      if (numberOfFail < 6) {
+        inputUser.loginFail = numberOfFail + 1;
+      } else {
+        inputUser.loginFail = 6;
+      }
+
+      inputUser.save();
     }
-
-    inputUser.save();
   }
 
   // console.log(username);
   // console.log(inputUser);
 
   // const loginFail = { inputUser };
+
+  console.log('Catch error here');
 
   return res
     .status(customError.statusCode)

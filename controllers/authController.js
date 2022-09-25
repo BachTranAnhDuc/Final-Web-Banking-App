@@ -22,8 +22,16 @@ import {
 const login = async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password) {
-    throw new badRequestError('Please provide email and password');
+  if (!username && !password) {
+    throw new badRequestError('Please provide username and password');
+  }
+
+  if (!username) {
+    throw new badRequestError('Please provide username');
+  }
+
+  if (!password) {
+    throw new badRequestError('Please provide password');
   }
 
   const user = await User.findOne({ username });
@@ -31,7 +39,9 @@ const login = async (req, res) => {
   // console.log(`Is first login: ${isFirstLogin}`);
 
   if (!user) {
-    throw new badRequestError('Can not find user');
+    throw new badRequestError(
+      'Can not find user, please provide true username'
+    );
   }
 
   const { isFirstLogin } = user;
@@ -39,12 +49,6 @@ const login = async (req, res) => {
   const isPassword = await user.comparePassword(password);
 
   if (!isPassword) {
-    // const numberOfFail = user.loginFail;
-
-    // user.loginFail = numberOfFail + 1;
-
-    // user.save();
-
     throw new unauthenticationError('Invalid password');
   }
 
@@ -101,17 +105,6 @@ const register = async (req, res) => {
 
   const isEmailExist = await User.findOne({ email: emailReq });
   const isPhoneExist = await User.findOne({ phone: phoneReq });
-
-  // console.log(
-  //   isPhoneExist,
-  //   phoneReq,
-  //   emailReq,
-  //   name,
-  //   address,
-  //   birth,
-  //   imageFront,
-  //   imageBack
-  // );
 
   if (isPhoneExist) {
     throw new badRequestError(
@@ -230,16 +223,21 @@ const firstLogin = async (req, res) => {
 
   const getUser = await User.findById({ _id: userId });
 
+  if (!pwd) {
+    console.log('password is empty here');
+    throw new badRequestError('Password must not empty');
+  }
+  if (pwd.length < 6) {
+    throw new badRequestError('Password must at least 6 characters');
+  }
+  if (!pwdConfirm) {
+    console.log('password is empty here');
+    throw new badRequestError('Password confirm must not empty');
+  }
+
   if (pwd !== pwdConfirm) {
     throw new badRequestError('Confirm password is not correct!');
   }
-
-  // console.log('first login get user');
-  // console.log(user);
-  // const { password } = user;
-  // console.log(`pwd: ${password}`);
-
-  // user.password = pwd;
 
   getUser.password = pwd;
   getUser.isFirstLogin = false;

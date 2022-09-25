@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Loading, Alert } from '../components';
 import { useGlobalContext } from '../context/appContext';
 import loginImage from '../assets/images/login_1.svg';
@@ -24,6 +24,9 @@ const FirstLogin = () => {
     isLogin,
     firstLogin,
     logout,
+    resetAlert,
+    styleInputLogin,
+    isFirstLogin,
   } = useGlobalContext();
 
   const [values, setValues] = useState(defaultState);
@@ -57,27 +60,23 @@ const FirstLogin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!values.pwd || !values.pwdConfirm) {
-      setErrValue({ isErrValue: true, msg: 'Please provide all values' });
-
-      return;
-    }
-
-    if (values.pwd !== values.pwdConfirm) {
-      setErrValue({ isErrValue: true, msg: 'Password is not match' });
-
-      return;
-    }
-
-    setErrValue({ isErrValue: false, msg: 'Valid password' });
     setAlert(!isAlert);
 
     firstLogin({ pwd: values.pwd, pwdConfirm: values.pwdConfirm });
-
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 3000);
   };
+
+  useEffect(() => {
+    switchPage();
+    resetAlert();
+    if (!isFirstLogin) {
+      console.log('-----------navigate success here--------------');
+      navigate('/dashboard');
+      // setTimeout(() => {
+      // }, 3000);
+    } else {
+      console.log('navigate error here');
+    }
+  }, [isFirstLogin]);
 
   if (isLoading) {
     return <Loading></Loading>;
@@ -97,7 +96,7 @@ const FirstLogin = () => {
           Your first login you need to change password
         </span>
 
-        {isAlert && (
+        {isErrorForm && (
           <Alert
             isError={isErrorForm}
             typeError={typeErrorForm}
@@ -109,14 +108,20 @@ const FirstLogin = () => {
           <label htmlFor="pwd" className="form-label form-label__first-login">
             New Password
           </label>
-          <span
+          {/* <span
             className={getErrValue.isErrValue ? 'form__error' : 'form__success'}
           >
             {getErrValue.msg}
-          </span>
+          </span> */}
           <input
             type={pwdTypeText ? 'text' : 'password'}
-            className="form-input form-input__pwd"
+            className={
+              styleInputLogin.isFirstPwd === 'true'
+                ? 'form-input form-input__error'
+                : styleInputLogin.isFirstPwd === 'false'
+                ? 'form-input form-input__success'
+                : 'form-input'
+            }
             id="pwd"
             name="pwd"
             value={values.pwd}
@@ -141,14 +146,20 @@ const FirstLogin = () => {
           >
             Confirm Password
           </label>
-          <span
+          {/* <span
             className={getErrValue.isErrValue ? 'form__error' : 'form__success'}
           >
             {getErrValue.msg}
-          </span>
+          </span> */}
           <input
             type={pwdTypeText ? 'text' : 'password'}
-            className="form-input form-input__pwd"
+            className={
+              styleInputLogin.isFirstPwdConfirm === 'true'
+                ? 'form-input form-input__error'
+                : styleInputLogin.isFirstPwdConfirm === 'false'
+                ? 'form-input form-input__success'
+                : 'form-input'
+            }
             id="pwdConfirm"
             name="pwdConfirm"
             value={values.pwdConfirm}

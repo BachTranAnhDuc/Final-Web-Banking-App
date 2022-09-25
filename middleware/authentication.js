@@ -17,16 +17,9 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    // const { user } = isTokenValid(token);
-    // req.user = user;
-
-    // console.log(user);
-
     const { userId, phone, email } = isTokenValid(token);
 
     const user = { userId, phone, email };
-
-    // console.log(isTokenValid(token));
 
     console.log('Authen user here');
     console.log(user);

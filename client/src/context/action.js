@@ -30,3 +30,6 @@ export const HIDE_LOADING = 'HIDE_LOADING';
 export const IS_LOGIN = 'IS_LOGIN';
 
 export const IS_ALERT = 'IS_ALERT';
+
+export const RESET_LOGIN_FORM = 'RESET_LOGIN_FORM';
+export const RESET_ALERT = 'RESET_ALERT';

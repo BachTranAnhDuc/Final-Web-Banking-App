@@ -27,6 +27,8 @@ import {
   HIDE_LOADING,
   IS_LOGIN,
   IS_ALERT,
+  RESET_LOGIN_FORM,
+  RESET_ALERT,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -51,6 +53,13 @@ const defaultState = {
   numberOfLoginFail: 0,
   isCountDown: false,
   styleAlert: '',
+  styleInputLogin: {
+    isUserErr: 'default',
+    isPwdErr: 'default',
+    isFirstPwd: 'default',
+    isFirstPwdConfirm: 'default',
+    style: 'form-input',
+  },
   isAlert: true,
 };
 
@@ -86,8 +95,17 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem('isFirstLogin', isFirstLogin);
   };
 
+  const resetLoginForm = () => {
+    dispatch({ type: RESET_LOGIN_FORM });
+  };
+
+  const resetAlert = () => {
+    dispatch({ type: RESET_ALERT });
+  };
+
   const login = async (userInput) => {
     dispatch({ type: LOGIN_BEGIN });
+    resetLoginForm();
 
     setTimeout(async () => {
       try {
@@ -98,11 +116,7 @@ const AppProvider = ({ children }) => {
         const { msg, user, token, isFirstLogin } = data;
         const { loginFail } = user;
 
-        console.log(user);
-
         addUserToLocalStorage({ user, token, isFirstLogin });
-
-        // console.log(`Number of login fail: ${user.loginFail}`);
 
         if (loginFail === 6) {
           dispatch({
@@ -110,6 +124,12 @@ const AppProvider = ({ children }) => {
             payloadMsg:
               '6 fails, your account is blocked forever, please contact with admin',
             payloadFail: loginFail,
+            payloadStyle: {
+              ...defaultState.styleInputLogin,
+              isUserErr: 'false',
+              isPwdErr: 'false',
+              style: 'form-input',
+            },
           });
         } else {
           dispatch({
@@ -119,6 +139,12 @@ const AppProvider = ({ children }) => {
             payloadToken: token,
             payloadIsFirst: isFirstLogin,
             payloadFail: loginFail,
+            payloadStyle: {
+              ...defaultState.styleInputLogin,
+              isUserErr: 'false',
+              isPwdErr: 'false',
+              style: 'form-input',
+            },
           });
         }
 
@@ -128,38 +154,76 @@ const AppProvider = ({ children }) => {
         const { data } = response;
         const { msg, user } = data;
 
-        const { loginFail } = user;
-
-        // console.log('Something went wrong...');
-
-        // console.log(`Number of login fail: ${loginFail}`);
-
         let message = msg;
-        // let checkIsCountDown = false;
+        let styleInput = 'form-input';
+        let isUserErr = 'false';
+        let isPwdErr = 'false';
 
-        if (loginFail === 3) {
-          message = '3 fails, your account is lock in 1 minute';
-          dispatch({ type: OPEN_COUNTDONW });
+        // catch msg err
+        // resetLoginForm();
+
+        if (user) {
+          if (message === 'Please provide password') {
+            styleInput = 'form-input form-input__error';
+            isPwdErr = 'true';
+          }
+
+          if (message === 'Invalid password') {
+            styleInput = 'form-input form-input__error';
+            isPwdErr = 'true';
+          }
+
+          const { loginFail } = user;
+
+          if (loginFail === 3) {
+            message = '3 fails, your account is lock in 1 minute';
+            dispatch({ type: OPEN_COUNTDONW });
+          } else {
+            dispatch({ type: CLOSE_COUNTDOWN });
+          }
+
+          if (loginFail === 6) {
+            message =
+              '6 fails, your account is blocked forever, please contact with admin';
+          }
+
+          dispatch({
+            type: LOGIN_ERROR,
+            payloadMsg: message,
+            payloadFail: loginFail,
+            payloadStyle: {
+              isUserErr: isUserErr,
+              isPwdErr: isPwdErr,
+              style: styleInput,
+            },
+          });
         } else {
-          dispatch({ type: CLOSE_COUNTDOWN });
+          if (message === 'Please provide username') {
+            styleInput = 'form-input form-input__error';
+            isUserErr = 'true';
+          }
+          if (message === 'Please provide username and password') {
+            styleInput = 'form-input form-input__error';
+            isUserErr = 'true';
+            isPwdErr = 'true';
+          }
+          if (message === 'Can not find user, please provide true username') {
+            styleInput = 'form-input form-input__error';
+            isUserErr = 'true';
+          }
+
+          dispatch({
+            type: LOGIN_ERROR,
+            payloadMsg: message,
+            payloadFail: 0,
+            payloadStyle: {
+              ...defaultState.styleInputLogin,
+              isUserErr: isUserErr,
+              isPwdErr: isPwdErr,
+              style: styleInput,
+            },
+          });
         }
-
-        // loginFail === 3
-        //   ? dispatch({ type: OPEN_COUNTDONW })
-        //   : dispatch({ type: CLOSE_COUNTDOWN });
-
-        if (loginFail === 6) {
-          message =
-            '6 fails, your account is blocked forever, please contact with admin';
-        }
-
-        // const checkIsCountdonw = loginFail === 3 ? true : false;
-
-        dispatch({
-          type: LOGIN_ERROR,
-          payloadMsg: message,
-          payloadFail: loginFail,
-        });
       }
     }, 1500);
   };
@@ -188,6 +252,8 @@ const AppProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    resetLoginForm();
+    resetAlert();
     try {
       const log = await axios.post('/api/v1/auth/logout');
 
@@ -201,34 +267,70 @@ const AppProvider = ({ children }) => {
   };
 
   const firstLogin = async ({ pwd, pwdConfirm }) => {
+    resetLoginForm();
     dispatch({ type: FIRST_LOGIN_BEGIN });
 
-    try {
-      const changePwd = await axios.post('/api/v1/auth/first-login', {
-        pwd,
-        pwdConfirm,
-      });
+    setTimeout(async () => {
+      try {
+        const changePwd = await axios.post('/api/v1/auth/first-login', {
+          pwd,
+          pwdConfirm,
+        });
 
-      const { data } = changePwd;
+        const { data } = changePwd;
 
-      const { msg, token, user, isFirstLogin } = data;
+        const { msg, token, user, isFirstLogin } = data;
 
-      addUserToLocalStorage({ user, token, isFirstLogin });
+        addUserToLocalStorage({ user, token, isFirstLogin });
 
-      console.log('First login success');
-      console.log(data);
+        console.log('First login success');
+        console.log(data);
 
-      dispatch({
-        type: FIRST_LOGIN_SUCCESS,
-        payloadMsg: msg,
-        payloadUser: user,
-        payloadToken: token,
-        payloadIsFirst: isFirstLogin,
-      });
-    } catch (error) {
-      console.log(error);
-      dispatch({ type: FIRST_LOGIN_ERROR });
-    }
+        dispatch({
+          type: FIRST_LOGIN_SUCCESS,
+          payloadMsg: msg,
+          payloadUser: user,
+          payloadToken: token,
+          payloadIsFirst: isFirstLogin,
+          payloadStyle: {
+            ...defaultState.styleInputLogin,
+            isFirstPwd: 'false',
+            isFirstPwdConfirm: 'false',
+          },
+        });
+      } catch (error) {
+        const { response } = error;
+        const { data } = response;
+        const { msg } = data;
+
+        let isFirstPwd = 'default';
+        let isFirstPwdConfirm = 'default';
+
+        if (
+          msg === 'Password must not empty' ||
+          msg === 'Password must at at least 6 characters'
+        ) {
+          isFirstPwd = 'true';
+        }
+        if (
+          msg === 'Password confirm must not empty' ||
+          msg === 'Confirm password is not correct!'
+        ) {
+          isFirstPwdConfirm = 'true';
+        }
+
+        console.log(response);
+        dispatch({
+          type: FIRST_LOGIN_ERROR,
+          payloadStyle: {
+            ...defaultState.styleInputLogin,
+            isFirstPwd: isFirstPwd,
+            isFirstPwdConfirm: isFirstPwdConfirm,
+          },
+          payloadMsg: msg,
+        });
+      }
+    }, 1500);
   };
 
   const openSidebar = () => {
@@ -283,6 +385,8 @@ const AppProvider = ({ children }) => {
         hideLoading,
         logginSuccess,
         closeAlert,
+        resetLoginForm,
+        resetAlert,
       }}
     >
       {children}

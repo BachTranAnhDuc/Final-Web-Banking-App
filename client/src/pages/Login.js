@@ -24,6 +24,8 @@ const Login = () => {
     isCountDown,
     isAlert,
     numberOfLoginFail,
+    styleInputLogin,
+    resetLoginForm,
   } = useGlobalContext();
 
   const [values, setValues] = useState(defaultState);
@@ -32,6 +34,7 @@ const Login = () => {
   const [isShowPwd, setShowPwd] = useState(false);
   const [pwdTypeText, setPwdType] = useState(false);
   const [btnText, setBtnText] = useState('Login');
+  const [getClassInput, setClassInput] = useState('form-input');
 
   const navigate = useNavigate();
 
@@ -46,19 +49,38 @@ const Login = () => {
     setPwdType(!pwdTypeText);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setBtnText('Login is processing...');
-
-    if (!values.username || !values.password) {
-      setErrValue({ isErrValue: true, msg: 'Please provide all values' });
+  const checkEmptyValue = (inputValue) => {
+    if (!inputValue) {
+      setErrValue({ isErrValue: true, msg: 'Please provide value' });
+      setClassInput('form-input form-input__error');
 
       return;
     }
+  };
+
+  const checkEmptyValues = (inputValues) => {
+    inputValues.forEach((el) => {
+      checkEmptyValue(el);
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // setBtnText('Login is processing...');
+
+    // if (!values.username || !values.password) {
+    //   setErrValue({ isErrValue: true, msg: 'Please provide all values' });
+
+    //   return;
+    // }
+
+    checkEmptyValues([values.username, values.password]);
 
     setErrValue({ isErrValue: false, msg: '' });
 
     login({ username: values.username, password: values.password });
+
+    // resetLoginForm();
   };
 
   useEffect(() => {
@@ -110,9 +132,15 @@ const Login = () => {
             <input
               type="text"
               // className={
-              //   isCountDown ? 'form-input form-input__disabled' : 'form-input'
+              //   styleInputLogin.isUserErr ? styleInputLogin.style : 'form-input'
               // }
-              className="form-input"
+              className={
+                styleInputLogin.isUserErr === 'true'
+                  ? 'form-input form-input__error'
+                  : styleInputLogin.isUserErr === 'false'
+                  ? 'form-input form-input__success'
+                  : 'form-input'
+              }
               id="name"
               name="username"
               value={values.username}
@@ -134,12 +162,13 @@ const Login = () => {
 
             <input
               type={pwdTypeText ? 'text' : 'password'}
-              // className={
-              //   isCountDown
-              //     ? 'form-input form-input__pwd form-input__disabled'
-              //     : 'form-input form-input__pwd'
-              // }
-              className="form-input form-input__pwd"
+              className={
+                styleInputLogin.isPwdErr === 'true'
+                  ? 'form-input form-input__error'
+                  : styleInputLogin.isPwdErr === 'false'
+                  ? 'form-input form-input__success'
+                  : 'form-input'
+              }
               id="password"
               name="password"
               value={values.password}

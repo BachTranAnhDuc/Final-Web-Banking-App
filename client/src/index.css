@@ -659,6 +659,14 @@ body {
   color: var(--color-primary-light-1);
 }
 
+.form-input__error {
+  border: 2px solid var(--color-tertiary-dark-3);
+}
+
+.form-input__success {
+  border: 2px solid var(--color-primary-light-3);
+}
+
 .form-input__pwd {
 }
 
@@ -846,7 +854,7 @@ body {
 
   /* justify-items: center; */
 
-  gap: 3.2rem;
+  gap: 1.6rem;
 }
 
 .form-control__first-login {
