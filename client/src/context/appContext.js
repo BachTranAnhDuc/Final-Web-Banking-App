@@ -114,7 +114,7 @@ const AppProvider = ({ children }) => {
         const { data } = postUser;
 
         const { msg, user, token, isFirstLogin } = data;
-        const { loginFail } = user;
+        const { loginFail, identify } = user;
 
         addUserToLocalStorage({ user, token, isFirstLogin });
 
@@ -123,6 +123,19 @@ const AppProvider = ({ children }) => {
             type: LOGIN_ERROR,
             payloadMsg:
               '6 fails, your account is blocked forever, please contact with admin',
+            payloadFail: loginFail,
+            payloadStyle: {
+              ...defaultState.styleInputLogin,
+              isUserErr: 'false',
+              isPwdErr: 'false',
+              style: 'form-input',
+            },
+          });
+        } else if (identify === 'fail') {
+          dispatch({
+            type: LOGIN_ERROR,
+            payloadMsg:
+              'Your account is blocked forever, contact with 18001008 to solve this problem!',
             payloadFail: loginFail,
             payloadStyle: {
               ...defaultState.styleInputLogin,

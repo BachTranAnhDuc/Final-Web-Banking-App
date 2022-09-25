@@ -2,7 +2,11 @@ import express from 'express';
 
 const router = express.Router();
 
-import { getAllUsers, getUser } from '../controllers/userController.js';
+import {
+  getAllUsers,
+  getUser,
+  identifyUser,
+} from '../controllers/userController.js';
 import { unauthorizedError } from '../error/index.js';
 import { authenticateUser, authorizePermissions } from '../middleware/index.js';
 
@@ -12,5 +16,8 @@ router
 router
   .route('/:id')
   .get(authenticateUser, authorizePermissions(['admin']), getUser);
+router
+  .route('/identify/:id')
+  .post(authenticateUser, authorizePermissions(['admin']), identifyUser);
 
 export default router;

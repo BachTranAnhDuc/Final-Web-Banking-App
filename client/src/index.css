@@ -625,6 +625,7 @@ body {
 
 .form-input:focus {
   outline: none;
+  /* border: 2px solid black; */
   border: 2px solid var(--color-primary-dark-5);
 }
 

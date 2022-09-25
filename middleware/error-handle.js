@@ -24,7 +24,9 @@ const errorHandler = async (err, req, res, next) => {
   }
 
   if (err.name === 'CastError') {
-    customError.msg = `No item found with id : ${err.value}`;
+    // console.log(err);
+    const { _id: idReq } = err.value;
+    customError.msg = `No item found with id: ${idReq}`;
     customError.statusCode = 404;
   }
 

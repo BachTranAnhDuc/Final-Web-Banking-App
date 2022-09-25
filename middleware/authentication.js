@@ -17,9 +17,9 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    const { userId, phone, email } = isTokenValid(token);
+    const { userId, phone, email, role } = isTokenValid(token);
 
-    const user = { userId, phone, email };
+    const user = { userId, phone, email, role };
 
     console.log('Authen user here');
     console.log(user);
@@ -35,11 +35,13 @@ const authenticateUser = async (req, res, next) => {
 
 const authorizePermissions = (roles) => {
   return (req, res, next) => {
+    console.log('Check permission here');
     const roleUser = req.user.role;
 
     console.log(req.user);
 
     if (!roles.includes(roleUser)) {
+      console.log('Check permission error here');
       throw new unauthorizedError(`${roleUser} cannot access this router`);
     }
 

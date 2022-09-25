@@ -30,6 +30,8 @@ const Dashboard = () => {
       <span>
         {identify === 'processing'
           ? 'Your account is processing....'
+          : identify === 'fail'
+          ? 'Your account is banded please contact with admin to solve this problem'
           : 'Success'}
       </span>
     </section>

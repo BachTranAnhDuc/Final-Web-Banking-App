@@ -30,4 +30,19 @@ const getUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Get user success', user: user });
 };
 
-export { getAllUsers, getUser };
+const identifyUser = async (req, res) => {
+  const { valueIdentify } = req.body;
+  const { id: idReq } = req.params;
+
+  // console.log(id);
+
+  const user = await User.findById({ _id: idReq });
+
+  user.identify = valueIdentify;
+
+  user.save();
+
+  res.status(StatusCodes.OK).json({ msg: 'Identify user success', user: user });
+};
+
+export { getAllUsers, getUser, identifyUser };
