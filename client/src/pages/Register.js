@@ -36,6 +36,8 @@ const Register = () => {
     uploadImage,
   } = useGlobalContext();
 
+  const ref = useRef(null);
+
   const [getNext, setNext] = useState(0);
   const [getPercent, setPercent] = useState(0);
 
@@ -43,6 +45,8 @@ const Register = () => {
 
   const [isValid, setValid] = useState(true);
   const [isLoadingForm, setLoadingForm] = useState(false);
+
+  const [test, setTest] = useState(null);
 
   const navigate = useNavigate();
 
@@ -53,9 +57,7 @@ const Register = () => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
 
-      console.log(img);
-
-      uploadImage(img);
+      uploadImage(img, e.target.name);
 
       setValues({ ...values, [e.target.name]: e.target.value });
     } else {
@@ -90,6 +92,8 @@ const Register = () => {
     e.preventDefault();
 
     console.log('Submit success');
+
+    console.log(e.target.imageFront);
 
     register({
       name: values.name,

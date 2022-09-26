@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useGlobalContext } from '../context/appContext';
 
 import Logo from '../assets/images/logos/bankist.svg';
@@ -100,7 +100,9 @@ const NavDashboard = () => {
         </MenuItem>
         <MenuItem className={'nav__menu--item'}>
           <VscSettingsGear></VscSettingsGear>
-          <Link to="/dashboard/setting">Setting</Link>
+          <Link to="/dashboard/setting" className="btn-link">
+            Setting
+          </Link>
         </MenuItem>
 
         <MenuDivider />

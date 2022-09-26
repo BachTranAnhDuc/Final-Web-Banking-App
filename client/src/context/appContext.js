@@ -104,13 +104,16 @@ const AppProvider = ({ children }) => {
     dispatch({ type: RESET_ALERT });
   };
 
-  const uploadImage = async (img) => {
+  const uploadImage = async (imgFile, imgName) => {
     // dispatch({ type: UPLOAD_IMAGE });
 
     let imageValue;
 
+    const formData = new FormData();
+    formData.append(imgName, imgFile);
+
     try {
-      const res = await axios.post('/api/v1/auth/upload', img, {
+      const res = await axios.post('/api/v1/auth/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
