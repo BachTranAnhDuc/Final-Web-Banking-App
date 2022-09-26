@@ -24,6 +24,7 @@ import {
   IS_ALERT,
   RESET_LOGIN_FORM,
   RESET_ALERT,
+  UPLOAD_IMAGE,
 } from './action';
 
 const reducer = (state, action) => {
@@ -217,6 +218,12 @@ const reducer = (state, action) => {
       ...state,
       isErrorForm: false,
       messageErrorForm: '',
+    };
+  }
+
+  if (action.type === UPLOAD_IMAGE) {
+    return {
+      ...state,
     };
   }
 };

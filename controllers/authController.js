@@ -97,21 +97,40 @@ const uploadUserImage = async (req, res, next) => {
   // next();
 };
 
-// const uploadUserImage = async (req, res) => {
-//   // const result = await cloudinary.v2.uploader.upload(
-//   //   req.files.image.tempFilePath,
-//   //   {
-//   //     use_filename: true,
-//   //     folder: `bankist`,
-//   //   }
-//   // );
+// const uploadUserImage1 = async (req, res) => {
+//   const result = await cloudinary.v2.uploader.upload(
+//     req.files.image.tempFilePath,
+//     {
+//       use_filename: true,
+//       folder: `bankist`,
+//     }
+//   );
 
-//   // fs.unlinkSync(req.files.image.tempFilePath);
+//   fs.unlinkSync(req.files.image.tempFilePath);
 
-//   console.log(req.files);
+//   console.log(req.files.image);
 
-//   res.status(StatusCodes.OK).json({ msg: 'upload success' });
+//   res
+//     .status(StatusCodes.OK)
+//     .json({ msg: 'upload success', data: result.secure_url });
 // };
+const uploadUserImage1 = async (req, res) => {
+  const result = await cloudinary.v2.uploader.upload(
+    req.files.imageFront.tempFilePath,
+    {
+      use_filename: true,
+      folder: `bankist`,
+    }
+  );
+
+  fs.unlinkSync(req.files.imageFront.tempFilePath);
+
+  console.log(req.files.imageFront);
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'upload success', data: result.secure_url });
+};
 
 const uploadImage = async (tempPath, username) => {
   const up = await cloudinary.v2.uploader.upload(
@@ -333,7 +352,7 @@ export {
   forgotPassword,
   verifyEmail,
   firstLogin,
-  uploadUserImage,
+  uploadUserImage1,
 };
 
 // admin: 620277
