@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import cloudinary from 'cloudinary';
 import fs from 'fs';
 
+
 import {
   sendVerificationEmail,
   createJWT,
@@ -135,7 +136,6 @@ const register = async (req, res) => {
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
   const role = isFirstAccount ? 'admin' : 'user';
-
   const randomUsername = uniqueRandom(100000000, 999999999);
   const randomPassword = uniqueRandom(100000, 999999);
 
@@ -163,7 +163,7 @@ const register = async (req, res) => {
   const rdPwd = randomPassword();
 
   console.log('image here');
-  // console.log(req.files);
+  console.log(req.body);
 
   const { imageFront, imageBack } = req.files;
   const { tempFilePath: tempFilePathFront } = imageFront;
