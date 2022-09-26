@@ -910,6 +910,14 @@ body {
 
 /* SETTING */
 .section-setting {
+  min-height: 100vh;
+  padding: 8rem 16rem;
+
+  /* background-color: #20c997; */
+
+  display: grid;
+
+  grid-template-rows: max-content minmax(6rem, 8rem) 1fr;
 }
 
 /* FOOTER */
