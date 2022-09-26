@@ -33,3 +33,5 @@ export const IS_ALERT = 'IS_ALERT';
 
 export const RESET_LOGIN_FORM = 'RESET_LOGIN_FORM';
 export const RESET_ALERT = 'RESET_ALERT';
+
+export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';

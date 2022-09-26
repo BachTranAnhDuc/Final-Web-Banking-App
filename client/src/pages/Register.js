@@ -5,6 +5,7 @@ import loginImg from '../assets/images/login.svg';
 import defaultImage from '../assets/images/avt/hacker.png';
 import { useNavigate } from 'react-router-dom';
 // import { Loading } from '../components/index.js';
+import axios from 'axios';
 
 import {
   GrFormPrevious,
@@ -32,6 +33,7 @@ const Register = () => {
     typeErrorForm,
     login,
     register,
+    uploadImage,
   } = useGlobalContext();
 
   const [getNext, setNext] = useState(0);
@@ -46,8 +48,20 @@ const Register = () => {
 
   // const { isError } = useGlobalContext();
 
-  const handleChangeValue = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+  const handleChangeValue = async (e) => {
+    let imageValue;
+    if (e.target.files && e.target.files[0]) {
+      let img = e.target.files[0];
+
+      console.log(img);
+
+      uploadImage(img);
+
+      setValues({ ...values, [e.target.name]: e.target.value });
+    } else {
+      setValues({ ...values, [e.target.name]: e.target.value });
+    }
+    // setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const handleClickPre = (e) => {

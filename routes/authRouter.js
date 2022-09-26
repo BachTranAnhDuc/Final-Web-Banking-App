@@ -10,7 +10,7 @@ import {
   verifyEmail,
   logout,
   firstLogin,
-  uploadUserImage,
+  uploadUserImage1,
 } from '../controllers/authController.js';
 
 import { unauthorizedError } from '../error/index.js';
@@ -21,6 +21,6 @@ router.route('/login').post(login);
 router.route('/verify-email').post(verifyEmail);
 router.route('/logout').post(logout);
 router.route('/first-login').post(authenticateUser, firstLogin);
-router.route('/upload').post(uploadUserImage);
+router.route('/upload').post(uploadUserImage1);
 
 export default router;

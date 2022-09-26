@@ -29,6 +29,7 @@ import {
   IS_ALERT,
   RESET_LOGIN_FORM,
   RESET_ALERT,
+  UPLOAD_IMAGE,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -101,6 +102,24 @@ const AppProvider = ({ children }) => {
 
   const resetAlert = () => {
     dispatch({ type: RESET_ALERT });
+  };
+
+  const uploadImage = async (img) => {
+    // dispatch({ type: UPLOAD_IMAGE });
+
+    let imageValue;
+
+    try {
+      const res = await axios.post('/api/v1/auth/upload', img, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      console.log(res);
+    } catch (error) {
+      imageValue = null;
+
+      console.log(error);
+    }
   };
 
   const login = async (userInput) => {
@@ -248,7 +267,11 @@ const AppProvider = ({ children }) => {
 
     setTimeout(async () => {
       try {
-        const postUser = await axios.post('/api/v1/auth/register', user);
+        const postUser = await axios.post('/api/v1/auth/register', user, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         console.log(postUser);
         dispatch({ type: REGISTER_SUCCESS, payload: postUser });
       } catch (error) {
@@ -400,6 +423,7 @@ const AppProvider = ({ children }) => {
         closeAlert,
         resetLoginForm,
         resetAlert,
+        uploadImage,
       }}
     >
       {children}
