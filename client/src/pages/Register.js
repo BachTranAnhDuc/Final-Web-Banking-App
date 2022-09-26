@@ -34,6 +34,8 @@ const Register = () => {
     login,
     register,
     uploadImage,
+    imgBack,
+    imgFront
   } = useGlobalContext();
 
   const ref = useRef(null);
@@ -56,13 +58,7 @@ const Register = () => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
 
-<<<<<<< HEAD
-      console.log(img);
-
-      uploadImage(img, e.target.value);
-=======
       uploadImage(img, e.target.name);
->>>>>>> 4efcf70b6f96b7b6a13d734fbe328139958aa829
 
       setValues({ ...values, [e.target.name]: e.target.value });
     } else {
@@ -98,7 +94,6 @@ const Register = () => {
 
     console.log('Submit success');
 
-    console.log(e.target.imageFront);
 
     register({
       name: values.name,
@@ -106,10 +101,10 @@ const Register = () => {
       phone: values.phone,
       birth: values.birth,
       address: values.address,
-      imageFront: values.imageFront,
-      imageBack: values.imageBack,
+      imageFront: imgFront,
+      imageBack: imgBack,
     });
-
+    
     switchPage();
 
     setValid(!isValid);

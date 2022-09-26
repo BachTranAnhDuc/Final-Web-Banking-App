@@ -167,7 +167,7 @@ const uploadImage = async (tempPath, username) => {
 };
 
 const register = async (req, res) => {
-  const { phone: phoneReq, email: emailReq, name, address, birth } = req.body;
+  const { phone: phoneReq, email: emailReq, name, address, birth , imageFront, imageBack } = req.body;
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
   const role = isFirstAccount ? 'admin' : 'user';
@@ -198,14 +198,14 @@ const register = async (req, res) => {
   const rdPwd = randomPassword();
 
   console.log('image here');
-  console.log(req.body);
+  /* console.log(req.body); */
 
-  const { imageFront, imageBack } = req.files;
+  /* const { imageFront, imageBack } = req.files;
   const { tempFilePath: tempFilePathFront } = imageFront;
   const { tempFilePath: tempFilePathBack } = imageBack;
 
   let imgF = '';
-  let imgB = '';
+  let imgB = ''; 
 
   try {
     const up1 = await uploadImage(tempFilePathBack, rdUsername);
@@ -216,7 +216,7 @@ const register = async (req, res) => {
   } catch (error) {
     console.log('Cannot upload image');
     console.log(error);
-  }
+  }*/
 
   // console.log('link url image here');
   // console.log(up1);
@@ -231,8 +231,8 @@ const register = async (req, res) => {
     verificationToken,
     username: rdUsername,
     password: rdPwd,
-    imageFront: imgF,
-    imageBack: imgB,
+    imageFront,
+    imageBack,
     role,
   });
 

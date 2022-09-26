@@ -30,6 +30,9 @@ import {
   RESET_LOGIN_FORM,
   RESET_ALERT,
   UPLOAD_IMAGE,
+  SAVE_IMAGE,
+  SAVE_IMAGE_FRONT,
+  SAVE_IMAGE_BACK,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -62,6 +65,8 @@ const defaultState = {
     style: 'form-input',
   },
   isAlert: true,
+  imgFront: '',
+  imgBack: ''
 };
 
 const AppContext = React.createContext();
@@ -103,26 +108,31 @@ const AppProvider = ({ children }) => {
   const resetAlert = () => {
     dispatch({ type: RESET_ALERT });
   };
-
+  /* const saveImg = (img) => {
+    dispatch({ type: SAVE_IMAGE, pageLoadImage: img});  
+  } */
   const uploadImage = async (imgFile, imgName) => {
     // dispatch({ type: UPLOAD_IMAGE });
 
     let imageValue;
-<<<<<<< HEAD
-    const formData = new FormData();
-    formData.append('imageFront', img)
-=======
-
     const formData = new FormData();
     formData.append(imgName, imgFile);
-
->>>>>>> 4efcf70b6f96b7b6a13d734fbe328139958aa829
     try {
-      const res = await axios.post('/api/v1/auth/upload', formData, {
+      const response = await axios.post('/api/v1/auth/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      console.log(res);
+      const {data} = response
+      const {msg,data: datasrc} = data;
+      //const {msg: msgFinal, data: dataFinal} = datasrc;
+      console.log(datasrc);
+      if(imgName === 'imageFront'){
+        dispatch({type: SAVE_IMAGE_FRONT,pageLoadImage: datasrc})
+      }
+      else{
+        dispatch({type: SAVE_IMAGE_BACK, pageLoadImage: datasrc})
+      }
+
     } catch (error) {
       imageValue = null;
 

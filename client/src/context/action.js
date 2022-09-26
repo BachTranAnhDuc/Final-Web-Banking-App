@@ -35,3 +35,5 @@ export const RESET_LOGIN_FORM = 'RESET_LOGIN_FORM';
 export const RESET_ALERT = 'RESET_ALERT';
 
 export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
+export const SAVE_IMAGE_FRONT = 'SAVE_IMAGE_FRONT';
+export const SAVE_IMAGE_BACK = 'SAVE_IMAGE_BACK';

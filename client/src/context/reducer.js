@@ -25,6 +25,8 @@ import {
   RESET_LOGIN_FORM,
   RESET_ALERT,
   UPLOAD_IMAGE,
+  SAVE_IMAGE_BACK,
+  SAVE_IMAGE_FRONT
 } from './action';
 
 const reducer = (state, action) => {
@@ -226,6 +228,25 @@ const reducer = (state, action) => {
       ...state,
     };
   }
+
+  if(action.type === SAVE_IMAGE_BACK) {
+    return{
+      ...state,
+      /* imgs:{...imgs,imageBack: action.pageLoadImage} */
+      imgBack: action.pageLoadImage
+    }
+  }
+
+  if(action.type === SAVE_IMAGE_FRONT) {
+    return{
+      ...state,
+      /* imgs:{...imgs,imageBack: action.pageLoadImage} */
+      imgFront: action.pageLoadImage
+    }
+  }
+
 };
+
+  
 
 export default reducer;
