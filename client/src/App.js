@@ -11,6 +11,7 @@ import {
   ProtectedRoute,
   FirstLogin,
   ProtectedRouteDash,
+  Setting,
 } from './pages';
 import { ShareLayout, ShareLayoutDash } from './components';
 
@@ -40,6 +41,17 @@ const App = () => {
               <ProtectedRoute>
                 <ProtectedRouteDash>
                   <Dashboard></Dashboard>
+                </ProtectedRouteDash>
+              </ProtectedRoute>
+            }
+          ></Route>
+
+          <Route
+            path="setting"
+            element={
+              <ProtectedRoute>
+                <ProtectedRouteDash>
+                  <Setting></Setting>
                 </ProtectedRouteDash>
               </ProtectedRoute>
             }
