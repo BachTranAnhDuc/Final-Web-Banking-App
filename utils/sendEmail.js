@@ -10,12 +10,21 @@ const sendEmail = async ({ to, subject, html }) => {
     },
   });
 
-  return transporter.sendMail({
-    from: '"Bankist App" <btanhducspm@gmail.com>', // sender address
+  let info = await transporter.sendMail({
+    from: '"Bankist App" <kaylah.conroy59@ethereal.email>', // sender address
     to,
     subject,
     html,
   });
+
+  return info;
+
+  // return transporter.sendMail({
+  //   from: '"Bankist App" <btanhducspm@gmail.com>', // sender address
+  //   to,
+  //   subject,
+  //   html,
+  // });
 };
 
 export default sendEmail;

@@ -9,6 +9,16 @@ dotenv.config();
 import express, { application } from 'express';
 const app = express();
 
+import fileUpload from 'express-fileupload';
+
+// upload image
+import cloudinary from 'cloudinary';
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+
 // connect to db
 import connectDB from './db/connect.js';
 
@@ -36,6 +46,7 @@ app.use(
   })
 );
 
+app.use(fileUpload({ useTempFiles: true }));
 app.use(cors());
 app.use(express.json());
 app.use(morgan('tiny'));

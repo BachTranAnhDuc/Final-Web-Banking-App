@@ -215,13 +215,13 @@ const Register = () => {
               {getNext === 5 && (
                 <>
                   <div className="form-control__image">
-                    <label htmlFor="image1" className="form-label">
+                    <label htmlFor="imageFront" className="form-label">
                       Image front
                     </label>
                     <input
                       type="file"
                       className="form-input"
-                      id="image1"
+                      id="imageFront"
                       value={values.imageFront}
                       onChange={handleChangeValue}
                       name="imageFront"
@@ -238,13 +238,13 @@ const Register = () => {
                   </div>
 
                   <div className="form-control__image">
-                    <label htmlFor="image2" className="form-label">
+                    <label htmlFor="imageBack" className="form-label">
                       Image back
                     </label>
                     <input
                       type="file"
                       className="form-input"
-                      id="image2"
+                      id="imageBack"
                       value={values.imageBack}
                       onChange={handleChangeValue}
                       name="imageBack"
