@@ -2,6 +2,8 @@ import { StatusCodes } from 'http-status-codes';
 import User from '../models/User.js';
 import uniqueRandom from 'unique-random';
 import crypto from 'crypto';
+import cloudinary from 'cloudinary';
+import fs from 'fs';
 
 import {
   sendVerificationEmail,
@@ -82,16 +84,54 @@ const login = async (req, res) => {
   });
 };
 
+const uploadUserImage = async (req, res, next) => {
+  // const { imageFront, imageBack } = req.files;
+  // const { tempFilePath: tempFilePathFront } = imageFront;
+  // const { tempFilePath: tempFilePathBack } = imageBack;
+  // const result = await cloudinary.v2.uploader.upload(tempFilePathBack, {
+  //   use_filename: true,
+  //   folder: `bankist/users/${username}`,
+  // });
+  // // fs.unlinkSync(req.files.image.tempFilePathBack);
+  // console.log(result.secure_url);
+  // next();
+};
+
+// const uploadUserImage = async (req, res) => {
+//   // const result = await cloudinary.v2.uploader.upload(
+//   //   req.files.image.tempFilePath,
+//   //   {
+//   //     use_filename: true,
+//   //     folder: `bankist`,
+//   //   }
+//   // );
+
+//   // fs.unlinkSync(req.files.image.tempFilePath);
+
+//   console.log(req.files);
+
+//   res.status(StatusCodes.OK).json({ msg: 'upload success' });
+// };
+
+const uploadImage = async (tempPath, username) => {
+  const up = await cloudinary.v2.uploader.upload(
+    tempPath,
+    {
+      use_filename: true,
+      folder: `/bankist/users/${username}`,
+    },
+    (error, result) => {
+      console.log(result, error);
+    }
+  );
+
+  fs.unlinkSync(tempPath);
+
+  return up.secure_url;
+};
+
 const register = async (req, res) => {
-  const {
-    phone: phoneReq,
-    email: emailReq,
-    name,
-    address,
-    birth,
-    imageFront,
-    imageBack,
-  } = req.body;
+  const { phone: phoneReq, email: emailReq, name, address, birth } = req.body;
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
   const role = isFirstAccount ? 'admin' : 'user';
@@ -119,20 +159,33 @@ const register = async (req, res) => {
 
   const verificationToken = crypto.randomBytes(40).toString('hex');
 
-  console.log(
-    isPhoneExist,
-    phoneReq,
-    emailReq,
-    name,
-    address,
-    birth,
-    imageFront,
-    imageBack,
-    verificationToken
-  );
-
   const rdUsername = randomUsername();
   const rdPwd = randomPassword();
+
+  console.log('image here');
+  // console.log(req.files);
+
+  const { imageFront, imageBack } = req.files;
+  const { tempFilePath: tempFilePathFront } = imageFront;
+  const { tempFilePath: tempFilePathBack } = imageBack;
+
+  let imgF = '';
+  let imgB = '';
+
+  try {
+    const up1 = await uploadImage(tempFilePathBack, rdUsername);
+    const up2 = await uploadImage(tempFilePathFront, rdUsername);
+
+    imgB = up1;
+    imgF = up2;
+  } catch (error) {
+    console.log('Cannot upload image');
+    console.log(error);
+  }
+
+  // console.log('link url image here');
+  // console.log(up1);
+  // console.log(up2);
 
   const user = await User.create({
     name,
@@ -143,8 +196,8 @@ const register = async (req, res) => {
     verificationToken,
     username: rdUsername,
     password: rdPwd,
-    imageFront,
-    imageBack,
+    imageFront: imgF,
+    imageBack: imgB,
     role,
   });
 
@@ -270,6 +323,7 @@ export {
   forgotPassword,
   verifyEmail,
   firstLogin,
+  uploadUserImage,
 };
 
 // admin: 620277
