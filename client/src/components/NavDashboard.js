@@ -100,7 +100,7 @@ const NavDashboard = () => {
         </MenuItem>
         <MenuItem className={'nav__menu--item'}>
           <VscSettingsGear></VscSettingsGear>
-          <span>Setting</span>
+          <Link to="/dashboard/setting">Setting</Link>
         </MenuItem>
 
         <MenuDivider />
