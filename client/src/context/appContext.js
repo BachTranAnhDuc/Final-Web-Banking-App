@@ -166,7 +166,7 @@ const AppProvider = ({ children }) => {
         const { response } = error;
         const { data } = response;
         const { msg, user } = data;
-
+        console.log(data)
         let message = msg;
         let styleInput = 'form-input';
         let isUserErr = 'false';
