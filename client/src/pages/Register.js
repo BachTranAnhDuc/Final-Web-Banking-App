@@ -47,7 +47,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   // const { isError } = useGlobalContext();
-
   const handleChangeValue = async (e) => {
     let imageValue;
     if (e.target.files && e.target.files[0]) {
@@ -55,7 +54,7 @@ const Register = () => {
 
       console.log(img);
 
-      uploadImage(img);
+      uploadImage(img, e.target.value);
 
       setValues({ ...values, [e.target.name]: e.target.value });
     } else {
@@ -128,6 +127,7 @@ const Register = () => {
               className={
                 getNext === 5 ? 'register-form__images' : 'register-form'
               }
+              
               // onSubmit={handleSubmit}
             >
               {getNext === 0 && (
@@ -239,6 +239,7 @@ const Register = () => {
                       value={values.imageFront}
                       onChange={handleChangeValue}
                       name="imageFront"
+                      accept = "image/*"
                     />
 
                     <img
@@ -262,6 +263,7 @@ const Register = () => {
                       value={values.imageBack}
                       onChange={handleChangeValue}
                       name="imageBack"
+                      accept="image/*"
                     />
                     <img
                       src={
