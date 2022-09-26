@@ -908,6 +908,10 @@ body {
   transform: scale(1.1);
 }
 
+/* SETTING */
+.section-setting {
+}
+
 /* FOOTER */
 .footer {
   border-top: 2px solid var(--color-primary-dark-6);
