@@ -132,15 +132,7 @@ const uploadImage = async (tempPath, username) => {
 };
 
 const register = async (req, res) => {
-  const {
-    phone: phoneReq,
-    email: emailReq,
-    name,
-    address,
-    birth,
-    imageBack,
-    imageFront,
-  } = req.body;
+  const { phone: phoneReq, email: emailReq, name, address, birth } = req.body;
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
   const role = isFirstAccount ? 'admin' : 'user';
@@ -173,18 +165,16 @@ const register = async (req, res) => {
   console.log('image here');
   console.log(req.body);
 
-  // const { imageFront, imageBack } = req.files;
-  // const { tempFilePath: tempFilePathFront } = imageFront;
-  // const { tempFilePath: tempFilePathBack } = imageBack;
-
-  // console.log(imageBack);
+  const { imageFront, imageBack } = req.files;
+  const { tempFilePath: tempFilePathFront } = imageFront;
+  const { tempFilePath: tempFilePathBack } = imageBack;
 
   let imgF = '';
   let imgB = '';
 
   try {
-    const up1 = await uploadImage(imageBack, rdUsername);
-    const up2 = await uploadImage(imageFront, rdUsername);
+    const up1 = await uploadImage(tempFilePathBack, rdUsername);
+    const up2 = await uploadImage(tempFilePathFront, rdUsername);
 
     imgB = up1;
     imgF = up2;
