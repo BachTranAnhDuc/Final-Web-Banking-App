@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useGlobalContext } from '../context/appContext';
@@ -22,6 +22,7 @@ const NavDashboard = () => {
   const [position, setPosition] = useState('anchor');
   const [viewScroll, setViewScroll] = useState('auto');
   const [direction, setDirection] = useState('bottom');
+  const [stickyClass, setStickyClass] = useState('nav-bar');
 
   const navigate = useNavigate();
 
@@ -35,8 +36,25 @@ const NavDashboard = () => {
     }, 1000);
   };
 
+  const stickyNavbar = () => {
+    if (window !== undefined) {
+      let windowHeight = window.scrollY;
+      windowHeight > 100
+        ? setStickyClass('nav-bar sticky mt-4')
+        : setStickyClass('nav-bar');
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', stickyNavbar);
+
+    return () => {
+      window.removeEventListener('scroll', stickyNavbar);
+    };
+  }, []);
+
   return (
-    <nav className="nav-dash">
+    <nav className={stickyClass}>
       <button onClick={openSidebar} className="sidebar-toggle">
         <FaBars />
       </button>
@@ -100,7 +118,11 @@ const NavDashboard = () => {
         </MenuItem>
         <MenuItem className={'nav__menu--item'}>
           <VscSettingsGear></VscSettingsGear>
-          <Link to="/dashboard/setting" className="btn-link">
+          <Link
+            to="/dashboard/setting/all"
+            className="btn-link"
+            onClick={() => switchPage()}
+          >
             Setting
           </Link>
         </MenuItem>

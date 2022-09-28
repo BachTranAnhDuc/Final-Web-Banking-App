@@ -9,6 +9,10 @@ import ProtectedRoute from './ProtectedRoute';
 import FirstLogin from './FirstLogin';
 import ProtectedRouteDash from './ProtectedRouteDash';
 import Setting from './Setting';
+import Account from './Account';
+import UploadCMD from './UploadCMD';
+import Deposit from './Deposit';
+import Security from './Security';
 
 export {
   Landing,
@@ -22,4 +26,8 @@ export {
   FirstLogin,
   ProtectedRouteDash,
   Setting,
+  Account,
+  UploadCMD,
+  Deposit,
+  Security,
 };

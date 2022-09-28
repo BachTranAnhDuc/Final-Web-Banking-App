@@ -9,6 +9,8 @@ import NavDashboard from './NavDashboard';
 import ShareLayoutDash from './ShareLayoutDash';
 import SideBar from './SideBar';
 import CountDown from './CountDown';
+import NavSetting from './NavSetting';
+import ShareLayoutSetting from './ShareLayoutSetting';
 
 export {
   Navbar,
@@ -22,4 +24,6 @@ export {
   ShareLayoutDash,
   SideBar,
   CountDown,
+  NavSetting,
+  ShareLayoutSetting,
 };
