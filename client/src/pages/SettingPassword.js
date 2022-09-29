@@ -3,8 +3,22 @@ import React, { useState } from 'react';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { BsArrowRightCircle } from 'react-icons/bs';
 
+import { useGlobalContext } from '../context/appContext';
+
+import { Loader2 } from '../components';
+
 const SettingPassword = () => {
   const [next, setNext] = useState(false);
+
+  const { isLoader } = useGlobalContext();
+
+  if (isLoader) {
+    return (
+      <div className="section-setting">
+        <Loader2></Loader2>;
+      </div>
+    );
+  }
 
   return (
     <div className="section-setting section-setting__password">

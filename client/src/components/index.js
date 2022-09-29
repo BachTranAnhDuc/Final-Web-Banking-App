@@ -12,6 +12,7 @@ import CountDown from './CountDown';
 import NavSetting from './NavSetting';
 import ShareLayoutSetting from './ShareLayoutSetting';
 import Toast from './Toast';
+import Loader2 from './Loader2';
 
 export {
   Navbar,
@@ -28,4 +29,5 @@ export {
   NavSetting,
   ShareLayoutSetting,
   Toast,
+  Loader2,
 };

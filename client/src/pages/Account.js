@@ -8,8 +8,18 @@ import { BsFillCalendarDateFill } from 'react-icons/bs';
 
 import { useGlobalContext } from '../context/appContext';
 
+import { Loader2 } from '../components';
+
 const Account = () => {
-  const { user } = useGlobalContext();
+  const { user, isLoader } = useGlobalContext();
+
+  if (isLoader) {
+    return (
+      <div className="section-setting">
+        <Loader2></Loader2>;
+      </div>
+    );
+  }
 
   return (
     <div className="section-setting section-setting__account">

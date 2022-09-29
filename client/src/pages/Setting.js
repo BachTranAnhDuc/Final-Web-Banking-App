@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { NavLink } from 'react-router-dom';
+
+import { Loader2 } from '../components';
 
 import { HiOutlineUser } from 'react-icons/hi';
 import { AiOutlineMail } from 'react-icons/ai';
 import { BsCalendar2Date } from 'react-icons/bs';
 
+import { useGlobalContext } from '../context/appContext';
+
 const Setting = () => {
+  const { switchSetting, isLoader } = useGlobalContext();
+
+  if (isLoader) {
+    return (
+      <div className="section-setting">
+        <Loader2></Loader2>;
+      </div>
+    );
+  }
   return (
     <div className="section-setting">
       <form className="setting-form">

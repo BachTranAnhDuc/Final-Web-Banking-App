@@ -26,7 +26,9 @@ import {
   RESET_ALERT,
   UPLOAD_IMAGE,
   SAVE_IMAGE_BACK,
-  SAVE_IMAGE_FRONT
+  SAVE_IMAGE_FRONT,
+  SHOW_LOADER,
+  HIDE_LOADER,
 } from './action';
 
 const reducer = (state, action) => {
@@ -229,24 +231,35 @@ const reducer = (state, action) => {
     };
   }
 
-  if(action.type === SAVE_IMAGE_BACK) {
-    return{
+  if (action.type === SAVE_IMAGE_BACK) {
+    return {
       ...state,
       /* imgs:{...imgs,imageBack: action.pageLoadImage} */
-      imgBack: action.pageLoadImage
-    }
+      imgBack: action.pageLoadImage,
+    };
   }
 
-  if(action.type === SAVE_IMAGE_FRONT) {
-    return{
+  if (action.type === SAVE_IMAGE_FRONT) {
+    return {
       ...state,
       /* imgs:{...imgs,imageBack: action.pageLoadImage} */
-      imgFront: action.pageLoadImage
-    }
+      imgFront: action.pageLoadImage,
+    };
   }
 
+  if (action.type === SHOW_LOADER) {
+    return {
+      ...state,
+      isLoader: true,
+    };
+  }
+
+  if (action.type === HIDE_LOADER) {
+    return {
+      ...state,
+      isLoader: false,
+    };
+  }
 };
-
-  
 
 export default reducer;

@@ -2,7 +2,21 @@ import React from 'react';
 
 import depositImg from '../assets/images/design/bank-card.svg';
 
+import { Loader2 } from '../components';
+
+import { useGlobalContext } from '../context/appContext';
+
 const Deposit = () => {
+  const { isLoader } = useGlobalContext();
+
+  if (isLoader) {
+    return (
+      <div className="section-setting">
+        <Loader2></Loader2>;
+      </div>
+    );
+  }
+
   return (
     <div className="section-setting">
       <div className="setting-deposit">

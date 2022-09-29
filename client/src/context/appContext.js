@@ -35,6 +35,8 @@ import {
   SAVE_IMAGE,
   SAVE_IMAGE_FRONT,
   SAVE_IMAGE_BACK,
+  SHOW_LOADER,
+  HIDE_LOADER,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -69,6 +71,7 @@ const defaultState = {
   isAlert: true,
   imgFront: '',
   imgBack: '',
+  isLoader: false,
 };
 
 const AppContext = React.createContext();
@@ -81,6 +84,22 @@ const AppProvider = ({ children }) => {
   };
   const hideLoading = () => {
     dispatch({ type: HIDE_LOADING });
+  };
+
+  const showLoader = () => {
+    dispatch({ type: SHOW_LOADER });
+  };
+
+  const hideLoader = () => {
+    dispatch({ type: HIDE_LOADER });
+  };
+
+  const switchSetting = (time) => {
+    showLoader();
+
+    setTimeout(() => {
+      hideLoader();
+    }, time);
   };
 
   const switchPage = () => {
@@ -475,6 +494,7 @@ const AppProvider = ({ children }) => {
         showToastSuccess,
         showToastError,
         showToastPromise,
+        switchSetting,
       }}
     >
       {children}

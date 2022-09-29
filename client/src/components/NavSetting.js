@@ -4,7 +4,7 @@ import { useGlobalContext } from '../context/appContext';
 // import { Toast } from '../components';
 
 const NavSetting = () => {
-  const { user, showToastSuccess, showToastError, showToast } =
+  const { user, showToastSuccess, showToastError, showToast, switchSetting } =
     useGlobalContext();
 
   const { identify } = user;
@@ -18,13 +18,14 @@ const NavSetting = () => {
   // });
 
   const handleCheck = () => {
+    switchSetting(1000);
     if (identify === 'processing') {
       // showToastError(
       //   'Your account is processing... \n\n You cannot access this router'
       // );
 
       showToast(
-        '💣 Your account is processing... \n\n 😔 You cannot access this router',
+        '😔 Your account is processing... \n\n ❌ You cannot access this router',
         6000
       );
     }
@@ -44,6 +45,7 @@ const NavSetting = () => {
               ? 'setting-nav__link setting-nav__link--active'
               : 'setting-nav__link'
           }
+          onClick={() => switchSetting(1000)}
         >
           <span>My Account</span>
         </NavLink>
@@ -54,6 +56,7 @@ const NavSetting = () => {
               ? 'setting-nav__link setting-nav__link--active'
               : 'setting-nav__link'
           }
+          onClick={() => switchSetting(1000)}
         >
           <span>Identity</span>
         </NavLink>
@@ -75,6 +78,7 @@ const NavSetting = () => {
               ? 'setting-nav__link setting-nav__link--active'
               : 'setting-nav__link'
           }
+          onClick={() => switchSetting(1000)}
         >
           <span>Security</span>
         </NavLink>
@@ -85,6 +89,7 @@ const NavSetting = () => {
               ? 'setting-nav__link setting-nav__link--active'
               : 'setting-nav__link'
           }
+          onClick={() => switchSetting(1000)}
         >
           <span>Password</span>
         </NavLink>
@@ -95,6 +100,7 @@ const NavSetting = () => {
               ? 'setting-nav__link setting-nav__link--active'
               : 'setting-nav__link'
           }
+          onClick={() => switchSetting(1000)}
         >
           <span>Setting</span>
         </NavLink>
