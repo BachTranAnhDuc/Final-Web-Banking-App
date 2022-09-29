@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Loading, Alert, CountDown } from '../components';
+import { Loading, Alert, CountDown, Toast } from '../components';
 import { useGlobalContext } from '../context/appContext';
 import loginImage from '../assets/images/login_1.svg';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
@@ -79,6 +80,15 @@ const Login = () => {
     setErrValue({ isErrValue: false, msg: '' });
 
     login({ username: values.username, password: values.password });
+
+    // toast.promise(
+    //   login({ username: values.username, password: values.password }),
+    //   {
+    //     loading: 'Loading',
+    //     success: 'Got the data',
+    //     error: 'Error when fetching',
+    //   }
+    // );
 
     // resetLoginForm();
   };
@@ -212,6 +222,8 @@ const Login = () => {
           </button>
         </form>
       </div>
+
+      <Toast></Toast>
     </section>
   );
 };

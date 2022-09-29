@@ -11,6 +11,7 @@ import SideBar from './SideBar';
 import CountDown from './CountDown';
 import NavSetting from './NavSetting';
 import ShareLayoutSetting from './ShareLayoutSetting';
+import Toast from './Toast';
 
 export {
   Navbar,
@@ -26,4 +27,5 @@ export {
   CountDown,
   NavSetting,
   ShareLayoutSetting,
+  Toast,
 };

@@ -16,6 +16,8 @@ import {
   UploadCMD,
   Deposit,
   Security,
+  SettingPassword,
+  ProtectedRoutePermission,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -63,9 +65,20 @@ const App = () => {
             >
               <Route path="all" element={<Setting></Setting>}></Route>
               <Route path="account" element={<Account></Account>}></Route>
+              <Route
+                path="password"
+                element={<SettingPassword></SettingPassword>}
+              ></Route>
               <Route path="upload" element={<UploadCMD></UploadCMD>}></Route>
               <Route path="security" element={<Security></Security>}></Route>
-              <Route path="deposit" element={<Deposit></Deposit>}></Route>
+              <Route
+                path="deposit"
+                element={
+                  <ProtectedRoutePermission>
+                    <Deposit></Deposit>
+                  </ProtectedRoutePermission>
+                }
+              ></Route>
             </Route>
           </>
         </Route>
