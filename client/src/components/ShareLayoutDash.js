@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { NavDashboard, Footer, SideBar, Loading } from '../components';
+import { NavDashboard, FooterDash, SideBar, Loading } from '../components';
 import { useGlobalContext } from '../context/appContext';
 
 import { FaBars } from 'react-icons/fa';
@@ -13,7 +13,7 @@ const ShareLayoutDash = () => {
     <div className="container__dashboard">
       <NavDashboard></NavDashboard>
       {isLoading ? <Loading></Loading> : <Outlet></Outlet>}
-      <Footer></Footer>
+      <FooterDash></FooterDash>
 
       <SideBar></SideBar>
 

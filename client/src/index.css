@@ -901,7 +901,7 @@ body {
 }
 
 .dashboard__header--container-1 {
-  background: linear-gradient(90deg, #ffbf96, #fe7096);
+  background: linear-gradient(90deg, #84d9d2, #07cdae);
 }
 
 .dashboard__header--container-2 {
@@ -909,7 +909,7 @@ body {
 }
 
 .dashboard__header--container-3 {
-  background: linear-gradient(90deg, #84d9d2, #07cdae);
+  background: linear-gradient(90deg, #ffbf96, #fe7096);
 }
 
 .dashboard__header--container-context {
@@ -1487,7 +1487,7 @@ body {
 
   grid-template-columns: repeat(3, 1fr);
 
-  justify-items: center;
+  justify-items: start;
 
   gap: 3.2rem 1.6rem;
 }
@@ -1501,6 +1501,10 @@ body {
 .footer__heading {
   font-size: 2.4rem;
   color: var(--color-grey-light-1);
+
+  font-weight: 500;
+
+  letter-spacing: 0.2rem;
 }
 
 .footer__icons-list {
@@ -1521,6 +1525,8 @@ body {
 
 .footer__item {
   font-size: 1.4rem;
+
+  letter-spacing: 0.1rem;
 }
 
 .footer__contacts {
@@ -1573,6 +1579,29 @@ body {
 
 .footer__copyright {
   align-self: end;
+}
+
+/* FOOTER DASH */
+.footer-dash {
+  padding: 4rem 16rem;
+  background-color: var(--color-grey-light-9);
+}
+
+.footer-dash__content {
+  border-top: 1px solid var(--color-grey-light-7);
+  background-color: var(--color-grey-light-9);
+  /* background-color: orange; */
+  display: grid;
+  min-height: 6rem;
+
+  align-items: center;
+
+  grid-template-columns: 1fr max-content;
+}
+
+.footer-dash__copyright {
+  font-size: 1.4rem;
+  letter-spacing: 0.1rem;
 }
 
 /* BUTTON */

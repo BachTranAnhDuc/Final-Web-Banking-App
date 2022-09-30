@@ -40,7 +40,7 @@ const NavDashboard = () => {
     if (window !== undefined) {
       let windowHeight = window.scrollY;
       windowHeight > 100
-        ? setStickyClass('nav-bar sticky mt-4')
+        ? setStickyClass('nav-bar sticky')
         : setStickyClass('nav-bar');
     }
   };
