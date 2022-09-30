@@ -141,12 +141,14 @@ const uploadUserImage1 = async (req, res) => {
         folder: `bankist`,
       }
     );
+  
     fs.unlinkSync(req.files.imageBack.tempFilePath);
 
     res
       .status(StatusCodes.OK)
       .json({ msg: 'upload success', data: result.secure_url });
   }
+  
 };
 
 const uploadImage = async (tempPath, username) => {
