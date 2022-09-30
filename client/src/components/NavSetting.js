@@ -26,7 +26,8 @@ const NavSetting = () => {
 
       showToast(
         '😔 Your account is processing... \n\n ❌ You cannot access this router',
-        6000
+        6000,
+        'error'
       );
     }
   };

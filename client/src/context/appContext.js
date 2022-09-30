@@ -110,7 +110,35 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
-  const showToast = (msg, time) => {
+  const showToast = (msg, time, type) => {
+    if (type === 'error') {
+      return toast(msg, {
+        duration: time,
+        style: {
+          border: '2px solid #ff6b6b',
+          padding: '16px',
+          color: '#662b2b',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        },
+      });
+    } else if (type === 'warming') {
+      return toast(msg, {
+        duration: time,
+        style: {
+          border: '2px solid #fcc419',
+          padding: '16px',
+          color: '#4c3b07',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        },
+      });
+    }
+
     return toast(msg, {
       duration: time,
     });
@@ -121,7 +149,17 @@ const AppProvider = ({ children }) => {
   };
 
   const showToastError = (msg) => {
-    return toast.error(msg);
+    return toast.error(msg, {
+      style: {
+        border: '1px solid #713200',
+        padding: '16px',
+        color: '#713200',
+      },
+      iconTheme: {
+        primary: '#713200',
+        secondary: '#FFFAEE',
+      },
+    });
   };
 
   const showToastPromise = (promiseInput, msgSuccess, msgError) => {
