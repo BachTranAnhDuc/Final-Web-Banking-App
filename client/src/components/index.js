@@ -9,6 +9,10 @@ import NavDashboard from './NavDashboard';
 import ShareLayoutDash from './ShareLayoutDash';
 import SideBar from './SideBar';
 import CountDown from './CountDown';
+import NavSetting from './NavSetting';
+import ShareLayoutSetting from './ShareLayoutSetting';
+import Toast from './Toast';
+import Loader2 from './Loader2';
 
 export {
   Navbar,
@@ -22,4 +26,8 @@ export {
   ShareLayoutDash,
   SideBar,
   CountDown,
+  NavSetting,
+  ShareLayoutSetting,
+  Toast,
+  Loader2,
 };

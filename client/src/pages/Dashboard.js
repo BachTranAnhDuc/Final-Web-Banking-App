@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
-import { Loading } from '../components';
+import { Loading, Toast } from '../components';
 
 import { useGlobalContext } from '../context/appContext';
 
+import { HiOutlineUsers } from 'react-icons/hi';
+import { BsFillGearFill } from 'react-icons/bs';
+import { FaUsers, FaSketch } from 'react-icons/fa';
+
 const Dashboard = () => {
-  const { user } = useGlobalContext();
+  const { user, showToast, showToastSuccess, showToastError } =
+    useGlobalContext();
 
   const { name, identify, role, email } = user;
 
@@ -23,17 +28,56 @@ const Dashboard = () => {
 
   return (
     <section className="section-dashboard">
-      <h1 className="heading--primary">This is dasboard</h1>
-      <h2 className="heading--secondary">{`Hello ${name}`}</h2>
-      <p>{`You are ${role}`}</p>
+      <div className="dashboard__header">
+        <div className="dashboard__header--container dashboard__header--container-1">
+          <div className="dashboard__header--container-context">
+            <h4 className="dashboard__heading">User</h4>
+            <span className="dashboard__span">1096</span>
+            <p className="dashboard__text">Text here</p>
+            <FaUsers className="dashboard__header--icon"></FaUsers>
+          </div>
+          <img
+            src="https://technext.github.io/purple-react/static/media/circle.953c9ca0.svg"
+            alt="svg"
+            className="dashboard__header--img-design"
+          />
+        </div>
 
-      <span>
-        {identify === 'processing'
-          ? 'Your account is processing....'
-          : identify === 'fail'
-          ? 'Your account is banded please contact with admin to solve this problem'
-          : 'Success'}
-      </span>
+        <div className="dashboard__header--container dashboard__header--container-2">
+          <div className="dashboard__header--container-context">
+            <h4 className="dashboard__heading">Balance</h4>
+            <span className="dashboard__span">1096</span>
+            <p className="dashboard__text">Text here</p>
+            <FaSketch className="dashboard__header--icon"></FaSketch>
+          </div>
+          <img
+            src="https://technext.github.io/purple-react/static/media/circle.953c9ca0.svg"
+            alt="svg"
+            className="dashboard__header--img-design"
+          />
+        </div>
+
+        <div className="dashboard__header--container dashboard__header--container-3">
+          <div className="dashboard__header--container-context">
+            <h4 className="dashboard__heading">Account</h4>
+            <span className="dashboard__span">View</span>
+            <p className="dashboard__text">Text here</p>
+            <BsFillGearFill className="dashboard__header--icon"></BsFillGearFill>
+          </div>
+          <img
+            src="https://technext.github.io/purple-react/static/media/circle.953c9ca0.svg"
+            alt="svg"
+            className="dashboard__header--img-design"
+          />
+        </div>
+      </div>
+
+      <div className="dashboard__something-1">
+        <div className="dashboard__something-1--v1"></div>
+        <div className="dashboard__something-1--v2"></div>
+      </div>
+
+      {/* <Toast></Toast> */}
     </section>
   );
 };

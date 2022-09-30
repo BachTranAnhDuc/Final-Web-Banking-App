@@ -1,59 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import { NavLink } from 'react-router-dom';
+
+import { Loader2 } from '../components';
+
+import { HiOutlineUser } from 'react-icons/hi';
+import { AiOutlineMail } from 'react-icons/ai';
+import { BsCalendar2Date } from 'react-icons/bs';
+
+import { useGlobalContext } from '../context/appContext';
 
 const Setting = () => {
+  const { switchSetting, isLoader } = useGlobalContext();
+
+  if (isLoader) {
+    return (
+      <div className="section-setting">
+        <Loader2></Loader2>;
+      </div>
+    );
+  }
   return (
-    <section className="section-setting">
-      <h2 className="heading--secondary">Setting</h2>
-
-      <nav className="setting-nav">
-        <span className="setting-nav__link">My detail</span>
-        <span className="setting-nav__link">My detail</span>
-        <span className="setting-nav__link">My detail</span>
-        <span className="setting-nav__link">My detail</span>
-        <span className="setting-nav__link">My detail</span>
-      </nav>
-
+    <div className="section-setting">
       <form className="setting-form">
         <div className="setting-heading__content">
           <div className="setting-heading__context">
-            <h3 className="heading--tertiary">Personal info</h3>
-            <p className="setting-heading__text">
+            <h3 className="heading--tertiary setting-form__heading">
+              Personal info
+            </h3>
+            <p className="setting-heading__text setting-heading__text--small">
               Update your photo and personal details here
             </p>
           </div>
 
           <div className="setting-heading__buttons">
-            <button className="btn" type="button">
+            <button className="button-83" type="button">
               Cancel
             </button>
-            <button className="btn" type="button">
+            <button className="button-83" type="button">
               Save
             </button>
           </div>
         </div>
 
-        <div className="form-control">
-          <label htmlFor="name" className="form-label">
-            Name
+        <div
+          className="form-control
+        form-control__setting"
+        >
+          <HiOutlineUser className="setting__icon"></HiOutlineUser>
+          <label htmlFor="name" className="form-label setting-form__label">
+            <span>Name</span>
           </label>
-          <input type="text" className="form-input" name="name" id="name" />
+          <input
+            type="text"
+            className="setting-form__input"
+            name="name"
+            id="name"
+          />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="email" className="form-label">
-            Email
+        <div
+          className="form-control
+        form-control__setting"
+        >
+          <AiOutlineMail className="setting__icon"></AiOutlineMail>
+          <label htmlFor="email" className="form-label setting-form__label">
+            <span>Email</span>
           </label>
-          <input type="email" className="form-input" name="email" id="email" />
+          <input
+            type="email"
+            className="setting-form__input"
+            name="email"
+            id="email"
+          />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="birth" className="form-label">
-            Birth
+        <div
+          className="form-control
+        form-control__setting"
+        >
+          <BsCalendar2Date className="setting__icon"></BsCalendar2Date>
+          <label htmlFor="birth" className="form-label setting-form__label">
+            <span>Birth</span>
           </label>
-          <input type="date" className="form-input" name="birth" id="birth" />
+          <input
+            type="date"
+            className="setting-form__input"
+            name="birth"
+            id="birth"
+          />
         </div>
       </form>
-    </section>
+    </div>
   );
 };
 

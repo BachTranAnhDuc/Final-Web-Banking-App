@@ -12,8 +12,14 @@ import {
   FirstLogin,
   ProtectedRouteDash,
   Setting,
+  Account,
+  UploadCMD,
+  Deposit,
+  Security,
+  SettingPassword,
+  ProtectedRoutePermission,
 } from './pages';
-import { ShareLayout, ShareLayoutDash } from './components';
+import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
 const App = () => {
   return (
@@ -35,27 +41,46 @@ const App = () => {
         <Route path="/first-login" element={<FirstLogin></FirstLogin>}></Route>
 
         <Route path="/dashboard" element={<ShareLayoutDash></ShareLayoutDash>}>
-          <Route
-            index
-            element={
-              <ProtectedRoute>
-                <ProtectedRouteDash>
-                  <Dashboard></Dashboard>
-                </ProtectedRouteDash>
-              </ProtectedRoute>
-            }
-          ></Route>
+          <>
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <ProtectedRouteDash>
+                    <Dashboard></Dashboard>
+                  </ProtectedRouteDash>
+                </ProtectedRoute>
+              }
+            ></Route>
 
-          <Route
-            path="setting"
-            element={
-              <ProtectedRoute>
-                <ProtectedRouteDash>
-                  <Setting></Setting>
-                </ProtectedRouteDash>
-              </ProtectedRoute>
-            }
-          ></Route>
+            <Route
+              path="setting"
+              element={
+                <ProtectedRoute>
+                  <ProtectedRouteDash>
+                    <ShareLayoutSetting></ShareLayoutSetting>
+                  </ProtectedRouteDash>
+                </ProtectedRoute>
+              }
+            >
+              <Route path="all" element={<Setting></Setting>}></Route>
+              <Route path="account" element={<Account></Account>}></Route>
+              <Route
+                path="password"
+                element={<SettingPassword></SettingPassword>}
+              ></Route>
+              <Route path="upload" element={<UploadCMD></UploadCMD>}></Route>
+              <Route path="security" element={<Security></Security>}></Route>
+              <Route
+                path="deposit"
+                element={
+                  <ProtectedRoutePermission>
+                    <Deposit></Deposit>
+                  </ProtectedRoutePermission>
+                }
+              ></Route>
+            </Route>
+          </>
         </Route>
       </Routes>
     </BrowserRouter>

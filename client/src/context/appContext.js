@@ -5,6 +5,8 @@ import reducer from './reducer';
 
 import axios from 'axios';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 import {
   SHOW_HIDE_LOADING,
   SWITCH_PAGE,
@@ -33,6 +35,8 @@ import {
   SAVE_IMAGE,
   SAVE_IMAGE_FRONT,
   SAVE_IMAGE_BACK,
+  SHOW_LOADER,
+  HIDE_LOADER,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -66,7 +70,8 @@ const defaultState = {
   },
   isAlert: true,
   imgFront: '',
-  imgBack: ''
+  imgBack: '',
+  isLoader: false,
 };
 
 const AppContext = React.createContext();
@@ -81,12 +86,88 @@ const AppProvider = ({ children }) => {
     dispatch({ type: HIDE_LOADING });
   };
 
+  const showLoader = () => {
+    dispatch({ type: SHOW_LOADER });
+  };
+
+  const hideLoader = () => {
+    dispatch({ type: HIDE_LOADER });
+  };
+
+  const switchSetting = (time) => {
+    showLoader();
+
+    setTimeout(() => {
+      hideLoader();
+    }, time);
+  };
+
   const switchPage = () => {
     showLoading();
 
     setTimeout(() => {
       dispatch({ type: SWITCH_PAGE });
     }, 1000);
+  };
+
+  const showToast = (msg, time, type) => {
+    if (type === 'error') {
+      return toast(msg, {
+        duration: time,
+        style: {
+          border: '2px solid #ff6b6b',
+          padding: '16px',
+          color: '#662b2b',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        },
+      });
+    } else if (type === 'warming') {
+      return toast(msg, {
+        duration: time,
+        style: {
+          border: '2px solid #fcc419',
+          padding: '16px',
+          color: '#4c3b07',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        },
+      });
+    }
+
+    return toast(msg, {
+      duration: time,
+    });
+  };
+
+  const showToastSuccess = (msg) => {
+    return toast.success(msg);
+  };
+
+  const showToastError = (msg) => {
+    return toast.error(msg, {
+      style: {
+        border: '1px solid #713200',
+        padding: '16px',
+        color: '#713200',
+      },
+      iconTheme: {
+        primary: '#713200',
+        secondary: '#FFFAEE',
+      },
+    });
+  };
+
+  const showToastPromise = (promiseInput, msgSuccess, msgError) => {
+    return toast.promise(promiseInput, {
+      loading: 'Loading...',
+      success: <b>{msgSuccess}</b>,
+      error: <b>{msgError}</b>,
+    });
   };
 
   const addUserToLocalStorage = ({ user, token, isFirstLogin }) => {
@@ -122,17 +203,15 @@ const AppProvider = ({ children }) => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const {data} = response
-      const {msg,data: datasrc} = data;
+      const { data } = response;
+      const { msg, data: datasrc } = data;
       //const {msg: msgFinal, data: dataFinal} = datasrc;
       console.log(datasrc);
-      if(imgName === 'imageFront'){
-        dispatch({type: SAVE_IMAGE_FRONT,pageLoadImage: datasrc})
+      if (imgName === 'imageFront') {
+        dispatch({ type: SAVE_IMAGE_FRONT, pageLoadImage: datasrc });
+      } else {
+        dispatch({ type: SAVE_IMAGE_BACK, pageLoadImage: datasrc });
       }
-      else{
-        dispatch({type: SAVE_IMAGE_BACK, pageLoadImage: datasrc})
-      }
-
     } catch (error) {
       imageValue = null;
 
@@ -143,6 +222,12 @@ const AppProvider = ({ children }) => {
   const login = async (userInput) => {
     dispatch({ type: LOGIN_BEGIN });
     resetLoginForm();
+
+    showToastPromise(
+      axios.post('/api/v1/auth/login', userInput),
+      'Login success',
+      'Login error'
+    );
 
     setTimeout(async () => {
       try {
@@ -203,7 +288,7 @@ const AppProvider = ({ children }) => {
         const { response } = error;
         const { data } = response;
         const { msg, user } = data;
-        console.log(data)
+        console.log(data);
         let message = msg;
         let styleInput = 'form-input';
         let isUserErr = 'false';
@@ -308,6 +393,7 @@ const AppProvider = ({ children }) => {
   const logout = async () => {
     resetLoginForm();
     resetAlert();
+
     try {
       const log = await axios.post('/api/v1/auth/logout');
 
@@ -442,6 +528,11 @@ const AppProvider = ({ children }) => {
         resetLoginForm,
         resetAlert,
         uploadImage,
+        showToast,
+        showToastSuccess,
+        showToastError,
+        showToastPromise,
+        switchSetting,
       }}
     >
       {children}
