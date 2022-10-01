@@ -2,16 +2,17 @@ import nodemailer from 'nodemailer';
 
 const sendEmail = async ({ to, subject, html }) => {
   const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
+    service: 'gmail',
     port: 587,
+    secure: false,
     auth: {
-      user: 'kaylah.conroy59@ethereal.email',
-      pass: '2qC6yq5rWytcEffNbH',
+      user: 'rubikme.company@gmail.com',
+      pass: 'viaiakjerrkqhxje',
     },
   });
 
   let info = await transporter.sendMail({
-    from: '"Bankist App" <kaylah.conroy59@ethereal.email>', // sender address
+    from: '"Bankist App" <rubikme.company@gmail.com>', // sender address
     to,
     subject,
     html,

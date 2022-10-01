@@ -15,6 +15,7 @@ import UploadCMD from './UploadCMD';
 import Deposit from './Deposit';
 import Security from './Security';
 import SettingPassword from './SettingPassword';
+import Bank from './Bank';
 
 export {
   Landing,
@@ -34,4 +35,5 @@ export {
   Security,
   SettingPassword,
   ProtectedRoutePermission,
+  Bank,
 };
