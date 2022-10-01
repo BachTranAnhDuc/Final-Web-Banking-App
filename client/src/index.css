@@ -1159,7 +1159,7 @@ body {
 
   background-color: var(--color-grey-light-9);
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: 100% 36rem;
   background-position: top-center;
   /* background-size: cover; */
 }
