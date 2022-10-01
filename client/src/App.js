@@ -18,6 +18,7 @@ import {
   Security,
   SettingPassword,
   ProtectedRoutePermission,
+  Bank,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -80,6 +81,7 @@ const App = () => {
                 }
               ></Route>
             </Route>
+            <Route path="deposit" element={<Bank></Bank>}></Route>
           </>
         </Route>
       </Routes>

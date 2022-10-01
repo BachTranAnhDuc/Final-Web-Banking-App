@@ -96,13 +96,13 @@ const NavDashboard = () => {
           </li>
           <li className="nav-dash__list--item">
             <NavLink
-              to={'/about'}
+              to={'/dashboard/deposit'}
               className={({ isActive }) =>
                 isActive ? 'nav-link nav-link__active' : 'nav-link'
               }
               onClick={() => switchPage()}
             >
-              <span>Users</span>
+              <span>Deposit</span>
             </NavLink>
           </li>
         </ul>
