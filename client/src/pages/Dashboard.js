@@ -7,6 +7,7 @@ import { useGlobalContext } from '../context/appContext';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { BsFillGearFill } from 'react-icons/bs';
 import { FaUsers, FaSketch } from 'react-icons/fa';
+import { AiFillHome } from 'react-icons/ai';
 
 const Dashboard = () => {
   const { user, showToast, showToastSuccess, showToastError } =
@@ -28,6 +29,12 @@ const Dashboard = () => {
 
   return (
     <section className="section-dashboard">
+      <div className="dashboard__content-text">
+        <div className="dashboard__content-text--containericon">
+          <AiFillHome className="dashboard__content-text--icon"></AiFillHome>
+        </div>
+        <h2 className="dashboard__content-text--heading">Home</h2>
+      </div>
       <div className="dashboard__header">
         <div className="dashboard__header--container dashboard__header--container-1">
           <div className="dashboard__header--container-context">
@@ -75,6 +82,10 @@ const Dashboard = () => {
       <div className="dashboard__something-1">
         <div className="dashboard__something-1--v1"></div>
         <div className="dashboard__something-1--v2"></div>
+      </div>
+
+      <div className="dashboard__something-2">
+        <div className="dashboard__something-2--v1"></div>
       </div>
 
       {/* <Toast></Toast> */}

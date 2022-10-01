@@ -29,6 +29,8 @@ import {
   SAVE_IMAGE_FRONT,
   SHOW_LOADER,
   HIDE_LOADER,
+  SHOW_STYLE_BODY,
+  HIDE_STYLE_BODY,
 } from './action';
 
 const reducer = (state, action) => {
@@ -258,6 +260,19 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoader: false,
+    };
+  }
+
+  if (action.type === SHOW_STYLE_BODY) {
+    return {
+      ...state,
+      styleBody: 'container__dashboard setting-background',
+    };
+  }
+  if (action.type === HIDE_STYLE_BODY) {
+    return {
+      ...state,
+      styleBody: 'container__dashboard',
     };
   }
 };

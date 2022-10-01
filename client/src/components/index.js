@@ -13,6 +13,7 @@ import NavSetting from './NavSetting';
 import ShareLayoutSetting from './ShareLayoutSetting';
 import Toast from './Toast';
 import Loader2 from './Loader2';
+import FooterDash from './FooterDash';
 
 export {
   Navbar,
@@ -30,4 +31,5 @@ export {
   ShareLayoutSetting,
   Toast,
   Loader2,
+  FooterDash,
 };

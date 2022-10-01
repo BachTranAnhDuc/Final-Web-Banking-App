@@ -37,6 +37,8 @@ import {
   SAVE_IMAGE_BACK,
   SHOW_LOADER,
   HIDE_LOADER,
+  SHOW_STYLE_BODY,
+  HIDE_STYLE_BODY,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -72,12 +74,21 @@ const defaultState = {
   imgFront: '',
   imgBack: '',
   isLoader: false,
+  styleBody: 'container__dashboard',
 };
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, defaultState);
+
+  const showStyleBody = () => {
+    dispatch({ type: SHOW_STYLE_BODY });
+  };
+
+  const hideStyleBody = () => {
+    dispatch({ type: HIDE_STYLE_BODY });
+  };
 
   const showLoading = () => {
     dispatch({ type: SHOW_HIDE_LOADING });
@@ -533,6 +544,8 @@ const AppProvider = ({ children }) => {
         showToastError,
         showToastPromise,
         switchSetting,
+        showStyleBody,
+        hideStyleBody,
       }}
     >
       {children}

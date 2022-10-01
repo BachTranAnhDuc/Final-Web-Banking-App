@@ -1,19 +1,19 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { NavDashboard, Footer, SideBar, Loading } from '../components';
+import { Outlet, useParams } from 'react-router-dom';
+import { NavDashboard, FooterDash, SideBar, Loading } from '../components';
 import { useGlobalContext } from '../context/appContext';
 
 import { FaBars } from 'react-icons/fa';
 
 const ShareLayoutDash = () => {
-  const { isLoading, openSidebar, openModal, isSidebarOpen } =
+  const { isLoading, openSidebar, openModal, isSidebarOpen, styleBody } =
     useGlobalContext();
 
   return (
-    <div className="container__dashboard">
+    <div className={styleBody}>
       <NavDashboard></NavDashboard>
       {isLoading ? <Loading></Loading> : <Outlet></Outlet>}
-      <Footer></Footer>
+      <FooterDash></FooterDash>
 
       <SideBar></SideBar>
 

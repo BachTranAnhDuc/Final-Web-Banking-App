@@ -23,16 +23,12 @@ const Account = () => {
 
   return (
     <div className="section-setting section-setting__account">
-      <div className="setting-account__images">
-        <img src={avt1} alt="avatar" className="setting-account__image" />
+      <div className="setting-account__context-header">
+        <h3 className="setting-account__heading">Profile Detail</h3>
 
-        <img src={design1} alt="circle 1" className="icon-design__circle" />
-
-        <p className="setting-account__context--text setting-account__context--text-name">
-          {user.name}
-        </p>
+        <button className="btn">Edit Profile</button>
       </div>
-      <div className="setting-account__context">
+      <div className="setting-account__context-body">
         <div className="setting-account__context--control">
           <h3 className="setting-account__context--label">Email</h3>
           <p className="setting-account__context--text">{user.email}</p>
