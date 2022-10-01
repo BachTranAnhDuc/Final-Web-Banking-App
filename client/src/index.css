@@ -1153,13 +1153,13 @@ body {
 } */
 
 .setting-background {
-  background-image: url('./assets/images/background/bank-5.png');
+  background-image: url('./assets/images/background/bank-6.png');
   /* width: 100%;
   height: 36rem; */
 
   background-color: var(--color-grey-light-9);
   background-repeat: no-repeat;
-  background-size: 100% 36rem;
+  background-size: 100% 100%;
   background-position: top-center;
   /* background-size: cover; */
 }
