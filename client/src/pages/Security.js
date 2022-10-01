@@ -15,7 +15,9 @@ const Security = () => {
     );
   }
 
-  return <div className="section-setting">Security</div>;
+  return (
+    <div className="section-setting section-setting__security">Security</div>
+  );
 };
 
 export default Security;

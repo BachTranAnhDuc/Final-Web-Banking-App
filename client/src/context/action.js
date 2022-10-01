@@ -40,3 +40,7 @@ export const SAVE_IMAGE_BACK = 'SAVE_IMAGE_BACK';
 
 export const SHOW_LOADER = 'SHOW LOADER';
 export const HIDE_LOADER = 'HIDE LOADER';
+
+export const SHOW_STYLE_BODY = 'SHOW STYLE BODY';
+
+export const HIDE_STYLE_BODY = 'HIDE STYLE BODY';

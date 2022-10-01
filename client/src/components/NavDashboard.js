@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useGlobalContext } from '../context/appContext';
 
-import Logo from '../assets/images/logos/bankist.svg';
+import Logo from '../assets/images/logos/BANK.svg';
+import avt1 from '../assets/images/avt/avatar-01.svg';
 
 import { FaBars } from 'react-icons/fa';
 import { VscSettingsGear } from 'react-icons/vsc';
@@ -15,14 +16,21 @@ import '@szhsin/react-menu/dist/index.css';
 // import '@szhsin/react-menu/dist/transitions/slide.css';
 
 const NavDashboard = () => {
-  const { switchPage, openSidebar, logout } = useGlobalContext();
+  const {
+    switchPage,
+    openSidebar,
+    logout,
+    user,
+    showStyleBody,
+    hideStyleBody,
+  } = useGlobalContext();
 
   const [display, setDisplay] = useState('arrow');
   const [align, setAlign] = useState('center');
   const [position, setPosition] = useState('anchor');
   const [viewScroll, setViewScroll] = useState('auto');
   const [direction, setDirection] = useState('bottom');
-  const [stickyClass, setStickyClass] = useState('nav-bar');
+  const [stickyClass, setStickyClass] = useState('nav-dash');
 
   const navigate = useNavigate();
 
@@ -31,17 +39,28 @@ const NavDashboard = () => {
 
     switchPage();
 
+    // navigate('/login');
+
     setTimeout(() => {
       navigate('/login');
     }, 1000);
   };
 
+  const handleClick = (input) => {
+    if (input) {
+      showStyleBody();
+    } else {
+      hideStyleBody();
+    }
+    switchPage();
+  };
+
   const stickyNavbar = () => {
     if (window !== undefined) {
       let windowHeight = window.scrollY;
-      windowHeight > 100
-        ? setStickyClass('nav-bar sticky')
-        : setStickyClass('nav-bar');
+      windowHeight > 400
+        ? setStickyClass('nav-dash sticky')
+        : setStickyClass('nav-dash');
     }
   };
 
@@ -55,85 +74,96 @@ const NavDashboard = () => {
 
   return (
     <nav className={stickyClass}>
-      <button onClick={openSidebar} className="sidebar-toggle">
-        <FaBars />
-      </button>
+      <div className="nav-dash__left-side">
+        <button onClick={openSidebar} className="sidebar-toggle">
+          <FaBars />
+        </button>
+        <NavLink to={'/dashboard'} onClick={() => handleClick(false)}>
+          <img src={Logo} alt="" className="nav-dash__logo" />
+        </NavLink>
 
-      <NavLink to={'/dashboard'} onClick={() => switchPage()}>
-        <img src={Logo} alt="" className="nav-logo" />
-      </NavLink>
+        <ul className="nav-dash__list">
+          <li className="nav-dash__list--item">
+            <NavLink
+              to={'/dashboard'}
+              className={({ isActive }) =>
+                isActive ? 'nav-link nav-link__active' : 'nav-link'
+              }
+              onClick={() => switchPage()}
+            >
+              Home
+            </NavLink>
+          </li>
+          <li className="nav-dash__list--item">
+            <NavLink
+              to={'/about'}
+              className={({ isActive }) =>
+                isActive ? 'nav-link nav-link__active' : 'nav-link'
+              }
+              onClick={() => switchPage()}
+            >
+              <span>Users</span>
+            </NavLink>
+          </li>
+        </ul>
+      </div>
 
-      <ul className="nav-list">
-        <li className="nav-list__item">
-          <NavLink
-            to={'/dashboard'}
-            className={({ isActive }) =>
-              isActive ? 'nav-link nav-link__active' : 'nav-link'
-            }
-            onClick={() => switchPage()}
-          >
-            Something
-          </NavLink>
-        </li>
-        <li className="nav-list__item">
-          <NavLink
-            to={'/about'}
-            className={({ isActive }) =>
-              isActive ? 'nav-link nav-link__active' : 'nav-link'
-            }
-            onClick={() => switchPage()}
-          >
-            <span>Something</span>
-          </NavLink>
-        </li>
-      </ul>
+      <div className="nav-dash__right-side">
+        <img src={avt1} alt="avatar" className="nav__menu--img" />
 
-      <Menu
-        className={'nav__menu'}
-        menuButton={
-          <MenuButton className={'btn-account'}>My Account</MenuButton>
-        }
-        key={direction}
-        direction={direction}
-        align={align}
-        position={position}
-        viewScroll={viewScroll}
-        arrow={display === 'arrow'}
-        offsetX={
-          display === 'offset' &&
-          (direction === 'left' || direction === 'right')
-            ? 12
-            : 0
-        }
-        offsetY={
-          display === 'offset' &&
-          (direction === 'top' || direction === 'bottom')
-            ? 12
-            : 0
-        }
-      >
-        <MenuItem className={'nav__menu--item'}>
-          <RiUserLine></RiUserLine>
-          <span>View account</span>
-        </MenuItem>
-        <MenuItem className={'nav__menu--item'}>
-          <VscSettingsGear></VscSettingsGear>
-          <Link
-            to="/dashboard/setting/all"
-            className="btn-link"
-            onClick={() => switchPage()}
-          >
-            Setting
-          </Link>
-        </MenuItem>
+        <Menu
+          className={'nav__menu'}
+          menuButton={
+            <MenuButton className={'btn-account'}>{user?.name}</MenuButton>
+          }
+          key={direction}
+          direction={direction}
+          align={align}
+          position={position}
+          viewScroll={viewScroll}
+          arrow={display === 'arrow'}
+          offsetX={
+            display === 'offset' &&
+            (direction === 'left' || direction === 'right')
+              ? 12
+              : 0
+          }
+          offsetY={
+            display === 'offset' &&
+            (direction === 'top' || direction === 'bottom')
+              ? 12
+              : 0
+          }
+        >
+          <MenuItem className={'nav__menu--item'}>
+            <RiUserLine></RiUserLine>
+            <Link
+              to="/dashboard/setting/account"
+              className="btn-link"
+              onClick={() => handleClick(true)}
+            >
+              View account
+            </Link>
+          </MenuItem>
+          <MenuItem className={'nav__menu--item'}>
+            <VscSettingsGear></VscSettingsGear>
+            <Link
+              to="/dashboard/setting/all"
+              className="btn-link"
+              onClick={() => handleClick(true)}
+            >
+              Setting
+            </Link>
+          </MenuItem>
 
-        <MenuDivider />
+          <MenuDivider />
 
-        <MenuItem className={'nav__menu--item'} onClick={handleClickLog}>
-          <RiLogoutCircleRLine></RiLogoutCircleRLine>
-          <span>Logout</span>
-        </MenuItem>
-      </Menu>
+          <MenuItem className={'nav__menu--item'} onClick={handleClickLog}>
+            <RiLogoutCircleRLine></RiLogoutCircleRLine>
+            <span>Logout</span>
+          </MenuItem>
+        </Menu>
+      </div>
     </nav>
   );
 };

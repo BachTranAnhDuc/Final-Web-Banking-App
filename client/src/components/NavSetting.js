@@ -2,28 +2,19 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useGlobalContext } from '../context/appContext';
 // import { Toast } from '../components';
+import avt from '../assets/images/avt/avatar-01.svg';
+
+import { FaUserAlt } from 'react-icons/fa';
 
 const NavSetting = () => {
   const { user, showToastSuccess, showToastError, showToast, switchSetting } =
     useGlobalContext();
 
-  const { identify } = user;
-
-  // const checkIdentify = new Promise((resolve, reject) => {
-  //   if (identify === 'processing') {
-  //     resolve();
-  //   } else {
-  //     reject();
-  //   }
-  // });
+  const { identify, name, role } = user;
 
   const handleCheck = () => {
     switchSetting(1000);
     if (identify === 'processing') {
-      // showToastError(
-      //   'Your account is processing... \n\n You cannot access this router'
-      // );
-
       showToast(
         '😔 Your account is processing... \n\n ❌ You cannot access this router',
         6000,
@@ -33,10 +24,17 @@ const NavSetting = () => {
   };
 
   return (
-    <>
-      <h2 className="heading--secondary setting__heading setting__border--bottom">
-        Setting
-      </h2>
+    <div className="setting-header">
+      <div className="setting-header__context">
+        <h2 className="heading--secondary setting__heading ">{name}</h2>
+
+        <div className="setting-header__roles">
+          <FaUserAlt className="setting-header__roles--icon"></FaUserAlt>
+          <span className="setting-header__roles--text">{role}</span>
+        </div>
+      </div>
+
+      <img src={avt} alt="avt" className="setting-header__avt" />
 
       <nav className="setting-nav">
         <NavLink
@@ -108,7 +106,7 @@ const NavSetting = () => {
       </nav>
 
       {/* <Toast></Toast> */}
-    </>
+    </div>
   );
 };
 
