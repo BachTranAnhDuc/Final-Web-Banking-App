@@ -15,6 +15,8 @@ import Toast from './Toast';
 import Loader2 from './Loader2';
 import FooterDash from './FooterDash';
 
+import StepperBank from './bank/StepperBank';
+
 export {
   Navbar,
   ShareLayout,
@@ -32,4 +34,5 @@ export {
   Toast,
   Loader2,
   FooterDash,
+  StepperBank,
 };

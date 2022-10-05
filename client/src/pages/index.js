@@ -16,6 +16,11 @@ import Deposit from './Deposit';
 import Security from './Security';
 import SettingPassword from './SettingPassword';
 import Bank from './Bank';
+import BankHome from './bank/BankHome';
+import Transfer from './bank/Transfer';
+import Recharge from './bank/Recharge';
+import WithDraw from './bank/Withdraw';
+import BuyCard from './bank/BuyCard';
 
 export {
   Landing,
@@ -35,5 +40,10 @@ export {
   Security,
   SettingPassword,
   ProtectedRoutePermission,
+  BankHome,
+  Transfer,
+  Recharge,
+  WithDraw,
+  BuyCard,
   Bank,
 };
