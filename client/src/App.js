@@ -19,6 +19,11 @@ import {
   SettingPassword,
   ProtectedRoutePermission,
   Bank,
+  BankHome,
+  Transfer,
+  Recharge,
+  WithDraw,
+  BuyCard,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -81,7 +86,13 @@ const App = () => {
                 }
               ></Route>
             </Route>
-            <Route path="deposit" element={<Bank></Bank>}></Route>
+            <Route path="deposit" element={<Bank></Bank>}>
+              <Route index element={<BankHome></BankHome>}></Route>
+              <Route path="transfer" element={<Transfer></Transfer>}></Route>
+              <Route path="recharge" element={<Recharge></Recharge>}></Route>
+              <Route path="withdraw" element={<WithDraw></WithDraw>}></Route>
+              <Route path="buy" element={<BuyCard></BuyCard>}></Route>
+            </Route>
           </>
         </Route>
       </Routes>
