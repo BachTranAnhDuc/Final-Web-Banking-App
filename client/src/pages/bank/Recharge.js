@@ -23,6 +23,11 @@ import { FaLinux } from 'react-icons/fa';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
+    color: '#c2edc2',
+    fontSize: 14,
+  },
+  '& label': {
+    fontSize: 16,
     color: '#388078',
   },
   '& .MuiInput-underline:after': {
@@ -32,7 +37,7 @@ const CssTextField = styled(TextField)({
     '& fieldset': {
       borderColor: '#20c997',
       border: '2px solid #388078',
-      fontSize: '1.6rem',
+      fontSize: 16,
     },
     '&:hover fieldset': {
       borderColor: '#388078',
@@ -40,6 +45,10 @@ const CssTextField = styled(TextField)({
     '&.Mui-focused fieldset': {
       borderColor: '#c2edc2',
     },
+  },
+  '& .MuiInputBase-input': {
+    fontSize: 16,
+    letterSpacing: 1.6,
   },
 });
 
@@ -239,7 +248,7 @@ const Recharge = () => {
                   500000đ
                 </button>
               </div>
-            
+
               {/* <div className="recharge-form__control">
                 <div className="recharge-form__label--first">
                   <input
