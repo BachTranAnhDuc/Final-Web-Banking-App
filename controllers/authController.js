@@ -10,6 +10,7 @@ import {
   sendVerificationEmail,
   createJWT,
   isTokenValid,
+  sendOTPForgotPass,
   attachCookiesToResponse,
 } from '../utils/index.js';
 
@@ -277,7 +278,28 @@ const logout = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Logout success' });
 };
 
+// function: forget password
+// scenario: user click forgot pass and enter email and phone
+// server random otp and send otp to email user
 const forgotPassword = async (req, res) => {
+  //get email and phone
+  const {email, phone} = req.body;
+  // find user in database
+  const user = await User.findOne({email:email, phone:phone});
+  console.log(user)
+
+  // if user with email not exist in database
+  if(!user) {
+    throw new badRequestError("Cannot find user");
+  }
+  // then check phone user in database with phone input forgotPass
+    // random OTP to send email user
+    const randomOTP = uniqueRandom(100000, 999999);
+    user.otpForgotPass = randomOTP()
+    // save otp to database
+    sendOTPForgotPass({name: user.name,email: user.email, otpForgotPass: user.otpForgotPass})
+    await user.save();
+  
   res.status(StatusCodes.OK).json({ msg: 'Forgot password success' });
 };
 

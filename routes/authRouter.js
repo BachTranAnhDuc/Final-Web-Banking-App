@@ -22,5 +22,6 @@ router.route('/verify-email').post(verifyEmail);
 router.route('/logout').post(logout);
 router.route('/first-login').post(authenticateUser, firstLogin);
 router.route('/upload').post(uploadUserImage1);
+router.route('/forgotPassword').post(forgotPassword);
 
 export default router;
