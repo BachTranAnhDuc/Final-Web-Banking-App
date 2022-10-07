@@ -285,23 +285,47 @@ const forgotPassword = async (req, res) => {
   //get email and phone
   const {email, phone} = req.body;
   // find user in database
-  const user = await User.findOne({email:email, phone:phone});
-  console.log(user)
-
+  const findUser = await User.findOne({email:email, phone:phone});
+  console.log(findUser)
   // if user with email not exist in database
-  if(!user) {
+  if(!findUser) {
     throw new badRequestError("Cannot find user");
   }
   // then check phone user in database with phone input forgotPass
     // random OTP to send email user
     const randomOTP = uniqueRandom(100000, 999999);
-    user.otpForgotPass = randomOTP()
+    const otp = randomOTP()
+    findUser.otpForgotPass = otp.toString();
+    // send otp to email user
+    sendOTPForgotPass({name: findUser.name,email: findUser.email, otpForgotPass: findUser.otpForgotPass})
     // save otp to database
-    sendOTPForgotPass({name: user.name,email: user.email, otpForgotPass: user.otpForgotPass})
-    await user.save();
+    findUser.save()
   
   res.status(StatusCodes.OK).json({ msg: 'Forgot password success' });
 };
+
+// (Function) Enter OTP forgot password
+// Validate: check length input is equal 6, OTP input is equal OTP send to email from server
+// True: set OTP field in database "" and redirect change password page
+// False: Show warning message and display button for user can get new OTP => send otp email again
+// False(validation): Check OTP is not duplicate Old OTP save in database 
+const enterOTPForgotPass = async(req, res) => {
+  //get OTP from input
+  const {email,phone,otpForgotPass} = req.body;
+  // check length otp input 
+  const user = await User.findOne({email: email, phone: phone});
+  if(otpForgotPass.length !== 6){
+    throw new badRequestError("OTP must be 6 character");
+  }
+  // false user enter wrong otp show message and button for user to request otp again
+  if(otpForgotPass !== user.otpForgotPass){
+    throw new badRequestError("OTP is not valid please enter otp again");
+  }
+  // true
+  user.otpForgotPass = "";
+  user.save();
+  res.status(StatusCodes.OK).json({ msg: 'OTP Forgot password is true, redirect to change password' });
+}
 
 const verifyEmail = async (req, res) => {
   const { verificationToken, email } = req.body;
@@ -382,6 +406,7 @@ export {
   forgotPassword,
   verifyEmail,
   firstLogin,
+  enterOTPForgotPass,
   uploadUserImage1,
 };
 
