@@ -638,6 +638,18 @@ const AppProvider = ({ children }) => {
       try {
         const postUser = await axios.post('/api/v1/auth/login', userInput);
 
+        // function send otp
+        // const forgot = await axios.post('/api/v1/auth/forgotpassword', {
+        //   email,
+        //   phone,
+        // });
+
+        // testUser = {email, phone} true
+        // false: testUser = null
+
+        // function enterOTP:
+        // const enter = await axios.post('/api/v1/auth/enterOTP', {testUser.email, testUser.phone, otp})
+
         const { data } = postUser;
 
         const { msg, user, token, isFirstLogin } = data;

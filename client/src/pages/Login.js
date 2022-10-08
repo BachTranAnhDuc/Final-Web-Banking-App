@@ -206,6 +206,14 @@ const Login = () => {
               onClick={() => switchPage()}
             >
               Register here
+            </Link>{' '}
+            /{' '}
+            <Link
+              to={'/forgot-password'}
+              className="btn-link"
+              onClick={() => switchPage()}
+            >
+              Forgot password
             </Link>
           </p>
 

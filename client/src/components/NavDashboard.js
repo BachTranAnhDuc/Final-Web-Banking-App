@@ -184,7 +184,7 @@ const NavDashboard = () => {
           <MenuItem>
             <Avatar /> Profile
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={(e) => navigate('/dashboard/setting/account')}>
             <Avatar /> My account
           </MenuItem>
           <Divider />
@@ -195,14 +195,14 @@ const NavDashboard = () => {
             </ListItemIcon>
             Add another account
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={(e) => navigate('/dashboard/setting/all')}>
             <ListItemIcon>
               {/* <Settings fontSize="small" /> */}
               <VscSettingsGear></VscSettingsGear>
             </ListItemIcon>
             Settings
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={handleClickLog}>
             <ListItemIcon>
               {/* <Logout fontSize="small" /> */}
               <RiLogoutCircleRLine></RiLogoutCircleRLine>

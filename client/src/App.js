@@ -24,6 +24,7 @@ import {
   Recharge,
   WithDraw,
   BuyCard,
+  ForgotPassword,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -45,6 +46,10 @@ const App = () => {
         </Route>
 
         <Route path="/first-login" element={<FirstLogin></FirstLogin>}></Route>
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword></ForgotPassword>}
+        ></Route>
 
         <Route path="/dashboard" element={<ShareLayoutDash></ShareLayoutDash>}>
           <>

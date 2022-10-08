@@ -856,6 +856,23 @@ body {
 .login__heading {
   transform: translateY(-2.8rem);
 }
+
+/* FORGOT PASSWORD */
+.section-forgot {
+  min-height: 100vh;
+
+  display: grid;
+
+  grid-template-columns: 1.5fr 3fr;
+}
+
+.forgot-left {
+  background-color: #047edf;
+}
+
+.forgot-right {
+  background-color: #07cdae;
+}
 /* ERROR */
 .section-error {
   height: 85vh;

@@ -5,7 +5,6 @@ import crypto from 'crypto';
 import cloudinary from 'cloudinary';
 import fs from 'fs';
 
-
 import {
   sendVerificationEmail,
   createJWT,
@@ -142,14 +141,13 @@ const uploadUserImage1 = async (req, res) => {
         folder: `bankist`,
       }
     );
-  
+
     fs.unlinkSync(req.files.imageBack.tempFilePath);
 
     res
       .status(StatusCodes.OK)
       .json({ msg: 'upload success', data: result.secure_url });
   }
-  
 };
 
 const uploadImage = async (tempPath, username) => {
@@ -170,7 +168,15 @@ const uploadImage = async (tempPath, username) => {
 };
 
 const register = async (req, res) => {
-  const { phone: phoneReq, email: emailReq, name, address, birth , imageFront, imageBack } = req.body;
+  const {
+    phone: phoneReq,
+    email: emailReq,
+    name,
+    address,
+    birth,
+    imageFront,
+    imageBack,
+  } = req.body;
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
   const role = isFirstAccount ? 'admin' : 'user';
@@ -283,24 +289,28 @@ const logout = async (req, res) => {
 // server random otp and send otp to email user
 const forgotPassword = async (req, res) => {
   //get email and phone
-  const {email, phone} = req.body;
+  const { email, phone } = req.body;
   // find user in database
-  const findUser = await User.findOne({email:email, phone:phone});
-  console.log(findUser)
+  const findUser = await User.findOne({ email: email, phone: phone });
+  console.log(findUser);
   // if user with email not exist in database
-  if(!findUser) {
-    throw new badRequestError("Cannot find user");
+  if (!findUser) {
+    throw new badRequestError('Cannot find user');
   }
   // then check phone user in database with phone input forgotPass
-    // random OTP to send email user
-    const randomOTP = uniqueRandom(100000, 999999);
-    const otp = randomOTP()
-    findUser.otpForgotPass = otp.toString();
-    // send otp to email user
-    sendOTPForgotPass({name: findUser.name,email: findUser.email, otpForgotPass: findUser.otpForgotPass})
-    // save otp to database
-    findUser.save()
-  
+  // random OTP to send email user
+  const randomOTP = uniqueRandom(100000, 999999);
+  const otp = randomOTP();
+  findUser.otpForgotPass = otp.toString();
+  // send otp to email user
+  sendOTPForgotPass({
+    name: findUser.name,
+    email: findUser.email,
+    otpForgotPass: findUser.otpForgotPass,
+  });
+  // save otp to database
+  findUser.save();
+
   res.status(StatusCodes.OK).json({ msg: 'Forgot password success' });
 };
 
@@ -308,24 +318,29 @@ const forgotPassword = async (req, res) => {
 // Validate: check length input is equal 6, OTP input is equal OTP send to email from server
 // True: set OTP field in database "" and redirect change password page
 // False: Show warning message and display button for user can get new OTP => send otp email again
-// False(validation): Check OTP is not duplicate Old OTP save in database 
-const enterOTPForgotPass = async(req, res) => {
+// False(validation): Check OTP is not duplicate Old OTP save in database
+const enterOTPForgotPass = async (req, res) => {
   //get OTP from input
-  const {email,phone,otpForgotPass} = req.body;
-  // check length otp input 
-  const user = await User.findOne({email: email, phone: phone});
-  if(otpForgotPass.length !== 6){
-    throw new badRequestError("OTP must be 6 character");
+  const { email, phone, otpForgotPass } = req.body;
+  // check length otp input
+  const user = await User.findOne({ email: email, phone: phone });
+
+  const { otpForgotPass: otpDb } = user;
+
+  if (otpForgotPass.length !== 6) {
+    throw new badRequestError('OTP must be 6 character');
   }
   // false user enter wrong otp show message and button for user to request otp again
-  if(otpForgotPass !== user.otpForgotPass){
-    throw new badRequestError("OTP is not valid please enter otp again");
+  if (otpForgotPass !== user.otpForgotPass) {
+    throw new badRequestError('OTP is not valid please enter otp again');
   }
   // true
-  user.otpForgotPass = "";
+  user.otpForgotPass = '';
   user.save();
-  res.status(StatusCodes.OK).json({ msg: 'OTP Forgot password is true, redirect to change password' });
-}
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'OTP Forgot password is true, redirect to change password' });
+};
 
 const verifyEmail = async (req, res) => {
   const { verificationToken, email } = req.body;

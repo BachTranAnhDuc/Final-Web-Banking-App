@@ -21,6 +21,7 @@ import Transfer from './bank/Transfer';
 import Recharge from './bank/Recharge';
 import WithDraw from './bank/Withdraw';
 import BuyCard from './bank/BuyCard';
+import ForgotPassword from './ForgotPassword';
 
 export {
   Landing,
@@ -46,4 +47,5 @@ export {
   WithDraw,
   BuyCard,
   Bank,
+  ForgotPassword,
 };
