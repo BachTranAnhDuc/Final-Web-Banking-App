@@ -16,6 +16,14 @@ import { Loading } from '../components';
 
 import LandingPage from '../theme/pages/LandingPage';
 
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+} from '../theme/components/Buttons';
+
 const Landing = () => {
   const { isLoading } = useGlobalContext();
 
@@ -42,11 +50,11 @@ const Landing = () => {
         </p>
 
         <div className="header__buttons">
-          <button className="btn btn-download">
+          <DownloadButton>
             <IoLogoGooglePlaystore className="logo-playstore"></IoLogoGooglePlaystore>
             <span className="btn-text"> Download app</span>
-          </button>
-          <button className="btn btn-contact">Contact us</button>
+          </DownloadButton>
+          <ContactButton className="btn btn-contact">Contact us</ContactButton>
         </div>
 
         <img

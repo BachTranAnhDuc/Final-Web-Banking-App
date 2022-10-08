@@ -12,6 +12,8 @@ import {
   CssVarsProvider,
   useColorScheme,
 } from '@mui/joy/styles';
+import styled from 'styled-components';
+import ThemeStyled from './theme/Theme';
 
 const muiTheme = extendMuiTheme({
   // This is required to point to `var(--joy-*)` because we are using `CssVarsProvider` from Joy UI.
@@ -88,8 +90,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AppProvider>
-      <CssVarsProvider theme={theme}></CssVarsProvider>
-      <App />
+      <CssVarsProvider theme={theme}>
+        {/* <ThemeStyled> */}
+        <App />
+        {/* </ThemeStyled> */}
+      </CssVarsProvider>
     </AppProvider>
   </React.StrictMode>
 );

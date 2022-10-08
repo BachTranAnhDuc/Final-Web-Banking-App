@@ -16,6 +16,14 @@ import {
   GrCaretPrevious,
 } from 'react-icons/gr';
 
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+} from '../theme/components/Buttons';
+
 const initState = {
   name: '',
   phone: '',
@@ -291,7 +299,7 @@ const Register = () => {
                 )}
 
                 <div className="form-buttons">
-                  <button
+                  <ContactButton
                     className="btn btn-contact btn-register"
                     onClick={handleClickPre}
                     type="button"
@@ -301,24 +309,16 @@ const Register = () => {
                     ) : (
                       <GrCaretPrevious className="icon-pre"></GrCaretPrevious>
                     )}
-                  </button>
+                  </ContactButton>
 
                   {getNext === 6 ? (
-                    <button
-                      className="btn btn-contact btn-register"
-                      onClick={handleSubmit}
-                      type="submit"
-                    >
+                    <ContactButton onClick={handleSubmit} type="submit">
                       Submit
-                    </button>
+                    </ContactButton>
                   ) : (
-                    <button
-                      className="btn btn-contact btn-register"
-                      onClick={handleClickNext}
-                      type="button"
-                    >
+                    <ContactButton onClick={handleClickNext} type="button">
                       <GrCaretNext className="icon-pre"></GrCaretNext>
-                    </button>
+                    </ContactButton>
                   )}
                 </div>
               </form>

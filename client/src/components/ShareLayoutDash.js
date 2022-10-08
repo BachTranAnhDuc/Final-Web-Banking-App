@@ -7,12 +7,14 @@ import { FaBars } from 'react-icons/fa';
 
 import SettingStyled from '../theme/pages/Setting';
 
+import GlobalStyled from '../theme/base/Global';
+
 const ShareLayoutDash = () => {
   const { isLoading, openSidebar, openModal, isSidebarOpen, styleBody } =
     useGlobalContext();
 
   return (
-    <SettingStyled>
+    <GlobalStyled>
       <div className={styleBody}>
         <NavDashboard></NavDashboard>
         {isLoading ? <Loading></Loading> : <Outlet></Outlet>}
@@ -22,7 +24,7 @@ const ShareLayoutDash = () => {
 
         {isSidebarOpen && <div className="overlay"></div>}
       </div>
-    </SettingStyled>
+    </GlobalStyled>
   );
 };
 

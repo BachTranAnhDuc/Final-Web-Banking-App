@@ -8,6 +8,13 @@ import toast, { Toaster } from 'react-hot-toast';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 import LoginStyled from '../theme/pages/Login';
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+} from '../theme/components/Buttons';
 
 const defaultState = {
   username: '',
@@ -220,9 +227,8 @@ const Login = () => {
               </Link>
             </p>
 
-            <button
+            <DefaultButton
               type="submit"
-              className="btn"
               disabled={isLoadingForm ? true : isCountDown ? true : false}
             >
               {isLoadingForm
@@ -230,7 +236,7 @@ const Login = () => {
                 : isCountDown
                 ? 'Cannot login now...'
                 : 'Login'}
-            </button>
+            </DefaultButton>
           </form>
         </div>
 

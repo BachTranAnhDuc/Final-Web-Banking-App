@@ -1,12 +1,14 @@
 import React from 'react';
 
+import { SpinnerStyled } from '../theme/components/Spinner';
+
 const Loading = () => {
   return (
     <div className="container__loading">
-      <div className="lds-ripple">
+      <SpinnerStyled>
         <div></div>
         <div></div>
-      </div>
+      </SpinnerStyled>
     </div>
   );
 };

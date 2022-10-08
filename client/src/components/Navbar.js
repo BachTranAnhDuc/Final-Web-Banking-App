@@ -5,6 +5,14 @@ import { useGlobalContext } from '../context/appContext';
 
 import NavLanding from '../theme/components/LandingNav';
 
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+} from '../theme/components/Buttons';
+
 const Navbar = () => {
   const [stickyClass, setStickyClass] = useState('nav-bar');
   const { switchPage } = useGlobalContext();
@@ -62,12 +70,7 @@ const Navbar = () => {
         </ul>
 
         <NavLink to={'/login'}>
-          <button
-            className="btn btn-login btn-white btn-animate"
-            onClick={() => switchPage()}
-          >
-            Sign In
-          </button>
+          <DefaultButton onClick={() => switchPage()}>Sign In</DefaultButton>
         </NavLink>
       </nav>
     </NavLanding>

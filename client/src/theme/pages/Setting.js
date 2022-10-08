@@ -1,19 +1,6 @@
 import styled from 'styled-components';
 
 const SettingStyled = styled.main`
-  .setting-background {
-    /* background-image: url({backSetting}); */
-    /* background-image: url('./assets/images/background/bank-6.png'); */
-    /* width: 100%;
-  height: 36rem; */
-    background-image: url('https://res.cloudinary.com/dvhgjxfum/image/upload/v1665232946/Background/bank-6_fewwpi.png');
-
-    background-color: var(--color-grey-light-9);
-    background-repeat: no-repeat;
-    background-size: 100% 36rem;
-    background-position: top-center;
-    /* background-size: cover; */
-  }
   .section-setting__container {
     min-height: 100vh;
     padding: 6rem 26rem;

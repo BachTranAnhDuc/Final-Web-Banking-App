@@ -107,6 +107,9 @@ const LandingPage = styled.main`
     filter: brightness(0);
     opacity: 50%;
   }
+  .logo-playstore {
+    transform: translateY(0.2rem);
+  }
 `;
 
 export default LandingPage;

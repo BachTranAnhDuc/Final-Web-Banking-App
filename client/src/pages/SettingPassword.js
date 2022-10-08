@@ -9,6 +9,15 @@ import { Loader2 } from '../components';
 
 import SettingStyled from '../theme/pages/Setting';
 
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+  ButtonAccountEdit,
+} from '../theme/components/Buttons';
+
 const SettingPassword = () => {
   const [next, setNext] = useState(false);
 
@@ -31,16 +40,16 @@ const SettingPassword = () => {
           <h3 className="setting-password__heading-text">Change Password</h3>
 
           <div className="setting-password__group-btns">
-            <button
-              className="btn"
+            <ButtonAccountEdit
+              className="align-self__center"
               type="button"
               onClick={() => setNext(false)}
             >
               Cancel
-            </button>
-            <button className="btn" type="button">
+            </ButtonAccountEdit>
+            <ButtonAccountEdit className="align-self__center" type="button">
               Save
-            </button>
+            </ButtonAccountEdit>
           </div>
         </div>
 

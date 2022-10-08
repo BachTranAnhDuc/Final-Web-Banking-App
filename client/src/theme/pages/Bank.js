@@ -1,6 +1,51 @@
 import styled from 'styled-components';
 
 const BankStyled = styled.main`
+  .dashboard__content-text {
+    display: grid;
+
+    grid-template-columns: min-content max-content;
+
+    align-items: center;
+
+    gap: 2rem;
+  }
+
+  .dashboard__content-text--containericon {
+    background: radial-gradient(
+      circle,
+      rgba(32, 201, 151, 1) 0%,
+      rgba(166, 233, 213, 1) 100%
+    );
+
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px,
+      rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px,
+      rgba(0, 0, 0, 0.07) 0px 16px 16px;
+
+    border-radius: 4px;
+    height: 4rem;
+    width: 4rem;
+
+    display: grid;
+
+    justify-items: center;
+    align-items: center;
+
+    /* padding: 0.8remm; */
+  }
+
+  .dashboard__content-text--icon {
+    margin: 0.8rem;
+
+    color: var(--color-white);
+  }
+
+  .dashboard__content-text--heading {
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.2rem;
+  }
+
   .section-bank {
     background-color: var(--color-grey-light-9);
 

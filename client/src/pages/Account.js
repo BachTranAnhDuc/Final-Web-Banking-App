@@ -12,6 +12,15 @@ import { Loader2 } from '../components';
 
 import SettingStyled from '../theme/pages/Setting';
 
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+  ButtonAccountEdit,
+} from '../theme/components/Buttons';
+
 const Account = () => {
   const { user, isLoader } = useGlobalContext();
 
@@ -31,7 +40,7 @@ const Account = () => {
         <div className="setting-account__context-header">
           <h3 className="setting-account__heading">Profile Detail</h3>
 
-          <button className="btn">Edit Profile</button>
+          <ButtonAccountEdit className="btn">Edit Profile</ButtonAccountEdit>
         </div>
         <div className="setting-account__context-body">
           <div className="setting-account__context--control">

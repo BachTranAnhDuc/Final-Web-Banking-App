@@ -1,9 +1,10 @@
 import React from 'react';
 
+import { LoaderStyled } from '../theme/components/Spinner';
 const Loader2 = () => {
   return (
     <div className="container__loader">
-      <div className="lds-hourglass"></div>
+      <LoaderStyled></LoaderStyled>
     </div>
   );
 };
