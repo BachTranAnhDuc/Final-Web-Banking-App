@@ -11,9 +11,22 @@ import { VscSettingsGear } from 'react-icons/vsc';
 import { RiUserLine, RiLogoutCircleRLine } from 'react-icons/ri';
 
 //
-import { Menu, MenuItem, MenuButton, MenuDivider } from '@szhsin/react-menu';
-import '@szhsin/react-menu/dist/index.css';
+// import { Menu, MenuItem, MenuButton, MenuDivider } from '@szhsin/react-menu';
+// import '@szhsin/react-menu/dist/index.css';
 // import '@szhsin/react-menu/dist/transitions/slide.css';
+
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+// import PersonAdd from '@mui/icons-material/PersonAdd';
+// import Settings from '@mui/icons-material/Settings';
+// import Logout from '@mui/icons-material/Logout';
 
 const NavDashboard = () => {
   const {
@@ -64,6 +77,15 @@ const NavDashboard = () => {
     }
   };
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClickOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
     window.addEventListener('scroll', stickyNavbar);
 
@@ -109,9 +131,88 @@ const NavDashboard = () => {
       </div>
 
       <div className="nav-dash__right-side">
-        <img src={avt1} alt="avatar" className="nav__menu--img" />
+        <Tooltip title="Account settings" sx={{}}>
+          <IconButton
+            onClick={handleClickOpen}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? 'account-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+          >
+            <Avatar sx={{ width: 32, height: 32, backgroundColor: '#20c997' }}>
+              D
+            </Avatar>
+          </IconButton>
+        </Tooltip>
 
         <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              '&:before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+          <MenuItem>
+            <Avatar /> Profile
+          </MenuItem>
+          <MenuItem>
+            <Avatar /> My account
+          </MenuItem>
+          <Divider />
+          <MenuItem>
+            <ListItemIcon>
+              {/* <PersonAdd fontSize="small" /> */}
+              <RiUserLine></RiUserLine>
+            </ListItemIcon>
+            Add another account
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              {/* <Settings fontSize="small" /> */}
+              <VscSettingsGear></VscSettingsGear>
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              {/* <Logout fontSize="small" /> */}
+              <RiLogoutCircleRLine></RiLogoutCircleRLine>
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
+        {/* <img src={avt1} alt="avatar" className="nav__menu--img" /> */}
+
+        {/* <Menu
           className={'nav__menu'}
           menuButton={
             <MenuButton className={'btn-account'}>{user?.name}</MenuButton>
@@ -162,7 +263,7 @@ const NavDashboard = () => {
             <RiLogoutCircleRLine></RiLogoutCircleRLine>
             <span>Logout</span>
           </MenuItem>
-        </Menu>
+        </Menu> */}
       </div>
     </nav>
   );

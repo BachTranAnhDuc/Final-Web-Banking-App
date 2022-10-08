@@ -24,6 +24,10 @@ import { MuiOtpInput } from 'mui-one-time-password-input';
 
 import { FaLinux, FaGithub } from 'react-icons/fa';
 
+import { Toast } from '../../components';
+
+import { useGlobalContext } from '../../context/appContext';
+
 // import { SteppBank } from '../../components';
 
 const CssTextField = styled(TextField)({
@@ -95,6 +99,14 @@ const Transfer = () => {
 
   const [activeStep, setActiveStep] = useState(0);
 
+  const {
+    showToast,
+    actionBankPage,
+    bankPage,
+    confirmMoneyInput,
+    isCorrectMoney,
+  } = useGlobalContext();
+
   const handleChangeId = (input) => {
     setValues({ ...values, idCard: input });
   };
@@ -103,7 +115,22 @@ const Transfer = () => {
     setValues({ ...values, cvv: input });
   };
 
+  const isValidMoney = (input) => {
+    if (input % 1000 === 0 && input !== 0) {
+      confirmMoneyInput(true);
+      console.log('check money success');
+      showToast('Valid money', 1000, 'success');
+    } else {
+      confirmMoneyInput(false);
+      console.log('check money error');
+      showToast('Money must divide 10000 and != 0', 1000, 'error');
+    }
+  };
+
   const handleChangeMoney = (e) => {
+    console.log(`${e.target.value}`);
+    isValidMoney(e.target.value);
+
     setValues({ ...values, money: e.target.value });
   };
 
@@ -112,40 +139,55 @@ const Transfer = () => {
   };
 
   const handleClick10 = () => {
+    isValidMoney(10000);
     setValues({ ...values, money: 10000 });
   };
   const handleClick20 = () => {
+    isValidMoney(20000);
     setValues({ ...values, money: 20000 });
   };
   const handleClick50 = () => {
+    isValidMoney(50000);
     setValues({ ...values, money: 50000 });
   };
   const handleClick100 = () => {
+    isValidMoney(100000);
     setValues({ ...values, money: 100000 });
   };
   const handleClick200 = () => {
+    isValidMoney(200000);
     setValues({ ...values, money: 200000 });
   };
   const handleClick500 = () => {
+    isValidMoney(500000);
     setValues({ ...values, money: 500000 });
   };
 
   const handleClickNext = (e) => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (getNext === 4) {
-      setNext(4);
+    if (!isCorrectMoney) {
+      showToast('Not valid money', 1000, 'error');
     } else {
-      setNext(getNext + 1);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
+    actionBankPage({
+      numPage: bankPage.numPage,
+      name: 'transfer',
+      length: 5,
+      actionType: 'plus',
+      isOK: isCorrectMoney,
+    });
   };
 
   const handleClickBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    if (getNext === 0) {
-      setNext(0);
-    } else {
-      setNext(getNext - 1);
-    }
+
+    actionBankPage({
+      numPage: bankPage.numPage,
+      name: 'transfer',
+      length: 5,
+      actionType: 'minus',
+      isOK: isCorrectMoney,
+    });
   };
 
   const [selectedValue, setSelectedValue] = React.useState('a');
@@ -195,13 +237,13 @@ const Transfer = () => {
           </Box>
         </div>
         <div className="transfer-body__right">
-          {getNext === 0 && (
+          {bankPage.numPage === 1 && (
             <div className="transfer-body__right--header">
               <h2 className="heading--secondary">Heading here</h2>
             </div>
           )}
 
-          {getNext === 0 && (
+          {bankPage.numPage === 1 && (
             <form className="transfer-form transfer-1">
               <Box sx={{ '& .MuiTextField-root': { m: 1, width: '32ch' } }}>
                 <CssTextField
@@ -288,7 +330,7 @@ const Transfer = () => {
             </form>
           )}
 
-          {getNext === 1 && (
+          {bankPage.numPage === 2 && (
             <>
               <div className="transfer-information__header">
                 <h2 className="transfer-information__heading">Phone Number</h2>
@@ -309,7 +351,7 @@ const Transfer = () => {
             </>
           )}
 
-          {getNext === 2 && (
+          {bankPage.numPage === 3 && (
             <>
               <div className="transfer-information__header">
                 <h2 className="transfer-information__heading">Information</h2>
@@ -392,7 +434,7 @@ const Transfer = () => {
             </>
           )}
 
-          {getNext === 3 && (
+          {bankPage.numPage === 4 && (
             <>
               <div className="transfer-information__header">
                 <h2 className="transfer-information__heading">OTP</h2>
@@ -411,7 +453,7 @@ const Transfer = () => {
             </>
           )}
 
-          {getNext === 4 && (
+          {bankPage.numPage === 5 && (
             <>
               <div className="transfer-result__header">
                 <h2 className="heading--secondary">Success</h2>
@@ -423,7 +465,7 @@ const Transfer = () => {
           )}
 
           <div className="transfer__group-btns">
-            {getNext !== 0 && (
+            {bankPage.numPage !== 1 && (
               <button
                 className="transfer__btn"
                 type="button"

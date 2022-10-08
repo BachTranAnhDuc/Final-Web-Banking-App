@@ -4,13 +4,30 @@ import { Outlet, NavLink } from 'react-router-dom';
 
 import { useGlobalContext } from '../context/appContext';
 
-import { Loader2 } from '../components';
+import { Loader2, Toast } from '../components';
 
 import { BsFillCreditCard2FrontFill } from 'react-icons/bs';
 import { FaCentos } from 'react-icons/fa';
 
 const Bank = () => {
-  const { switchSetting, isLoader } = useGlobalContext();
+  const { switchSetting, isLoader, resetPageBank } = useGlobalContext();
+
+  const handleClickBuyCard = () => {
+    switchSetting(1000);
+    resetPageBank('buy-card', 4);
+  };
+  const handleClickWithdraw = () => {
+    switchSetting(1000);
+    resetPageBank('withdraw', 4);
+  };
+  const handleClickTransfer = () => {
+    switchSetting(1000);
+    resetPageBank('transfer', 4);
+  };
+  const handleClickRecharge = () => {
+    switchSetting(1000);
+    resetPageBank('recharge', 4);
+  };
 
   return (
     <section className="section-bank">
@@ -44,7 +61,7 @@ const Bank = () => {
                           ? 'bankbody__link bankbody__link--active'
                           : 'bankbody__link'
                       }
-                      onClick={() => switchSetting(1000)}
+                      onClick={handleClickTransfer}
                     >
                       Transfer
                     </NavLink>
@@ -62,7 +79,7 @@ const Bank = () => {
                           ? 'bankbody__link bankbody__link--active'
                           : 'bankbody__link'
                       }
-                      onClick={() => switchSetting(1000)}
+                      onClick={handleClickRecharge}
                     >
                       Recharge
                     </NavLink>
@@ -80,7 +97,7 @@ const Bank = () => {
                           ? 'bankbody__link bankbody__link--active'
                           : 'bankbody__link'
                       }
-                      onClick={() => switchSetting(1000)}
+                      onClick={handleClickWithdraw}
                     >
                       Withdraw
                     </NavLink>
@@ -98,7 +115,7 @@ const Bank = () => {
                           ? 'bankbody__link bankbody__link--active'
                           : 'bankbody__link'
                       }
-                      onClick={() => switchSetting(1000)}
+                      onClick={handleClickBuyCard}
                     >
                       Buy card
                     </NavLink>
@@ -113,6 +130,8 @@ const Bank = () => {
           {isLoader ? <Loader2></Loader2> : <Outlet></Outlet>}
         </div>
       </div>
+
+      <Toast position={'top-right'}></Toast>
     </section>
   );
 };

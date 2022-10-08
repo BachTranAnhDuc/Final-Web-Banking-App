@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { HiOutlinePlusCircle, HiOutlineMinusCircle } from 'react-icons/hi';
 
 import viettelLogo from '../../assets/images/logos/viettel.svg';
 import successSvg from '../../assets/images/design/success.svg';
+
+import { useGlobalContext } from '../../context/appContext';
+
+import { DialogMUIPwd } from '../../components';
 
 const initSwitchCard = {
   viettel: true,
@@ -18,6 +22,12 @@ const initItem = {
   hundred: false,
 };
 
+const initPwd = {
+  pwd: '',
+  isShow: false,
+  isConfirm: false,
+};
+
 const BuyCard = () => {
   const [valuesCard, setValuesCard] = useState(initSwitchCard);
 
@@ -26,6 +36,26 @@ const BuyCard = () => {
   const [getAmount, setAmount] = useState(1);
 
   const [getPage, setPage] = useState(1);
+
+  const {
+    showToast,
+    isConfirmPwdBuy,
+    actionBankPage,
+    bankPage,
+    confirmPwdBuy,
+  } = useGlobalContext();
+
+  const [openModalMUI, setOpenModalMUI] = React.useState(false);
+
+  const [pwdInput, setPwdInput] = useState(initPwd);
+
+  const handleClickOpenModalMUI = () => {
+    setOpenModalMUI(true);
+  };
+
+  const handleCloseModalMUI = () => {
+    setOpenModalMUI(false);
+  };
 
   const resetSwitchCard = () => {
     setValuesCard({ viettel: false, mobile: false, vina: false });
@@ -60,7 +90,19 @@ const BuyCard = () => {
     setValuesItem({ ten: false, twenty: false, fifty: false, hundred: true });
   };
 
+  const handleCheckPlus = () => {
+    if (getAmount === 5) {
+      showToast('💣 Amount must not more than 5', 2000, 'error');
+    }
+  };
+  const handleCheckMinus = () => {
+    if (getAmount === 1) {
+      showToast('💣 Amount must not less than 1', 2000, 'error');
+    }
+  };
+
   const handleClickMinus = (e) => {
+    handleCheckMinus();
     if (getAmount === 1) {
       setAmount(1);
     } else {
@@ -69,6 +111,7 @@ const BuyCard = () => {
   };
 
   const handleClickPlus = (e) => {
+    handleCheckPlus();
     if (getAmount === 5) {
       setAmount(5);
     } else {
@@ -77,18 +120,25 @@ const BuyCard = () => {
   };
 
   const handleClickNextPage = (e) => {
-    if (getPage === 3) {
-      setPage(3);
-    } else {
-      setPage(getPage + 1);
+    if (bankPage.numPage === 1) {
+      confirmPwdBuy(false);
     }
+    actionBankPage({
+      numPage: bankPage.numPage,
+      name: 'buy-card',
+      length: 3,
+      actionType: 'plus',
+      isOK: true,
+    });
   };
   const handleClickPrePage = (e) => {
-    if (getPage === 1) {
-      setPage(1);
-    } else {
-      setPage(getPage - 1);
-    }
+    actionBankPage({
+      numPage: bankPage.numPage,
+      name: 'buy-card',
+      length: 3,
+      actionType: 'minus',
+      isOK: true,
+    });
   };
 
   return (
@@ -97,7 +147,7 @@ const BuyCard = () => {
         <h2 className="buy-card__header--heading">Buy card</h2>
       </div>
       <div className="buy-card__body">
-        {getPage === 1 && (
+        {bankPage.numPage === 1 && (
           <>
             <div className="buy-card__body--top">
               <div className="buy-card__list">
@@ -257,7 +307,7 @@ const BuyCard = () => {
           </>
         )}
 
-        {getPage === 2 && (
+        {bankPage.numPage === 2 && (
           <>
             <div className="buy-card__shop--body-infor">
               <div className="buy-card__shop--header">
@@ -297,6 +347,14 @@ const BuyCard = () => {
                         4
                       </span>
                     </div>
+                    <div className="buy-card__shop--body__content-control">
+                      <h2 className="buy-card__shop--body__content-heading">
+                        Total
+                      </h2>
+                      <span className="buy-card__shop--body__content-span">
+                        400000vnd
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -313,7 +371,7 @@ const BuyCard = () => {
                 <button
                   className="buy-card__shop--footer-btn"
                   type="button"
-                  onClick={handleClickNextPage}
+                  onClick={handleClickOpenModalMUI}
                 >
                   Next
                 </button>
@@ -322,7 +380,7 @@ const BuyCard = () => {
           </>
         )}
 
-        {getPage === 3 && (
+        {bankPage.numPage === 3 && (
           <>
             <div className="buy-card__result">
               <div className="buy-card__result--header">
@@ -372,6 +430,17 @@ const BuyCard = () => {
           </>
         )}
       </div>
+
+      <DialogMUIPwd
+        open={openModalMUI}
+        handleClose={handleCloseModalMUI}
+        namePage={'buy-card'}
+        lengthPage={3}
+        // values={pwdInput}
+        // handleChangePwd={handleChangePwd}
+        // handleClickShowPassword={handleClickShowPassword}
+        // handleMouseDownPassword={handleMouseDownPassword}
+      ></DialogMUIPwd>
     </div>
   );
 };

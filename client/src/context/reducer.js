@@ -31,6 +31,10 @@ import {
   HIDE_LOADER,
   SHOW_STYLE_BODY,
   HIDE_STYLE_BODY,
+  CONFIRM_PWD_BUY,
+  NUM_PAGE_BANK,
+  CONFIRM_DIGITAL_CARD,
+  VALID_MONEY_INPUT,
 } from './action';
 
 const reducer = (state, action) => {
@@ -274,6 +278,30 @@ const reducer = (state, action) => {
       ...state,
       styleBody: 'container__dashboard',
     };
+  }
+
+  if (action.type === CONFIRM_PWD_BUY) {
+    return {
+      ...state,
+      isConfirmPwdBuy: action.payload,
+    };
+  }
+
+  if (action.type === NUM_PAGE_BANK) {
+    const { numPage, name, length, actionType, isOK } = action.payload;
+
+    return {
+      ...state,
+      bankPage: { numPage, name, length, actionType, isOK },
+    };
+  }
+
+  if (action.type === CONFIRM_DIGITAL_CARD) {
+    return { ...state, isConfirmDigitalCard: action.payload };
+  }
+
+  if (action.type === VALID_MONEY_INPUT) {
+    return { ...state, isCorrectMoney: action.payload };
   }
 };
 

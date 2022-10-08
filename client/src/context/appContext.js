@@ -39,6 +39,10 @@ import {
   HIDE_LOADER,
   SHOW_STYLE_BODY,
   HIDE_STYLE_BODY,
+  CONFIRM_PWD_BUY,
+  NUM_PAGE_BANK,
+  CONFIRM_DIGITAL_CARD,
+  VALID_MONEY_INPUT,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -46,22 +50,47 @@ const user = localStorage.getItem('user');
 const isFirstLogin = localStorage.getItem('isFirstLogin');
 
 const defaultState = {
+  // check loading
   isLoading: false,
+
+  // show login alert
   showAlert: false,
   isErrorForm: false,
   messageErrorForm: '',
   typeErrorForm: '',
+
+  // save user to local store
   user: user ? JSON.parse(user) : null,
   isError: false,
+
+  // check is login
   isLogin: false,
+
+  // sidebar dashboard
   isSidebarOpen: false,
+
+  // modal dialog
   isModalOpen: false,
+
+  // token
   token: token,
+
+  // check is first login
   isFirstLogin: isFirstLogin,
+
+  // onclick form check loading
   isLoadingForm: false,
+
+  // if your account is block
   isLockForm: false,
+
+  // number of login fail
   numberOfLoginFail: 0,
+
+  // time count down
   isCountDown: false,
+
+  // style form when login (success, error, warning)
   styleAlert: '',
   styleInputLogin: {
     isUserErr: 'default',
@@ -71,16 +100,441 @@ const defaultState = {
     style: 'form-input',
   },
   isAlert: true,
+
+  // image identify front and back
   imgFront: '',
   imgBack: '',
+
+  // check loader in dashboard
   isLoader: false,
   styleBody: 'container__dashboard',
+
+  // check confirm password
+  isConfirmPwdBuy: false,
+
+  // check comfirm card
+  isConfirmDigitalCard: false,
+
+  // check input money is correct
+  isCorrectMoney: false,
+
+  // page in bank
+  bankPage: {
+    numPage: 1,
+    name: 'default',
+    length: 0,
+    actionType: '',
+    isOK: false,
+  },
 };
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, defaultState);
+
+  // custom toast
+  // msg: message, time: time countdown, type: error, success, warming...
+  const showToast = (msg, time, type) => {
+    // type error
+    if (type === 'error') {
+      return toast(msg, {
+        duration: time,
+        style: {
+          border: '2px solid #ff6b6b',
+          padding: '16px',
+          color: '#662b2b',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        },
+      });
+    }
+    // type warming
+    else if (type === 'warming') {
+      return toast(msg, {
+        duration: time,
+        style: {
+          border: '2px solid #fcc419',
+          padding: '16px',
+          color: '#4c3b07',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        },
+      });
+    }
+    // type success
+    else if (type === 'success') {
+      return toast(msg, {
+        duration: time,
+        style: {
+          border: '2px solid #36cea1',
+          padding: '16px',
+          color: '#0a3c2d',
+        },
+        iconTheme: {
+          primary: '#0a3c2d',
+          secondary: '#FFFAEE',
+        },
+      });
+    }
+
+    return toast(msg, {
+      duration: time,
+    });
+  };
+
+  const showToastSuccess = (msg) => {
+    return toast.success(msg);
+  };
+
+  const showToastError = (msg) => {
+    return toast.error(msg, {
+      style: {
+        border: '1px solid #713200',
+        padding: '16px',
+        color: '#713200',
+      },
+      iconTheme: {
+        primary: '#713200',
+        secondary: '#FFFAEE',
+      },
+    });
+  };
+
+  const showToastPromise = (promiseInput, msgSuccess, msgError) => {
+    return toast.promise(promiseInput, {
+      loading: 'Loading...',
+      success: <b>{msgSuccess}</b>,
+      error: <b>{msgError}</b>,
+    });
+  };
+
+  // handle click next page or previous page
+  const actionBankPage = ({ numPage, name, length, actionType, isOK }) => {
+    // console.log(actionType);
+
+    // if you in page buy card
+    if (name === 'buy-card') {
+      // if you click next page
+      if (actionType === 'plus') {
+        // if this is last page then page = length
+        if (numPage === length) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage, name, length, actionType, isOK },
+          });
+        }
+
+        // is your are in page 2 then you must enter your password to continue
+        else if (numPage === 2) {
+          // if you enter correct password
+          if (isOK) {
+            const page = numPage + 1;
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage: page, name, length, actionType, isOK },
+            });
+          }
+          // if you enter wrong password
+          else {
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage, name, length, actionType, isOK },
+            });
+          }
+        }
+        // other
+        else {
+          // console.log('check page here');
+
+          // if this is not last page then page = page + 1
+          const page = numPage + 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // if you click previous page
+      else if (actionType === 'minus') {
+        if (numPage === 1) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: 1, name, length, actionType, isOK },
+          });
+        } else {
+          const page = numPage - 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // others
+      else {
+      }
+    }
+    // if you in page transfer
+    if (name === 'transfer') {
+      // if you click next page
+      if (actionType === 'plus') {
+        // if this is last page then page = length
+        if (numPage === length) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage, name, length, actionType, isOK },
+          });
+        }
+
+        // is your are in page 2 then you must enter your password to continue
+        else if (numPage === 1) {
+          // if you enter correct password
+          if (isOK) {
+            const page = numPage + 1;
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage: page, name, length, actionType, isOK },
+            });
+          }
+          // if you enter wrong password
+          else {
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage, name, length, actionType, isOK },
+            });
+          }
+        }
+        // other
+        else {
+          // console.log('check page here');
+
+          // if this is not last page then page = page + 1
+          const page = numPage + 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // if you click previous page
+      else if (actionType === 'minus') {
+        if (numPage === 1) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: 1, name, length, actionType, isOK },
+          });
+        } else {
+          const page = numPage - 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // others
+      else {
+      }
+    }
+    // if you in page withdraw
+    if (name === 'withdraw') {
+      // if you click next page
+      if (actionType === 'plus') {
+        // if this is last page then page = length
+        if (numPage === length) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage, name, length, actionType, isOK },
+          });
+        } else if (numPage === 1) {
+          // if you enter valid money
+          if (isOK) {
+            const page = numPage + 1;
+            showToast('Valid money', 2000, 'success');
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage: page, name, length, actionType, isOK },
+            });
+          }
+          // if you enter not valid money
+          else {
+            showToast('💣 Not valid money', 2000, 'error');
+
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage, name, length, actionType, isOK },
+            });
+          }
+        }
+
+        // is your are in page 2 then you must enter your password to continue
+        else if (numPage === 2) {
+          // if you enter correct password
+          if (isOK) {
+            const page = numPage + 1;
+            showToast('Valid card', 2000, 'success');
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage: page, name, length, actionType, isOK },
+            });
+          }
+          // if you enter wrong password
+          else {
+            showToast('💣 Not valid card', 2000, 'error');
+
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage, name, length, actionType, isOK },
+            });
+          }
+        }
+        // other
+        else {
+          // console.log('check page here');
+
+          // if this is not last page then page = page + 1
+          const page = numPage + 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // if you click previous page
+      else if (actionType === 'minus') {
+        if (numPage === 1) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: 1, name, length, actionType, isOK },
+          });
+        } else {
+          const page = numPage - 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // others
+      else {
+      }
+    }
+    // if you in page withdraw
+    if (name === 'recharge') {
+      // if you click next page
+      if (actionType === 'plus') {
+        // if this is last page then page = length
+        if (numPage === length) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage, name, length, actionType, isOK },
+          });
+        } else if (numPage === 1) {
+          // if you enter valid money
+          if (isOK) {
+            const page = numPage + 1;
+            showToast('Valid money', 2000, 'success');
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage: page, name, length, actionType, isOK },
+            });
+          }
+          // if you enter not valid money
+          else {
+            showToast('💣 Not valid money', 2000, 'error');
+
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage, name, length, actionType, isOK },
+            });
+          }
+        }
+
+        // check valid card
+        else if (numPage === 2) {
+          // if you enter correct password
+          if (isOK) {
+            const page = numPage + 1;
+            showToast('Valid card', 2000, 'success');
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage: page, name, length, actionType, isOK },
+            });
+          }
+          // if you enter wrong password
+          else {
+            showToast('💣 Not valid card', 2000, 'error');
+
+            dispatch({
+              type: NUM_PAGE_BANK,
+              payload: { numPage, name, length, actionType, isOK },
+            });
+          }
+        }
+        // other
+        else {
+          // console.log('check page here');
+
+          // if this is not last page then page = page + 1
+          const page = numPage + 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // if you click previous page
+      else if (actionType === 'minus') {
+        if (numPage === 1) {
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: 1, name, length, actionType, isOK },
+          });
+        } else {
+          const page = numPage - 1;
+
+          dispatch({
+            type: NUM_PAGE_BANK,
+            payload: { numPage: page, name, length, actionType, isOK },
+          });
+        }
+      }
+      // others
+      else {
+      }
+    }
+  };
+
+  const confirmMoneyInput = (input) => {
+    dispatch({ type: VALID_MONEY_INPUT, payload: input });
+  };
+
+  const resetPageBank = (name, length) => {
+    if (name === 'buy-card') {
+      dispatch({
+        type: NUM_PAGE_BANK,
+        payload: { numPage: 1, name: name, length: length, actionType: '' },
+      });
+    }
+  };
+
+  const confirmPwdBuy = (input) => {
+    dispatch({ type: CONFIRM_PWD_BUY, payload: input });
+  };
+
+  const confirmDigitalCard = (input) => {
+    dispatch({ type: CONFIRM_DIGITAL_CARD, payload: input });
+  };
 
   const showStyleBody = () => {
     dispatch({ type: SHOW_STYLE_BODY });
@@ -119,66 +573,6 @@ const AppProvider = ({ children }) => {
     setTimeout(() => {
       dispatch({ type: SWITCH_PAGE });
     }, 1000);
-  };
-
-  const showToast = (msg, time, type) => {
-    if (type === 'error') {
-      return toast(msg, {
-        duration: time,
-        style: {
-          border: '2px solid #ff6b6b',
-          padding: '16px',
-          color: '#662b2b',
-        },
-        iconTheme: {
-          primary: '#713200',
-          secondary: '#FFFAEE',
-        },
-      });
-    } else if (type === 'warming') {
-      return toast(msg, {
-        duration: time,
-        style: {
-          border: '2px solid #fcc419',
-          padding: '16px',
-          color: '#4c3b07',
-        },
-        iconTheme: {
-          primary: '#713200',
-          secondary: '#FFFAEE',
-        },
-      });
-    }
-
-    return toast(msg, {
-      duration: time,
-    });
-  };
-
-  const showToastSuccess = (msg) => {
-    return toast.success(msg);
-  };
-
-  const showToastError = (msg) => {
-    return toast.error(msg, {
-      style: {
-        border: '1px solid #713200',
-        padding: '16px',
-        color: '#713200',
-      },
-      iconTheme: {
-        primary: '#713200',
-        secondary: '#FFFAEE',
-      },
-    });
-  };
-
-  const showToastPromise = (promiseInput, msgSuccess, msgError) => {
-    return toast.promise(promiseInput, {
-      loading: 'Loading...',
-      success: <b>{msgSuccess}</b>,
-      error: <b>{msgError}</b>,
-    });
   };
 
   const addUserToLocalStorage = ({ user, token, isFirstLogin }) => {
@@ -546,6 +940,11 @@ const AppProvider = ({ children }) => {
         switchSetting,
         showStyleBody,
         hideStyleBody,
+        confirmPwdBuy,
+        actionBankPage,
+        resetPageBank,
+        confirmDigitalCard,
+        confirmMoneyInput,
       }}
     >
       {children}

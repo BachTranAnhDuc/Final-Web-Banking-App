@@ -21,6 +21,8 @@ import { MuiOtpInput } from 'mui-one-time-password-input';
 
 import { FaLinux } from 'react-icons/fa';
 
+import { useGlobalContext } from '../../context/appContext';
+
 // import { SteppBank } from '../../components';
 
 const CssTextField = styled(TextField)({
@@ -98,57 +100,126 @@ const Withdraw = () => {
 
   const [activeStep, setActiveStep] = useState(0);
 
+  const [getValidCard, setValidCard] = useState(false);
+  const [getValidMoney, setValidMoney] = useState(false);
+
+  const {
+    actionBankPage,
+    bankPage,
+    confirmDigitalCard,
+    isConfirmDigitalCard,
+    showToast,
+  } = useGlobalContext();
+
   const handleChangeId = (input) => {
+    if (input === '123456') {
+      setValidCard(true);
+    } else {
+      setValidCard(false);
+    }
     setValues({ ...values, idCard: input });
   };
 
   const handleChangeCvv = (input) => {
+    if (input === '111') {
+      setValidCard(true);
+    } else {
+      setValidCard(false);
+    }
     setValues({ ...values, cvv: input });
   };
 
+  // check input money
   const handleChangeMoney = (e) => {
+    if (e.target.value % 50000 === 0 && e.target.value !== 0) {
+      showToast('💣 OK', 2000, 'success');
+      setValidMoney(true);
+    } else {
+      showToast('💣 Money must devide 50000', 2000, 'error');
+
+      setValidMoney(false);
+    }
     setValues({ ...values, money: e.target.value });
   };
 
   const handleChangeDate = (e) => {
+    if (e.target.value === '2022-10-03') {
+      setValidCard(true);
+    } else {
+      setValidCard(false);
+    }
     setValues({ ...values, date: e.target.value });
   };
 
   const handleClick10 = () => {
+    setValidMoney(false);
     setValues({ ...values, money: 10000 });
   };
   const handleClick20 = () => {
     setValues({ ...values, money: 20000 });
   };
   const handleClick50 = () => {
+    showToast('💣 OK', 2000, 'success');
+
+    setValidMoney(true);
     setValues({ ...values, money: 50000 });
   };
   const handleClick100 = () => {
+    showToast('💣 OK', 2000, 'success');
+    setValidMoney(true);
+
     setValues({ ...values, money: 100000 });
   };
   const handleClick200 = () => {
+    showToast('💣 OK', 2000, 'success');
+
+    setValidMoney(true);
     setValues({ ...values, money: 200000 });
   };
   const handleClick500 = () => {
+    showToast('💣 OK', 2000, 'success');
+
+    setValidMoney(true);
     setValues({ ...values, money: 500000 });
+  };
+
+  const isValidCard = ({ idCard, cvv, date }) => {
+    if (idCard === '123456' && cvv === '111' && date === '2022-10-03') {
+      confirmDigitalCard(true);
+      console.log('check valid card here');
+    }
   };
 
   const handleClickNext = (e) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (getNext === 2) {
-      setNext(2);
-    } else {
-      setNext(getNext + 1);
+    console.log('next page here');
+
+    if (bankPage.numPage === 1) {
+      confirmDigitalCard(false);
     }
+    // isValidCard({
+    //   idCard: values.idCard,
+    //   cvv: values.cvv,
+    //   date: values.date,
+    // });
+    actionBankPage({
+      numPage: bankPage.numPage,
+      name: 'withdraw',
+      length: 3,
+      actionType: 'plus',
+      isOK: bankPage.numPage === 1 ? getValidMoney : getValidCard,
+    });
   };
 
   const handleClickBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    if (getNext === 0) {
-      setNext(0);
-    } else {
-      setNext(getNext - 1);
-    }
+    actionBankPage({
+      numPage: bankPage.numPage,
+      name: 'withdraw',
+      length: 3,
+      actionType: 'minus',
+      isOK: true,
+    });
   };
 
   return (
@@ -185,7 +256,7 @@ const Withdraw = () => {
         </div>
         <div className="withdraw-body__right">
           <div className="withdraw-body__right--header">
-            {getNext === 0 && (
+            {bankPage.numPage === 1 && (
               <>
                 {/* <h2 className="heading--secondary">Heading here</h2> */}
                 <CustomWidthTooltip title={longText}>
@@ -195,7 +266,7 @@ const Withdraw = () => {
             )}
           </div>
 
-          {getNext === 0 && (
+          {bankPage.numPage === 1 && (
             <form className="withdraw-form withdraw-1">
               <Box sx={{ '& .MuiTextField-root': { m: 1, width: '32ch' } }}>
                 {/* <CssTextField
@@ -293,7 +364,7 @@ const Withdraw = () => {
             </form>
           )}
 
-          {getNext === 1 && (
+          {bankPage.numPage === 2 && (
             <form className="withdraw-form withdraw-1">
               <div className="withdraw-form__control--2">
                 <label className="withdraw-form__label">ID Card</label>
@@ -328,14 +399,14 @@ const Withdraw = () => {
             </form>
           )}
 
-          {getNext === 2 && (
+          {bankPage.numPage === 3 && (
             <div className="withdraw-result">
               <h2 className="heading--secondary">Success</h2>
             </div>
           )}
 
           <div className="withdraw__group-btns">
-            {getNext !== 0 && (
+            {bankPage.numPage !== 1 && (
               <button
                 className="withdraw__btn"
                 type="button"

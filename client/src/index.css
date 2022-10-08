@@ -2862,7 +2862,7 @@ body {
 .buy-card__shop--body__content {
   display: grid;
 
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1.5fr;
 
   align-items: center;
 }
@@ -2870,9 +2870,13 @@ body {
 .buy-card__shop--body__content--right {
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-columns: repeat(3, 1fr); */
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 
-  gap: 1.2rem;
+  /* justify-items: center; */
+
+  gap: 1.2rem 0;
 }
 
 .buy-card__shop--body__content-control {

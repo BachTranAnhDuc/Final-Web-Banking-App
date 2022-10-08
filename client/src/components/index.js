@@ -14,6 +14,7 @@ import ShareLayoutSetting from './ShareLayoutSetting';
 import Toast from './Toast';
 import Loader2 from './Loader2';
 import FooterDash from './FooterDash';
+import DialogMUIPwd from './DialogMUIPwd';
 
 import StepperBank from './bank/StepperBank';
 
@@ -35,4 +36,5 @@ export {
   Loader2,
   FooterDash,
   StepperBank,
+  DialogMUIPwd,
 };
