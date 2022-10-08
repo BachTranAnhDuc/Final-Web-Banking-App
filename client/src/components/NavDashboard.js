@@ -28,6 +28,8 @@ import Tooltip from '@mui/material/Tooltip';
 // import Settings from '@mui/icons-material/Settings';
 // import Logout from '@mui/icons-material/Logout';
 
+import NavLanding from '../theme/components/LandingNav';
+
 const NavDashboard = () => {
   const {
     switchPage,
@@ -59,13 +61,16 @@ const NavDashboard = () => {
     }, 1000);
   };
 
-  const handleClick = (input) => {
-    if (input) {
-      showStyleBody();
-    } else {
-      hideStyleBody();
-    }
+  const handleClickToSetting = (input) => {
+    showStyleBody();
     switchPage();
+    navigate(`/dashboard/setting/${input}`);
+  };
+
+  const handleClickToHome = (e) => {
+    hideStyleBody();
+    switchPage();
+    navigate(`/dashboard/setting/${e.target.name}`);
   };
 
   const stickyNavbar = () => {
@@ -95,124 +100,127 @@ const NavDashboard = () => {
   }, []);
 
   return (
-    <nav className={stickyClass}>
-      <div className="nav-dash__left-side">
-        <button onClick={openSidebar} className="sidebar-toggle">
-          <FaBars />
-        </button>
-        <NavLink to={'/dashboard'} onClick={() => handleClick(false)}>
-          <img src={Logo} alt="" className="nav-dash__logo" />
-        </NavLink>
+    <NavLanding>
+      <nav className={stickyClass}>
+        <div className="nav-dash__left-side">
+          <button onClick={openSidebar} className="sidebar-toggle">
+            <FaBars />
+          </button>
+          <NavLink to={'/dashboard'} onClick={handleClickToHome}>
+            <img src={Logo} alt="" className="nav-dash__logo" />
+          </NavLink>
 
-        <ul className="nav-dash__list">
-          <li className="nav-dash__list--item">
-            <NavLink
-              to={'/dashboard'}
-              className={({ isActive }) =>
-                isActive ? 'nav-link nav-link__active' : 'nav-link'
-              }
-              onClick={() => switchPage()}
-            >
-              Home
-            </NavLink>
-          </li>
-          <li className="nav-dash__list--item">
-            <NavLink
-              to={'/dashboard/deposit'}
-              className={({ isActive }) =>
-                isActive ? 'nav-link nav-link__active' : 'nav-link'
-              }
-              onClick={() => switchPage()}
-            >
-              <span>Deposit</span>
-            </NavLink>
-          </li>
-        </ul>
-      </div>
+          <ul className="nav-dash__list">
+            <li className="nav-dash__list--item">
+              <NavLink
+                to={'/dashboard'}
+                className={({ isActive }) =>
+                  isActive ? 'nav-link nav-link__active' : 'nav-link'
+                }
+                onClick={() => switchPage()}
+              >
+                Home
+              </NavLink>
+            </li>
+            <li className="nav-dash__list--item">
+              <NavLink
+                to={'/dashboard/deposit'}
+                className={({ isActive }) =>
+                  isActive ? 'nav-link nav-link__active' : 'nav-link'
+                }
+                onClick={() => switchPage()}
+              >
+                <span>Deposit</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
 
-      <div className="nav-dash__right-side">
-        <Tooltip title="Account settings" sx={{}}>
-          <IconButton
-            onClick={handleClickOpen}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
+        <div className="nav-dash__right-side">
+          <Tooltip title="Account settings" sx={{}}>
+            <IconButton
+              onClick={handleClickOpen}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? 'account-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+            >
+              <Avatar
+                sx={{ width: 32, height: 32, backgroundColor: '#20c997' }}
+              >
+                D
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: 'visible',
+                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                mt: 1.5,
+                '& .MuiAvatar-root': {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                '&:before': {
+                  content: '""',
+                  display: 'block',
+                  position: 'absolute',
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: 'background.paper',
+                  transform: 'translateY(-50%) rotate(45deg)',
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <Avatar sx={{ width: 32, height: 32, backgroundColor: '#20c997' }}>
-              D
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+            <MenuItem>
+              <Avatar /> Profile
+            </MenuItem>
+            <MenuItem onClick={(e) => handleClickToSetting('account')}>
+              <Avatar /> My account
+            </MenuItem>
+            <Divider />
+            <MenuItem>
+              <ListItemIcon>
+                {/* <PersonAdd fontSize="small" /> */}
+                <RiUserLine></RiUserLine>
+              </ListItemIcon>
+              Add another account
+            </MenuItem>
+            <MenuItem name="all" onClick={(e) => handleClickToSetting('all')}>
+              <ListItemIcon>
+                {/* <Settings fontSize="small" /> */}
+                <VscSettingsGear></VscSettingsGear>
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+            <MenuItem onClick={handleClickLog}>
+              <ListItemIcon>
+                {/* <Logout fontSize="small" /> */}
+                <RiLogoutCircleRLine></RiLogoutCircleRLine>
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </Menu>
+          {/* <img src={avt1} alt="avatar" className="nav__menu--img" /> */}
 
-        <Menu
-          anchorEl={anchorEl}
-          id="account-menu"
-          open={open}
-          onClose={handleClose}
-          onClick={handleClose}
-          PaperProps={{
-            elevation: 0,
-            sx: {
-              overflow: 'visible',
-              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-              mt: 1.5,
-              '& .MuiAvatar-root': {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
-              },
-              '&:before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
-                zIndex: 0,
-              },
-            },
-          }}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        >
-          <MenuItem>
-            <Avatar /> Profile
-          </MenuItem>
-          <MenuItem onClick={(e) => navigate('/dashboard/setting/account')}>
-            <Avatar /> My account
-          </MenuItem>
-          <Divider />
-          <MenuItem>
-            <ListItemIcon>
-              {/* <PersonAdd fontSize="small" /> */}
-              <RiUserLine></RiUserLine>
-            </ListItemIcon>
-            Add another account
-          </MenuItem>
-          <MenuItem onClick={(e) => navigate('/dashboard/setting/all')}>
-            <ListItemIcon>
-              {/* <Settings fontSize="small" /> */}
-              <VscSettingsGear></VscSettingsGear>
-            </ListItemIcon>
-            Settings
-          </MenuItem>
-          <MenuItem onClick={handleClickLog}>
-            <ListItemIcon>
-              {/* <Logout fontSize="small" /> */}
-              <RiLogoutCircleRLine></RiLogoutCircleRLine>
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </Menu>
-        {/* <img src={avt1} alt="avatar" className="nav__menu--img" /> */}
-
-        {/* <Menu
+          {/* <Menu
           className={'nav__menu'}
           menuButton={
             <MenuButton className={'btn-account'}>{user?.name}</MenuButton>
@@ -264,8 +272,9 @@ const NavDashboard = () => {
             <span>Logout</span>
           </MenuItem>
         </Menu> */}
-      </div>
-    </nav>
+        </div>
+      </nav>
+    </NavLanding>
   );
 };
 

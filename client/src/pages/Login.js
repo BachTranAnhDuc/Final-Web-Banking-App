@@ -7,6 +7,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
+import LoginStyled from '../theme/pages/Login';
+
 const defaultState = {
   username: '',
   password: '',
@@ -109,130 +111,132 @@ const Login = () => {
   }
 
   return (
-    <section className="section-login">
-      <div className="login__container-image">
-        <img src={loginImage} alt="login image" />
-      </div>
-      <div className="login__content">
-        <h1 className="heading--primary login__heading">
-          <span className="heading__highlight">Log</span>in
-        </h1>
+    <LoginStyled>
+      <section className="section-login">
+        <div className="login__container-image">
+          <img src={loginImage} alt="login image" />
+        </div>
+        <div className="login__content">
+          <h1 className="heading--primary login__heading">
+            <span className="heading__highlight">Log</span>in
+          </h1>
 
-        <form className="login__form" onSubmit={handleSubmit}>
-          {isErrorForm && (
-            <Alert
-              isError={isErrorForm}
-              typeError={typeErrorForm}
-              msgError={messageErrorForm}
-            ></Alert>
-          )}
-          <div className="form-control__2">
-            <label htmlFor="name" className="form-label">
-              Username
-            </label>
+          <form className="login__form" onSubmit={handleSubmit}>
+            {isErrorForm && (
+              <Alert
+                isError={isErrorForm}
+                typeError={typeErrorForm}
+                msgError={messageErrorForm}
+              ></Alert>
+            )}
+            <div className="form-control__2">
+              <label htmlFor="name" className="form-label">
+                Username
+              </label>
 
-            <span
-              className={
-                getErrValue.isErrValue ? 'form__error' : 'form__success'
-              }
-            >
-              {getErrValue.msg}
-            </span>
+              <span
+                className={
+                  getErrValue.isErrValue ? 'form__error' : 'form__success'
+                }
+              >
+                {getErrValue.msg}
+              </span>
 
-            <input
-              type="text"
-              // className={
-              //   styleInputLogin.isUserErr ? styleInputLogin.style : 'form-input'
-              // }
-              className={
-                styleInputLogin.isUserErr === 'true'
-                  ? 'form-input form-input__error'
-                  : styleInputLogin.isUserErr === 'false'
-                  ? 'form-input form-input__success'
-                  : 'form-input'
-              }
-              id="name"
-              name="username"
-              value={values.username}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-control__2 form-control__pwd">
-            <label htmlFor="password" className="form-label form-label__pwd">
-              Password
-            </label>
+              <input
+                type="text"
+                // className={
+                //   styleInputLogin.isUserErr ? styleInputLogin.style : 'form-input'
+                // }
+                className={
+                  styleInputLogin.isUserErr === 'true'
+                    ? 'form-input form-input__error'
+                    : styleInputLogin.isUserErr === 'false'
+                    ? 'form-input form-input__success'
+                    : 'form-input'
+                }
+                id="name"
+                name="username"
+                value={values.username}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-control__2 form-control__pwd">
+              <label htmlFor="password" className="form-label form-label__pwd">
+                Password
+              </label>
 
-            <span
-              className={
-                getErrValue.isErrValue ? 'form__error' : 'form__success'
-              }
-            >
-              {getErrValue.msg}
-            </span>
+              <span
+                className={
+                  getErrValue.isErrValue ? 'form__error' : 'form__success'
+                }
+              >
+                {getErrValue.msg}
+              </span>
 
-            <input
-              type={pwdTypeText ? 'text' : 'password'}
-              className={
-                styleInputLogin.isPwdErr === 'true'
-                  ? 'form-input form-input__error'
-                  : styleInputLogin.isPwdErr === 'false'
-                  ? 'form-input form-input__success'
-                  : 'form-input'
-              }
-              id="password"
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-            />
+              <input
+                type={pwdTypeText ? 'text' : 'password'}
+                className={
+                  styleInputLogin.isPwdErr === 'true'
+                    ? 'form-input form-input__error'
+                    : styleInputLogin.isPwdErr === 'false'
+                    ? 'form-input form-input__success'
+                    : 'form-input'
+                }
+                id="password"
+                name="password"
+                value={values.password}
+                onChange={handleChange}
+              />
+
+              <button
+                className="btn__pwd"
+                type="button"
+                onClick={handleClickShowHide}
+              >
+                {isShowPwd ? (
+                  <AiFillEye className="icon__pwd"></AiFillEye>
+                ) : (
+                  <AiFillEyeInvisible className="icon__pwd"></AiFillEyeInvisible>
+                )}
+              </button>
+            </div>
+
+            <p>
+              Don't have account?{' '}
+              <Link
+                to={'/register'}
+                className="btn-link"
+                onClick={() => switchPage()}
+              >
+                Register here
+              </Link>{' '}
+              /{' '}
+              <Link
+                to={'/forgot-password'}
+                className="btn-link"
+                onClick={() => switchPage()}
+              >
+                Forgot password
+              </Link>
+            </p>
 
             <button
-              className="btn__pwd"
-              type="button"
-              onClick={handleClickShowHide}
+              type="submit"
+              className="btn"
+              disabled={isLoadingForm ? true : isCountDown ? true : false}
             >
-              {isShowPwd ? (
-                <AiFillEye className="icon__pwd"></AiFillEye>
-              ) : (
-                <AiFillEyeInvisible className="icon__pwd"></AiFillEyeInvisible>
-              )}
+              {isLoadingForm
+                ? 'Loading is process...'
+                : isCountDown
+                ? 'Cannot login now...'
+                : 'Login'}
             </button>
-          </div>
+          </form>
+        </div>
 
-          <p>
-            Don't have account?{' '}
-            <Link
-              to={'/register'}
-              className="btn-link"
-              onClick={() => switchPage()}
-            >
-              Register here
-            </Link>{' '}
-            /{' '}
-            <Link
-              to={'/forgot-password'}
-              className="btn-link"
-              onClick={() => switchPage()}
-            >
-              Forgot password
-            </Link>
-          </p>
-
-          <button
-            type="submit"
-            className="btn"
-            disabled={isLoadingForm ? true : isCountDown ? true : false}
-          >
-            {isLoadingForm
-              ? 'Loading is process...'
-              : isCountDown
-              ? 'Cannot login now...'
-              : 'Login'}
-          </button>
-        </form>
-      </div>
-
-      <Toast></Toast>
-    </section>
+        <Toast></Toast>
+      </section>
+    </LoginStyled>
   );
 };
 

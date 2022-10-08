@@ -10,49 +10,55 @@ import { useGlobalContext } from '../context/appContext';
 
 import { Loader2 } from '../components';
 
+import SettingStyled from '../theme/pages/Setting';
+
 const Account = () => {
   const { user, isLoader } = useGlobalContext();
 
   if (isLoader) {
     return (
-      <div className="section-setting">
-        <Loader2></Loader2>;
-      </div>
+      <SettingStyled>
+        <div className="section-setting">
+          <Loader2></Loader2>;
+        </div>
+      </SettingStyled>
     );
   }
 
   return (
-    <div className="section-setting section-setting__account">
-      <div className="setting-account__context-header">
-        <h3 className="setting-account__heading">Profile Detail</h3>
+    <SettingStyled>
+      <div className="section-setting section-setting__account">
+        <div className="setting-account__context-header">
+          <h3 className="setting-account__heading">Profile Detail</h3>
 
-        <button className="btn">Edit Profile</button>
+          <button className="btn">Edit Profile</button>
+        </div>
+        <div className="setting-account__context-body">
+          <div className="setting-account__context--control">
+            <h3 className="setting-account__context--label">Email</h3>
+            <p className="setting-account__context--text">{user.email}</p>
+            <MdEmail className="setting-account__icon"></MdEmail>
+          </div>
+          <div className="setting-account__context--control">
+            <h3 className="setting-account__context--label">Phone</h3>
+            <p className="setting-account__context--text">{user.phone}</p>
+
+            <FaPhone className="setting-account__icon"></FaPhone>
+          </div>
+          <div className="setting-account__context--control">
+            <h3 className="setting-account__context--label">Address</h3>
+            <p className="setting-account__context--text">{user.address}</p>
+            <FaAddressCard className="setting-account__icon"></FaAddressCard>
+          </div>
+          <div className="setting-account__context--control">
+            <h3 className="setting-account__context--label">Birth</h3>
+            <p className="setting-account__context--text">{user.birth}</p>
+
+            <BsFillCalendarDateFill className="setting-account__icon"></BsFillCalendarDateFill>
+          </div>
+        </div>
       </div>
-      <div className="setting-account__context-body">
-        <div className="setting-account__context--control">
-          <h3 className="setting-account__context--label">Email</h3>
-          <p className="setting-account__context--text">{user.email}</p>
-          <MdEmail className="setting-account__icon"></MdEmail>
-        </div>
-        <div className="setting-account__context--control">
-          <h3 className="setting-account__context--label">Phone</h3>
-          <p className="setting-account__context--text">{user.phone}</p>
-
-          <FaPhone className="setting-account__icon"></FaPhone>
-        </div>
-        <div className="setting-account__context--control">
-          <h3 className="setting-account__context--label">Address</h3>
-          <p className="setting-account__context--text">{user.address}</p>
-          <FaAddressCard className="setting-account__icon"></FaAddressCard>
-        </div>
-        <div className="setting-account__context--control">
-          <h3 className="setting-account__context--label">Birth</h3>
-          <p className="setting-account__context--text">{user.birth}</p>
-
-          <BsFillCalendarDateFill className="setting-account__icon"></BsFillCalendarDateFill>
-        </div>
-      </div>
-    </div>
+    </SettingStyled>
   );
 };
 

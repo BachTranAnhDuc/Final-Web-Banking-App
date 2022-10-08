@@ -14,6 +14,8 @@ import 'animate.css';
 import { useGlobalContext } from '../context/appContext';
 import { Loading } from '../components';
 
+import LandingPage from '../theme/pages/LandingPage';
+
 const Landing = () => {
   const { isLoading } = useGlobalContext();
 
@@ -22,7 +24,7 @@ const Landing = () => {
   }
 
   return (
-    <>
+    <LandingPage>
       <header className="header">
         <h1 className="heading--primary header__heading animate__animated animate__lightSpeedInLeft">
           Easy way to <span className="heading__highlight">manage</span> to your
@@ -75,7 +77,7 @@ const Landing = () => {
           </div>
         </section>
       </main>
-    </>
+    </LandingPage>
   );
 };
 

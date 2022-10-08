@@ -8,48 +8,54 @@ import { FaTimes } from 'react-icons/fa';
 
 import logo from '../assets/images/logos/bankist.svg';
 
+import SidebarStyled from '../theme/components/Sidebar';
+
 const SideBar = () => {
   const { isSidebarOpen, closeSidebar } = useGlobalContext();
 
   return (
-    <aside className={`${isSidebarOpen ? 'sidebar show-sidebar' : 'sidebar'}`}>
-      <div className="sidebar-header">
-        <img src={logo} className="sidebar-logo" alt="image" />
-        <button className="close-btn" onClick={closeSidebar}>
-          <FaTimes />
-        </button>
-      </div>
+    <SidebarStyled>
+      <aside
+        className={`${isSidebarOpen ? 'sidebar show-sidebar' : 'sidebar'}`}
+      >
+        <div className="sidebar-header">
+          <img src={logo} className="sidebar-logo" alt="image" />
+          <button className="close-btn" onClick={closeSidebar}>
+            <FaTimes />
+          </button>
+        </div>
 
-      <ul className="sidebar-links">
-        <li>
-          <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
-          <a href="#">Something</a>
-        </li>
-        <li>
-          <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
-          <a href="#">Something</a>
-        </li>
-        <li>
-          <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
-          <a href="#">Something</a>
-        </li>
-        <li>
-          <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
-          <a href="#">Something</a>
-        </li>
-        <li>
-          <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
-          <a href="#">Something</a>
-        </li>
-      </ul>
+        <ul className="sidebar-links">
+          <li>
+            <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
+            <a href="#">Something</a>
+          </li>
+          <li>
+            <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
+            <a href="#">Something</a>
+          </li>
+          <li>
+            <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
+            <a href="#">Something</a>
+          </li>
+          <li>
+            <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
+            <a href="#">Something</a>
+          </li>
+          <li>
+            <AiOutlineInbox className="sidebar-links__icon"></AiOutlineInbox>
+            <a href="#">Something</a>
+          </li>
+        </ul>
 
-      <ul className="sidebar__social-icons">
-        <li>
-          <BiUserCircle className="sidebar__social-icon"></BiUserCircle>
-          <a href="#">Bach Tran Anh Duc</a>
-        </li>
-      </ul>
-    </aside>
+        <ul className="sidebar__social-icons">
+          <li>
+            <BiUserCircle className="sidebar__social-icon"></BiUserCircle>
+            <a href="#">Bach Tran Anh Duc</a>
+          </li>
+        </ul>
+      </aside>
+    </SidebarStyled>
   );
 };
 

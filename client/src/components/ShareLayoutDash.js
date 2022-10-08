@@ -5,20 +5,24 @@ import { useGlobalContext } from '../context/appContext';
 
 import { FaBars } from 'react-icons/fa';
 
+import SettingStyled from '../theme/pages/Setting';
+
 const ShareLayoutDash = () => {
   const { isLoading, openSidebar, openModal, isSidebarOpen, styleBody } =
     useGlobalContext();
 
   return (
-    <div className={styleBody}>
-      <NavDashboard></NavDashboard>
-      {isLoading ? <Loading></Loading> : <Outlet></Outlet>}
-      <FooterDash></FooterDash>
+    <SettingStyled>
+      <div className={styleBody}>
+        <NavDashboard></NavDashboard>
+        {isLoading ? <Loading></Loading> : <Outlet></Outlet>}
+        <FooterDash></FooterDash>
 
-      <SideBar></SideBar>
+        <SideBar></SideBar>
 
-      {isSidebarOpen && <div className="overlay"></div>}
-    </div>
+        {isSidebarOpen && <div className="overlay"></div>}
+      </div>
+    </SettingStyled>
   );
 };
 

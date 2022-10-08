@@ -43,6 +43,7 @@ import {
   NUM_PAGE_BANK,
   CONFIRM_DIGITAL_CARD,
   VALID_MONEY_INPUT,
+  NUM_PAGE_FORGOT_PASSWORD,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -125,6 +126,14 @@ const defaultState = {
     length: 0,
     actionType: '',
     isOK: false,
+  },
+
+  // forgot pwd page
+  forgotPage: {
+    numPage: 1,
+    isOK: false,
+    length: 3,
+    actionType: 'default',
   },
 };
 
@@ -511,6 +520,48 @@ const AppProvider = ({ children }) => {
       }
       // others
       else {
+      }
+    }
+  };
+
+  const actionForgotPage = ({ numPage, isOK, type, length }) => {
+    if (type === 'plus') {
+      if (numPage === length) {
+        dispatch({
+          type: NUM_PAGE_FORGOT_PASSWORD,
+          payload: { numPage, isOK, type, length },
+        });
+      } else {
+        if (isOK) {
+          const page = numPage + 1;
+          showToast('Valid phone and email', 2000, 'success');
+
+          dispatch({
+            type: NUM_PAGE_FORGOT_PASSWORD,
+            payload: { numPage: page, isOK, type, length },
+          });
+        } else {
+          showToast('Not valid phone or email', 2000, 'error');
+
+          dispatch({
+            type: NUM_PAGE_FORGOT_PASSWORD,
+            payload: { numPage, isOK, type, length },
+          });
+        }
+      }
+    }
+    if (type === 'minus') {
+      if (numPage === 1) {
+        dispatch({
+          type: NUM_PAGE_FORGOT_PASSWORD,
+          payload: { numPage, isOK, type, length },
+        });
+      } else {
+        const page = numPage - 1;
+        dispatch({
+          type: NUM_PAGE_FORGOT_PASSWORD,
+          payload: { numPage: page, isOK, type, length },
+        });
       }
     }
   };
@@ -957,6 +1008,7 @@ const AppProvider = ({ children }) => {
         resetPageBank,
         confirmDigitalCard,
         confirmMoneyInput,
+        actionForgotPage,
       }}
     >
       {children}

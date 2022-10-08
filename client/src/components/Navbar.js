@@ -3,6 +3,8 @@ import { NavLink, Outlet } from 'react-router-dom';
 import Logo from '../assets/images/logos/bankist.svg';
 import { useGlobalContext } from '../context/appContext';
 
+import NavLanding from '../theme/components/LandingNav';
+
 const Navbar = () => {
   const [stickyClass, setStickyClass] = useState('nav-bar');
   const { switchPage } = useGlobalContext();
@@ -28,45 +30,47 @@ const Navbar = () => {
     };
   }, []);
   return (
-    <nav className={stickyClass}>
-      <NavLink to={'/'} onClick={() => switchPage()}>
-        <img src={Logo} alt="" className="nav-logo" />
-      </NavLink>
+    <NavLanding>
+      <nav className={stickyClass}>
+        <NavLink to={'/'} onClick={() => switchPage()}>
+          <img src={Logo} alt="" className="nav-logo" />
+        </NavLink>
 
-      <ul className="nav-list">
-        <li className="nav-list__item">
-          <NavLink
-            to={'/'}
-            className={({ isActive }) =>
-              isActive ? 'nav-link nav-link__active' : 'nav-link'
-            }
+        <ul className="nav-list">
+          <li className="nav-list__item">
+            <NavLink
+              to={'/'}
+              className={({ isActive }) =>
+                isActive ? 'nav-link nav-link__active' : 'nav-link'
+              }
+              onClick={() => switchPage()}
+            >
+              Home
+            </NavLink>
+          </li>
+          <li className="nav-list__item">
+            <NavLink
+              to={'/about'}
+              className={({ isActive }) =>
+                isActive ? 'nav-link nav-link__active' : 'nav-link'
+              }
+              onClick={() => switchPage()}
+            >
+              <span>About me</span>
+            </NavLink>
+          </li>
+        </ul>
+
+        <NavLink to={'/login'}>
+          <button
+            className="btn btn-login btn-white btn-animate"
             onClick={() => switchPage()}
           >
-            Home
-          </NavLink>
-        </li>
-        <li className="nav-list__item">
-          <NavLink
-            to={'/about'}
-            className={({ isActive }) =>
-              isActive ? 'nav-link nav-link__active' : 'nav-link'
-            }
-            onClick={() => switchPage()}
-          >
-            <span>About me</span>
-          </NavLink>
-        </li>
-      </ul>
-
-      <NavLink to={'/login'}>
-        <button
-          className="btn btn-login btn-white btn-animate"
-          onClick={() => switchPage()}
-        >
-          Sign In
-        </button>
-      </NavLink>
-    </nav>
+            Sign In
+          </button>
+        </NavLink>
+      </nav>
+    </NavLanding>
   );
 };
 

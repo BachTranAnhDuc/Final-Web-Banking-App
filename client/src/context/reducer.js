@@ -35,6 +35,7 @@ import {
   NUM_PAGE_BANK,
   CONFIRM_DIGITAL_CARD,
   VALID_MONEY_INPUT,
+  NUM_PAGE_FORGOT_PASSWORD,
 } from './action';
 
 const reducer = (state, action) => {
@@ -302,6 +303,12 @@ const reducer = (state, action) => {
 
   if (action.type === VALID_MONEY_INPUT) {
     return { ...state, isCorrectMoney: action.payload };
+  }
+
+  if (action.type === NUM_PAGE_FORGOT_PASSWORD) {
+    const { numPage, isOK, type, length } = action.payload;
+
+    return { ...state, forgotPage: { numPage, isOK, type, length } };
   }
 };
 

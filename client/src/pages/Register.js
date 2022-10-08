@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 // import { Loading } from '../components/index.js';
 import axios from 'axios';
 
+import RegisterStyled from '../theme/pages/Register';
+
 import {
   GrFormPrevious,
   GrFormNext,
@@ -35,7 +37,7 @@ const Register = () => {
     register,
     uploadImage,
     imgBack,
-    imgFront
+    imgFront,
   } = useGlobalContext();
 
   const ref = useRef(null);
@@ -94,7 +96,6 @@ const Register = () => {
 
     console.log('Submit success');
 
-
     register({
       name: values.name,
       email: values.email,
@@ -104,7 +105,7 @@ const Register = () => {
       imageFront: imgFront,
       imageBack: imgBack,
     });
-    
+
     switchPage();
 
     setValid(!isValid);
@@ -116,219 +117,221 @@ const Register = () => {
 
   if (!isLoading) {
     return (
-      <section className="section-register">
-        <div className="register__container-image">
-          <img src={loginImg} alt="login image" className="register__img" />
-        </div>
-        <div className="register__container-content">
-          <h1 className="heading--primary register-heading">
-            <span className="heading__highlight">Regis</span>ter
-          </h1>
+      <RegisterStyled>
+        <section className="section-register">
+          <div className="register__container-image">
+            <img src={loginImg} alt="login image" className="register__img" />
+          </div>
+          <div className="register__container-content">
+            <h1 className="heading--primary register-heading">
+              <span className="heading__highlight">Regis</span>ter
+            </h1>
 
-          <FormProcessing getPercent={getPercent}></FormProcessing>
+            <FormProcessing getPercent={getPercent}></FormProcessing>
 
-          {isValid ? (
-            <form
-              className={
-                getNext === 5 ? 'register-form__images' : 'register-form'
-              }
-              
-              // onSubmit={handleSubmit}
-            >
-              {getNext === 0 && (
-                <div className="form-control form-control__register">
-                  <label
-                    htmlFor="phone"
-                    className="form-label form-label__register"
-                  >
-                    Phone number
-                  </label>
+            {isValid ? (
+              <form
+                className={
+                  getNext === 5 ? 'register-form__images' : 'register-form'
+                }
 
-                  <input
-                    type="text"
-                    className="form-input form-input__register"
-                    id="phone"
-                    value={values.phone}
-                    onChange={handleChangeValue}
-                    name="phone"
-                  />
-                </div>
-              )}
-
-              {getNext === 1 && (
-                <div className="form-control form-control__register">
-                  <label
-                    htmlFor="name"
-                    className="form-label form-label__register"
-                  >
-                    Full Name
-                  </label>
-
-                  <input
-                    type="text"
-                    className="form-input form-input__register"
-                    id="name"
-                    value={values.name}
-                    onChange={handleChangeValue}
-                    name="name"
-                  />
-                </div>
-              )}
-              {getNext === 2 && (
-                <div className="form-control form-control__register">
-                  <label
-                    htmlFor="email"
-                    className="form-label form-label__register"
-                  >
-                    Email
-                  </label>
-
-                  <input
-                    type="text"
-                    className="form-input form-input__register"
-                    id="email"
-                    value={values.email}
-                    onChange={handleChangeValue}
-                    name="email"
-                  />
-                </div>
-              )}
-              {getNext === 3 && (
-                <div className="form-control form-control__register">
-                  <label
-                    htmlFor="address"
-                    className="form-label form-label__register"
-                  >
-                    Address
-                  </label>
-
-                  <input
-                    type="text"
-                    className="form-input form-input__register"
-                    id="address"
-                    value={values.address}
-                    onChange={handleChangeValue}
-                    name="address"
-                  />
-                </div>
-              )}
-              {getNext === 4 && (
-                <div className="form-control form-control__register">
-                  <label
-                    htmlFor="birth"
-                    className="form-label form-label__register"
-                  >
-                    Date of birth
-                  </label>
-
-                  <input
-                    type="date"
-                    className="form-input form-input__register"
-                    id="birth"
-                    value={values.birth}
-                    onChange={handleChangeValue}
-                    name="birth"
-                  />
-                </div>
-              )}
-              {getNext === 5 && (
-                <>
-                  <div className="form-control__image">
-                    <label htmlFor="imageFront" className="form-label">
-                      Image front
+                // onSubmit={handleSubmit}
+              >
+                {getNext === 0 && (
+                  <div className="form-control form-control__register">
+                    <label
+                      htmlFor="phone"
+                      className="form-label form-label__register"
+                    >
+                      Phone number
                     </label>
-                    <input
-                      type="file"
-                      className="form-input"
-                      id="imageFront"
-                      value={values.imageFront}
-                      onChange={handleChangeValue}
-                      name="imageFront"
-                      accept = "image/*"
-                    />
 
-                    <img
-                      src={
-                        values.imageFront === ''
-                          ? defaultImage
-                          : values.imageFront
-                      }
-                      alt="default image"
+                    <input
+                      type="text"
+                      className="form-input form-input__register"
+                      id="phone"
+                      value={values.phone}
+                      onChange={handleChangeValue}
+                      name="phone"
                     />
                   </div>
+                )}
 
-                  <div className="form-control__image">
-                    <label htmlFor="imageBack" className="form-label">
-                      Image back
+                {getNext === 1 && (
+                  <div className="form-control form-control__register">
+                    <label
+                      htmlFor="name"
+                      className="form-label form-label__register"
+                    >
+                      Full Name
                     </label>
+
                     <input
-                      type="file"
-                      className="form-input"
-                      id="imageBack"
-                      value={values.imageBack}
+                      type="text"
+                      className="form-input form-input__register"
+                      id="name"
+                      value={values.name}
                       onChange={handleChangeValue}
-                      name="imageBack"
-                      accept="image/*"
-                    />
-                    <img
-                      src={
-                        values.imageBack === ''
-                          ? defaultImage
-                          : values.imageBack
-                      }
-                      alt="default image"
+                      name="name"
                     />
                   </div>
-                </>
-              )}
+                )}
+                {getNext === 2 && (
+                  <div className="form-control form-control__register">
+                    <label
+                      htmlFor="email"
+                      className="form-label form-label__register"
+                    >
+                      Email
+                    </label>
 
-              {getNext === 6 && (
-                <div className="form-control">
-                  <h2>Click to submit</h2>
-                </div>
-              )}
+                    <input
+                      type="text"
+                      className="form-input form-input__register"
+                      id="email"
+                      value={values.email}
+                      onChange={handleChangeValue}
+                      name="email"
+                    />
+                  </div>
+                )}
+                {getNext === 3 && (
+                  <div className="form-control form-control__register">
+                    <label
+                      htmlFor="address"
+                      className="form-label form-label__register"
+                    >
+                      Address
+                    </label>
 
-              <div className="form-buttons">
-                <button
-                  className="btn btn-contact btn-register"
-                  onClick={handleClickPre}
-                  type="button"
-                >
-                  {getNext === 6 ? (
-                    <GrCaretPrevious className="icon-pre"></GrCaretPrevious>
-                  ) : (
-                    <GrCaretPrevious className="icon-pre"></GrCaretPrevious>
-                  )}
-                </button>
+                    <input
+                      type="text"
+                      className="form-input form-input__register"
+                      id="address"
+                      value={values.address}
+                      onChange={handleChangeValue}
+                      name="address"
+                    />
+                  </div>
+                )}
+                {getNext === 4 && (
+                  <div className="form-control form-control__register">
+                    <label
+                      htmlFor="birth"
+                      className="form-label form-label__register"
+                    >
+                      Date of birth
+                    </label>
 
-                {getNext === 6 ? (
+                    <input
+                      type="date"
+                      className="form-input form-input__register"
+                      id="birth"
+                      value={values.birth}
+                      onChange={handleChangeValue}
+                      name="birth"
+                    />
+                  </div>
+                )}
+                {getNext === 5 && (
+                  <>
+                    <div className="form-control__image">
+                      <label htmlFor="imageFront" className="form-label">
+                        Image front
+                      </label>
+                      <input
+                        type="file"
+                        className="form-input"
+                        id="imageFront"
+                        value={values.imageFront}
+                        onChange={handleChangeValue}
+                        name="imageFront"
+                        accept="image/*"
+                      />
+
+                      <img
+                        src={
+                          values.imageFront === ''
+                            ? defaultImage
+                            : values.imageFront
+                        }
+                        alt="default image"
+                      />
+                    </div>
+
+                    <div className="form-control__image">
+                      <label htmlFor="imageBack" className="form-label">
+                        Image back
+                      </label>
+                      <input
+                        type="file"
+                        className="form-input"
+                        id="imageBack"
+                        value={values.imageBack}
+                        onChange={handleChangeValue}
+                        name="imageBack"
+                        accept="image/*"
+                      />
+                      <img
+                        src={
+                          values.imageBack === ''
+                            ? defaultImage
+                            : values.imageBack
+                        }
+                        alt="default image"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {getNext === 6 && (
+                  <div className="form-control">
+                    <h2>Click to submit</h2>
+                  </div>
+                )}
+
+                <div className="form-buttons">
                   <button
                     className="btn btn-contact btn-register"
-                    onClick={handleSubmit}
-                    type="submit"
-                  >
-                    Submit
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-contact btn-register"
-                    onClick={handleClickNext}
+                    onClick={handleClickPre}
                     type="button"
                   >
-                    <GrCaretNext className="icon-pre"></GrCaretNext>
+                    {getNext === 6 ? (
+                      <GrCaretPrevious className="icon-pre"></GrCaretPrevious>
+                    ) : (
+                      <GrCaretPrevious className="icon-pre"></GrCaretPrevious>
+                    )}
                   </button>
-                )}
-              </div>
-            </form>
-          ) : (
-            <AlertRegister
-              isError={isErrorForm}
-              typeError={typeErrorForm}
-              msgError={messageErrorForm}
-            ></AlertRegister>
-          )}
-        </div>
-      </section>
+
+                  {getNext === 6 ? (
+                    <button
+                      className="btn btn-contact btn-register"
+                      onClick={handleSubmit}
+                      type="submit"
+                    >
+                      Submit
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-contact btn-register"
+                      onClick={handleClickNext}
+                      type="button"
+                    >
+                      <GrCaretNext className="icon-pre"></GrCaretNext>
+                    </button>
+                  )}
+                </div>
+              </form>
+            ) : (
+              <AlertRegister
+                isError={isErrorForm}
+                typeError={typeErrorForm}
+                msgError={messageErrorForm}
+              ></AlertRegister>
+            )}
+          </div>
+        </section>
+      </RegisterStyled>
     );
   }
 };
