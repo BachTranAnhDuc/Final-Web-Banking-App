@@ -76,6 +76,9 @@ const UserSchema = new mongoose.Schema({
     emum: ['success', 'fail', 'processing', 'watting'],
     default: 'processing',
   },
+  otpForgotPass: {
+    type: String
+  }
 });
 
 UserSchema.methods.comparePassword = async function (inputPassword) {
