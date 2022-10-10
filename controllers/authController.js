@@ -85,17 +85,29 @@ const login = async (req, res) => {
   });
 };
 
-const uploadUserImage = async (req, res, next) => {
-  // const { imageFront, imageBack } = req.files;
-  // const { tempFilePath: tempFilePathFront } = imageFront;
-  // const { tempFilePath: tempFilePathBack } = imageBack;
-  // const result = await cloudinary.v2.uploader.upload(tempFilePathBack, {
-  //   use_filename: true,
-  //   folder: `bankist/users/${username}`,
-  // });
-  // // fs.unlinkSync(req.files.image.tempFilePathBack);
-  // console.log(result.secure_url);
-  // next();
+const uploadUserImage = async (req, res) => {
+  const { imageFront, imageBack } = req.files;
+  const { tempFilePath: tempFilePathFront } = imageFront;
+  const { tempFilePath: tempFilePathBack } = imageBack;
+  const result = await cloudinary.v2.uploader.upload(tempFilePathBack, {
+    use_filename: true,
+    folder: `bankist/users/${username}`,
+  });
+  // fs.unlinkSync(req.files.image.tempFilePathBack);
+  console.log(result.secure_url);
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'upload success', data: result.secure_url });
+
+  // const result = await cloudinary.uploader.upload(
+  //   req.files.image.tempFilePath,
+  //   {
+  //     use_filename: true,
+  //     folder: 'file-upload',
+  //   }
+  // );
+  // fs.unlinkSync(req.files.image.tempFilePath);
+  // return res.status(StatusCodes.OK).json({ image: { src: result.secure_url } });
 };
 
 // const uploadUserImage1 = async (req, res) => {
@@ -174,8 +186,8 @@ const register = async (req, res) => {
     name,
     address,
     birth,
-    imageFront,
-    imageBack,
+    // imageFront,
+    // imageBack,
   } = req.body;
 
   const isFirstAccount = (await User.countDocuments({})) === 0;
@@ -209,23 +221,44 @@ const register = async (req, res) => {
   console.log('image here');
   /* console.log(req.body); */
 
-  /* const { imageFront, imageBack } = req.files;
-  const { tempFilePath: tempFilePathFront } = imageFront;
-  const { tempFilePath: tempFilePathBack } = imageBack;
+  // const { imageFront, imageBack } = req.files;
+  // const { tempFilePath: tempFilePathFront } = imageFront;
+  // const { tempFilePath: tempFilePathBack } = imageBack;
+
+  // console.log(imageFront);
 
   let imgF = '';
-  let imgB = ''; 
+  let imgB = '';
 
   try {
-    const up1 = await uploadImage(tempFilePathBack, rdUsername);
-    const up2 = await uploadImage(tempFilePathFront, rdUsername);
+    // const up1 = await uploadImage(tempFilePathBack, rdUsername);
+    // const up2 = await uploadImage(tempFilePathFront, rdUsername);
 
-    imgB = up1;
-    imgF = up2;
+    console.log(req.files);
+
+    const result1 = await cloudinary.v2.uploader.upload(
+      req.files.imageFront.tempFilePath,
+      {
+        use_filename: true,
+        folder: `bankist`,
+      }
+    );
+    const result2 = await cloudinary.v2.uploader.upload(
+      req.files.imageBack.tempFilePath,
+      {
+        use_filename: true,
+        folder: `bankist`,
+      }
+    );
+    fs.unlinkSync(req.files.imageFront.tempFilePath);
+    fs.unlinkSync(req.files.imageBack.tempFilePath);
+
+    imgB = result2.secure_url;
+    imgF = result1.secure_url;
   } catch (error) {
     console.log('Cannot upload image');
     console.log(error);
-  }*/
+  }
 
   // console.log('link url image here');
   // console.log(up1);
@@ -240,8 +273,8 @@ const register = async (req, res) => {
     verificationToken,
     username: rdUsername,
     password: rdPwd,
-    imageFront,
-    imageBack,
+    imageFront: imgF,
+    imageBack: imgB,
     role,
   });
 

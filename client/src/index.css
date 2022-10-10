@@ -163,6 +163,10 @@ body {
   align-self: center;
 }
 
+.justify-self__end {
+  justify-self: end;
+}
+
 /* TEXT */
 
 .heading--primary {

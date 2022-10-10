@@ -36,6 +36,7 @@ import {
   CONFIRM_DIGITAL_CARD,
   VALID_MONEY_INPUT,
   NUM_PAGE_FORGOT_PASSWORD,
+  NUM_PAGE_REGISTER,
 } from './action';
 
 const reducer = (state, action) => {
@@ -309,6 +310,12 @@ const reducer = (state, action) => {
     const { numPage, isOK, type, length } = action.payload;
 
     return { ...state, forgotPage: { numPage, isOK, type, length } };
+  }
+
+  if (action.type === NUM_PAGE_REGISTER) {
+    const { numPage, isOK, type, length } = action.payload;
+
+    return { ...state, registerPage: { numPage, isOK, type, length } };
   }
 };
 

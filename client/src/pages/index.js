@@ -22,6 +22,8 @@ import Recharge from './bank/Recharge';
 import WithDraw from './bank/Withdraw';
 import BuyCard from './bank/BuyCard';
 import ForgotPassword from './ForgotPassword';
+import NewLogin from './NewLogin';
+import NewRegister from './NewRegister';
 
 export {
   Landing,
@@ -48,4 +50,6 @@ export {
   BuyCard,
   Bank,
   ForgotPassword,
+  NewLogin,
+  NewRegister,
 };

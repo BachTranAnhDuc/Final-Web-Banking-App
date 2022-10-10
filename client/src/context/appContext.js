@@ -44,6 +44,7 @@ import {
   CONFIRM_DIGITAL_CARD,
   VALID_MONEY_INPUT,
   NUM_PAGE_FORGOT_PASSWORD,
+  NUM_PAGE_REGISTER,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -135,12 +136,37 @@ const defaultState = {
     length: 3,
     actionType: 'default',
   },
+
+  registerPage: {
+    numPage: 1,
+    isOK: false,
+    length: 3,
+    actionType: 'default',
+  },
 };
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, defaultState);
+
+  // Random component
+  const Completionist = () => <span>You are good to go!</span>;
+
+  // Renderer callback with condition
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a complete state
+      return <Completionist />;
+    } else {
+      // Render a countdown
+      return (
+        <span>
+          {hours}:{minutes}:{seconds}
+        </span>
+      );
+    }
+  };
 
   // custom toast
   // msg: message, time: time countdown, type: error, success, warming...
@@ -565,6 +591,47 @@ const AppProvider = ({ children }) => {
       }
     }
   };
+  const actionRegisterPage = ({ numPage, isOK, type, length }) => {
+    if (type === 'plus') {
+      if (numPage === length) {
+        dispatch({
+          type: NUM_PAGE_REGISTER,
+          payload: { numPage, isOK, type, length },
+        });
+      } else {
+        if (isOK) {
+          const page = numPage + 1;
+          showToast('Valid phone and email', 2000, 'success');
+
+          dispatch({
+            type: NUM_PAGE_REGISTER,
+            payload: { numPage: page, isOK, type, length },
+          });
+        } else {
+          showToast('Not valid phone or email', 2000, 'error');
+
+          dispatch({
+            type: NUM_PAGE_REGISTER,
+            payload: { numPage, isOK, type, length },
+          });
+        }
+      }
+    }
+    if (type === 'minus') {
+      if (numPage === 1) {
+        dispatch({
+          type: NUM_PAGE_REGISTER,
+          payload: { numPage, isOK, type, length },
+        });
+      } else {
+        const page = numPage - 1;
+        dispatch({
+          type: NUM_PAGE_REGISTER,
+          payload: { numPage: page, isOK, type, length },
+        });
+      }
+    }
+  };
 
   const confirmMoneyInput = (input) => {
     dispatch({ type: VALID_MONEY_INPUT, payload: input });
@@ -675,15 +742,15 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const login = async (userInput) => {
+  const login = async (userInput, actions, loginSuccess) => {
     dispatch({ type: LOGIN_BEGIN });
     resetLoginForm();
 
-    showToastPromise(
-      axios.post('/api/v1/auth/login', userInput),
-      'Login success',
-      'Login error'
-    );
+    // showToastPromise(
+    //   axios.post('/api/v1/auth/login', userInput),
+    //   'Login success',
+    //   'Login error'
+    // );
 
     setTimeout(async () => {
       try {
@@ -735,6 +802,7 @@ const AppProvider = ({ children }) => {
             },
           });
         } else {
+          showToast('Loggin success', 5000, 'success');
           dispatch({
             type: LOGIN_SUCCESS,
             payloadMsg: msg,
@@ -749,6 +817,8 @@ const AppProvider = ({ children }) => {
               style: 'form-input',
             },
           });
+
+          loginSuccess();
         }
 
         // return <Navigate to={'/dashboard'}></Navigate>;
@@ -769,18 +839,43 @@ const AppProvider = ({ children }) => {
           if (message === 'Please provide password') {
             styleInput = 'form-input form-input__error';
             isPwdErr = 'true';
+
+            // actions.setErrors({
+            //   password: 'Password is not correct',
+            // });
+
+            // if (loginFail !== 3 && loginFail !== 6) {
+            showToast('Password is not correct', 4000, 'error');
+            // }
           }
 
           if (message === 'Invalid password') {
             styleInput = 'form-input form-input__error';
             isPwdErr = 'true';
+
+            actions.setErrors({
+              password: 'Password is not correct',
+            });
+            showToast('Password is not correct', 5000, 'error');
           }
 
           const { loginFail } = user;
 
           if (loginFail === 3) {
             message = '3 fails, your account is lock in 1 minute';
+
+            showToast(
+              'You login wrong 3 time, you account is blocked!',
+              3000,
+              'success'
+            );
             dispatch({ type: OPEN_COUNTDONW });
+
+            setTimeout(() => {
+              dispatch({ type: CLOSE_COUNTDOWN });
+
+              showToast('You can login now', 3000, 'success');
+            }, 5000);
           } else {
             dispatch({ type: CLOSE_COUNTDOWN });
           }
@@ -788,6 +883,12 @@ const AppProvider = ({ children }) => {
           if (loginFail === 6) {
             message =
               '6 fails, your account is blocked forever, please contact with admin';
+
+            showToast(
+              'You login wrong 6 time, you account is blocked forever! Please contact with 1800-00 to solve problem!',
+              5000,
+              'error'
+            );
           }
 
           dispatch({
@@ -804,15 +905,36 @@ const AppProvider = ({ children }) => {
           if (message === 'Please provide username') {
             styleInput = 'form-input form-input__error';
             isUserErr = 'true';
+
+            actions.setErrors({
+              username: 'Username must not empty',
+            });
+
+            showToast('Username must empty', 4000, 'error');
           }
           if (message === 'Please provide username and password') {
             styleInput = 'form-input form-input__error';
             isUserErr = 'true';
             isPwdErr = 'true';
+
+            // actions.setErrors({
+            //   username: 'Username must not empty',
+            // });
+            // actions.setErrors({
+            //   password: 'Password must not empty',
+            // });
+
+            showToast('Username and password must empty', 4000, 'error');
           }
           if (message === 'Can not find user, please provide true username') {
             styleInput = 'form-input form-input__error';
             isUserErr = 'true';
+
+            actions.setErrors({
+              username: 'User is not exist',
+            });
+
+            showToast('Cannot find any user', 4000, 'error');
           }
 
           dispatch({
@@ -831,7 +953,7 @@ const AppProvider = ({ children }) => {
     }, 1500);
   };
 
-  const register = async (user) => {
+  const registerNode = async (user) => {
     dispatch({ type: REGISTER_BEGIN });
 
     console.log('register begin');
@@ -981,7 +1103,7 @@ const AppProvider = ({ children }) => {
         showLoading,
         switchPage,
         login,
-        register,
+        registerNode,
         closeSidebar,
         openModal,
         openSidebar,
@@ -1009,6 +1131,7 @@ const AppProvider = ({ children }) => {
         confirmDigitalCard,
         confirmMoneyInput,
         actionForgotPage,
+        actionRegisterPage,
       }}
     >
       {children}
