@@ -166,6 +166,9 @@ body {
 .justify-self__end {
   justify-self: end;
 }
+.justify-self__start {
+  justify-self: start;
+}
 
 /* TEXT */
 

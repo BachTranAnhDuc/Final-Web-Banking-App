@@ -105,6 +105,23 @@ const NewRegisterStyled = styled.main`
 
     /* background-color: orange; */
   }
+
+  .new-register__right--result {
+    /* background-color: orange; */
+
+    padding-top: 3.2rem;
+    display: grid;
+
+    grid-template-rows: repeat(2, max-content);
+
+    row-gap: 1.2rem;
+  }
+
+  .new-register__right--result-heading {
+  }
+
+  .new-register__right--result-text {
+  }
 `;
 
 export default NewRegisterStyled;

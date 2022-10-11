@@ -7,7 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
 import ReactDOM from 'react-dom';
-import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
 import * as yup from 'yup';
 
 import LoginStyled from '../theme/pages/Login';
@@ -19,8 +19,6 @@ import {
   DownloadButton,
   MUIButtonLoading01,
 } from '../theme/components/Buttons';
-
-import { useForm, Controller } from 'react-hook-form';
 
 import styled from 'styled-components';
 
@@ -61,6 +59,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SendIcon from '@mui/icons-material/Send';
 
 import Countdown from 'react-countdown';
+
+import CloseIcon from '@mui/icons-material/Close';
 
 const defaultState = {
   username: '',
@@ -141,6 +141,8 @@ const NewLogin = () => {
 
   const [values, setValues] = useState(defaultState);
 
+  const [closeAlertLogin, setCloseAlertLogin] = useState(false);
+
   // const onSubmit = (e) => {
   //   console.log(e);
   // };
@@ -168,6 +170,28 @@ const NewLogin = () => {
     switchPage();
     navigate(inputPath);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      password: '',
+    },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+
+    validationSchema: validationSchema,
+    onSubmit: async (values, actions) => {
+      login(
+        {
+          username: values.username,
+          password: values.password,
+        },
+        actions,
+        loginSuccess
+      );
+    },
+  });
 
   if (isLoading) {
     return <Loading></Loading>;
@@ -209,6 +233,20 @@ const NewLogin = () => {
             </div>
 
             <div className="new-login__right--body">
+              {/* <form className="new-login__form" onSubmit={formik.handleSubmit}>
+                <MyTextField
+                  id="username"
+                  name="username"
+                  label="Username"
+                  // value={props.values.username}
+                  // onChange={props.handleChange}
+                  // error={
+                  //   props.touched.username && Boolean(props.errors.username)
+                  // }
+                  // aria-describedby="component-helper-text"
+                  // disabled={isCountDown}
+                />
+              </form> */}
               <Formik
                 initialValues={{ username: '', password: '' }}
                 validationSchema={validationSchema}
@@ -230,7 +268,15 @@ const NewLogin = () => {
                   >
                     <div className="new-login__form--alert-container">
                       {numberOfLoginFail === 3 && isCountDown && (
-                        <Alert severity="error" sx={{ fontSize: '1.4rem' }}>
+                        <Alert
+                          severity="error"
+                          sx={{ fontSize: '1.4rem' }}
+                          action={
+                            <Button color="inherit" size="small">
+                              UNDO
+                            </Button>
+                          }
+                        >
                           <AlertTitle sx={{ fontSize: '1.4rem' }}>
                             Error
                           </AlertTitle>
@@ -242,7 +288,22 @@ const NewLogin = () => {
                         </Alert>
                       )}
                       {numberOfLoginFail === 6 && (
-                        <Alert severity="error" sx={{ fontSize: '1.4rem' }}>
+                        <Alert
+                          severity="error"
+                          sx={{ fontSize: '1.4rem' }}
+                          action={
+                            <IconButton
+                              aria-label="close"
+                              color="inherit"
+                              size="small"
+                              onClick={() => {
+                                setCloseAlertLogin(false);
+                              }}
+                            >
+                              <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                          }
+                        >
                           <AlertTitle sx={{ fontSize: '1.4rem' }}>
                             Error
                           </AlertTitle>
@@ -250,9 +311,8 @@ const NewLogin = () => {
                         </Alert>
                       )}
                     </div>
-                    <Field
-                      name="username"
-                      render={({ field, form: { isSubmitting } }) => (
+                    <Field name="username">
+                      {({ field, form, meta }) => (
                         <FormControl>
                           <MUIInputCustom02
                             {...field}
@@ -282,10 +342,10 @@ const NewLogin = () => {
                           </FormHelperText>
                         </FormControl>
                       )}
-                    />
-                    <Field
-                      name="password"
-                      render={({ field, form: { isSubmitting } }) => (
+                    </Field>
+
+                    <Field name="password">
+                      {({ field, form, meta }) => (
                         <FormControl>
                           <MUIInputCustom02
                             id="password"
@@ -331,11 +391,10 @@ const NewLogin = () => {
                           </FormHelperText>
                         </FormControl>
                       )}
-                    />
+                    </Field>
 
                     {isLoadingForm ? (
                       <MUIButtonLoading01
-                        // onClick={handleClick}
                         endIcon={<SendIcon />}
                         loading={isLoadingForm}
                         loadingPosition="end"
@@ -352,10 +411,6 @@ const NewLogin = () => {
                         Login
                       </MUIButtonCustom02>
                     )}
-
-                    {/* <MUIButtonCustom02 variant="contained" type="submit">
-                      Login
-                    </MUIButtonCustom02> */}
 
                     <Box
                       sx={{

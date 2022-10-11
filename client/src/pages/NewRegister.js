@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { useFormik } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormik } from 'formik';
 import * as yup from 'yup';
 import {
   Loading,
@@ -14,6 +14,8 @@ import loginImage from '../assets/images/login_1.svg';
 import { Link, useNavigate, Navigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
+import defaultAvt from '../assets/images/avt/user.png';
+
 import LoginStyled from '../theme/pages/Login';
 import {
   DefaultButton,
@@ -21,6 +23,7 @@ import {
   Button83,
   ContactButton,
   DownloadButton,
+  MUIButtonLoading01,
 } from '../theme/components/Buttons';
 
 import { useForm, Controller } from 'react-hook-form';
@@ -39,6 +42,8 @@ import Typography from '@mui/material/Typography';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
 
 import {
   MUIInputCustom01,
@@ -58,17 +63,26 @@ import NewRegisterStyled from '../theme/pages/NewRegister';
 
 import { BsFacebook, BsMenuButton } from 'react-icons/bs';
 import { AiFillInstagram, AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+import SendIcon from '@mui/icons-material/Send';
 
 const validationSchema = yup.object({
   phone: yup
     .string('Enter your phone')
-    .required('Email is required')
-    .min(5, 'Phone should be of minimum 5 characters length'),
+    .required('Phone is required')
+    .min(8, 'Phone should be of minimum 8 characters length')
+    .max(13, 'Phone should be of maximum 13 characters length'),
   email: yup
     .string('Enter your email')
     .email('Enter valid email')
     .required('Email is required'),
+  address: yup.string('Enter your address').required('Address is required'),
+  name: yup.string('Enter your name').required('Name is required'),
 });
+
+const initErrorFormilk = {
+  isError: false,
+  msgError: '',
+};
 
 const NewRegister = () => {
   const {
@@ -77,29 +91,17 @@ const NewRegister = () => {
     actionRegisterPage,
     registerPage,
     registerNode,
+    isLoadingForm,
+    isErrorForm,
+    messageErrorForm,
+    registerTempUser,
   } = useGlobalContext();
 
   const navigate = useNavigate();
 
-  const formik = useFormik({
-    initialValues: {
-      phone: '',
-      email: '',
-      name: '',
-      address: '',
-      birth: '',
-      imageFront: new File([], 'https://picsum.photos/100'),
-      imageBack: new File([], 'https://picsum.photos/100'),
-    },
-    validationSchema: validationSchema,
-    onChange: (value) => {
-      console.log(value);
-    },
-    onSubmit: (values) => {
-      // alert(JSON.stringify(values, null, 2));
-      console.log(values);
-    },
-  });
+  const [imgBackLink, setImgBackLink] = useState('');
+  const [imgFrontLink, setImgFrontLink] = useState('');
+  const [isErrorFormik, setErrorFormilk] = useState(initErrorFormilk);
 
   const handleClickNext = (e) => {
     actionRegisterPage({
@@ -124,6 +126,27 @@ const NewRegister = () => {
     navigate(inputPath);
   };
 
+  const validationEmail = (value) => {
+    let error;
+
+    if (isErrorForm) {
+      if (value === registerTempUser.email) {
+        error = messageErrorForm;
+      }
+    }
+    return error;
+  };
+  const validationPhone = (value) => {
+    let error;
+
+    if (isErrorForm) {
+      if (value === registerTempUser.email) {
+        error = messageErrorForm;
+      }
+    }
+    return error;
+  };
+
   if (isLoading) {
     return <Loading></Loading>;
   }
@@ -144,153 +167,456 @@ const NewRegister = () => {
             <CustomizedSteppers></CustomizedSteppers>
 
             <div className="new-register__right--body">
-              <form
-                className="new-register__form"
-                onSubmit={formik.handleSubmit}
-              >
-                {registerPage.numPage === 1 && (
-                  <FormControl>
-                    <MUIInputCustom02
-                      id="phone"
-                      name="phone"
-                      label="Phone"
-                      value={formik.values.phone}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.phone && Boolean(formik.errors.phone)
-                      }
-                      // helperText={formik.touched.phone && formik.errors.phone}
-                    />
-                  </FormControl>
-                )}
-                {registerPage.numPage === 2 && (
-                  <FormControl>
-                    <MUIInputCustom02
-                      id="email"
-                      name="email"
-                      label="Email"
-                      value={formik.values.email}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.email && Boolean(formik.errors.email)
-                      }
-                      // helperText={formik.touched.email && formik.errors.email}
-                    ></MUIInputCustom02>
-                  </FormControl>
-                )}
-                {registerPage.numPage === 3 && (
-                  <FormControl>
-                    <MUIInputCustom02
-                      id="name"
-                      name="Name"
-                      label="name"
-                      value={formik.values.name}
-                      onChange={formik.handleChange}
-                      error={formik.touched.name && Boolean(formik.errors.name)}
-                      // helperText={formik.touched.name && formik.errors.name}
-                    />
-                  </FormControl>
-                )}
-                {registerPage.numPage === 4 && (
-                  <FormControl>
-                    <MUIInputCustom02
-                      id="address"
-                      name="address"
-                      label="Address"
-                      value={formik.values.address}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.address && Boolean(formik.errors.address)
-                      }
-                      helperText={
-                        formik.touched.address && formik.errors.address
-                      }
-                    />
-                  </FormControl>
-                )}
-                {registerPage.numPage === 5 && (
-                  <FormControl>
-                    <MUIInputCustom02
-                      type={'date'}
-                      id="birth"
-                      name="birth"
-                      label="Birth"
-                      value={formik.values.birth}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.birth && Boolean(formik.errors.birth)
-                      }
-                      helperText={formik.touched.birth && formik.errors.birth}
-                    />
-                  </FormControl>
-                )}
-                {registerPage.numPage === 6 && (
-                  <FormControl sx={{ display: 'grid', rowGap: '0.8rem' }}>
-                    <MUIButtonCustom04 variant="contained" component="label">
-                      Upload File Front
-                      <input
-                        type="file"
-                        id="imageFront"
-                        name="imageFront"
-                        label="imageFront"
-                        value={formik.values.imageFront}
-                        onChange={formik.handleChange}
-                        error={
-                          formik.touched.imageFront &&
-                          Boolean(formik.errors.imageFront)
-                        }
-                        helperText={
-                          formik.touched.imageFront && formik.errors.imageFront
-                        }
-                        hidden
-                        // {...field}
-                      />
-                    </MUIButtonCustom04>
+              {registerPage.numPage < 8 && (
+                <Formik
+                  initialValues={{
+                    phone: '',
+                    email: '',
+                    name: '',
+                    address: '',
+                    birth: '',
+                    imageFront: new File([], ''),
+                    imageBack: new File([], ''),
+                    // imageFront: null,
+                    // imageBack: null,
+                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={async (values, actions) => {
+                    console.log('Submit here');
+                    console.log(values);
 
-                    {/* <DefaultParagraph
-                      inputSize="1.2rem"
-                      className="justify-self__end"
+                    const {
+                      phone,
+                      email,
+                      name,
+                      address,
+                      birth,
+                      imageFront,
+                      imageBack,
+                    } = values;
+
+                    registerNode(
+                      {
+                        phone: phone,
+                        email: email,
+                        name: name,
+                        address: address,
+                        birth: birth,
+                        imageFront: imageFront,
+                        imageBack: imageBack,
+                      },
+                      actions
+                    );
+
+                    // const imageFrontUrl = URL.createObjectURL(imageFront);
+                    // const imageBackUrl = URL.createObjectURL(imageBack);
+
+                    // setImgFrontLink(imageFrontUrl);
+                    // setImgBackLink(imageBackUrl);
+
+                    // console.log(imageFront);
+
+                    // console.log(imageFrontUrl);
+
+                    // actions.submitForm(true);
+                  }}
+                >
+                  {(props) => (
+                    <Form
+                      onSubmit={props.handleSubmit}
+                      className="new-register__form"
                     >
-                      {getValues().imageFront
-                        ? `${getValues().imageFront[0].name}`
-                        : `Name image here`}
-                    </DefaultParagraph> */}
-                  </FormControl>
-                )}
-                {registerPage.numPage === 7 && (
-                  <FormControl sx={{ display: 'grid', rowGap: '0.8rem' }}>
-                    <MUIButtonCustom04 variant="contained" component="label">
-                      Upload File Back
-                      <input
-                        type="file"
-                        hidden
-                        id="imageBack"
-                        name="imageBack"
-                        label="imageBack"
-                        value={formik.values.imageBack}
-                        onChange={formik.handleChange}
-                        error={
-                          formik.touched.imageBack &&
-                          Boolean(formik.errors.imageBack)
-                        }
-                        helperText={
-                          formik.touched.imageBack && formik.errors.imageBack
-                        }
-                      />
-                    </MUIButtonCustom04>
+                      {registerPage.numPage === 1 && (
+                        <Field name="phone">
+                          {({ field, form, meta }) => (
+                            <FormControl>
+                              <MUIInputCustom02
+                                {...field}
+                                id="phone"
+                                name="phone"
+                                label="phone"
+                                value={props.values.phone}
+                                onChange={props.handleChange}
+                                error={
+                                  props.touched.phone &&
+                                  Boolean(props.errors.phone)
+                                }
+                                aria-describedby="component-helper-text"
+                              />
+                              <FormHelperText
+                                id="component-helper-text"
+                                sx={{
+                                  fontSize: '1.2rem',
+                                  color: 'var(--color-tertiary-dark-2)',
+                                }}
+                              >
+                                {props.touched.phone && props.errors.phone}
+                              </FormHelperText>
+                            </FormControl>
+                          )}
+                        </Field>
+                      )}
+                      {registerPage.numPage === 2 && (
+                        <Field name="email" validate={validationEmail}>
+                          {({ field, form, meta }) => (
+                            <FormControl>
+                              <MUIInputCustom02
+                                {...field}
+                                id="email"
+                                name="email"
+                                label="email"
+                                value={props.values.email}
+                                onChange={props.handleChange}
+                                error={
+                                  props.touched.email &&
+                                  Boolean(props.errors.email)
+                                }
+                                aria-describedby="component-helper-text"
+                              />
+                              <FormHelperText
+                                id="component-helper-text"
+                                sx={{
+                                  fontSize: '1.2rem',
+                                  color: 'var(--color-tertiary-dark-2)',
+                                }}
+                              >
+                                {props.touched.email && props.errors.email}
+                              </FormHelperText>
+                            </FormControl>
+                          )}
+                        </Field>
+                      )}
+                      {registerPage.numPage === 3 && (
+                        <Field name="name">
+                          {({ field, form, meta }) => (
+                            <FormControl>
+                              <MUIInputCustom02
+                                {...field}
+                                id="name"
+                                name="name"
+                                label="name"
+                                value={props.values.name}
+                                onChange={props.handleChange}
+                                error={
+                                  props.touched.name &&
+                                  Boolean(props.errors.name)
+                                }
+                                aria-describedby="component-helper-text"
+                                // disabled={isCountDown}
+                                // helperText={
+                                //   props.touched.name && props.errors.name
+                                // }
+                              />
+                              <FormHelperText
+                                id="component-helper-text"
+                                sx={{
+                                  fontSize: '1.2rem',
+                                  color: 'var(--color-tertiary-dark-2)',
+                                }}
+                              >
+                                {props.touched.name && props.errors.name}
+                              </FormHelperText>
+                            </FormControl>
+                          )}
+                        </Field>
+                      )}
+                      {registerPage.numPage === 4 && (
+                        <Field name="address">
+                          {({ field, form, meta }) => (
+                            <FormControl>
+                              <MUIInputCustom02
+                                {...field}
+                                id="address"
+                                name="address"
+                                label="address"
+                                value={props.values.address}
+                                onChange={props.handleChange}
+                                error={
+                                  props.touched.address &&
+                                  Boolean(props.errors.address)
+                                }
+                                aria-describedby="component-helper-text"
+                                // disabled={isCountDown}
+                                // helperText={
+                                //   props.touched.address && props.errors.address
+                                // }
+                              />
+                              <FormHelperText
+                                id="component-helper-text"
+                                sx={{
+                                  fontSize: '1.2rem',
+                                  color: 'var(--color-tertiary-dark-2)',
+                                }}
+                              >
+                                {props.touched.address && props.errors.address}
+                              </FormHelperText>
+                            </FormControl>
+                          )}
+                        </Field>
+                      )}
+                      {registerPage.numPage === 5 && (
+                        <Field name="birth">
+                          {({ field, form, meta }) => (
+                            <FormControl>
+                              <MUIInputCustom02
+                                {...field}
+                                id="birth"
+                                name="birth"
+                                label="birth"
+                                value={props.values.birth}
+                                onChange={props.handleChange}
+                                error={
+                                  props.touched.birth &&
+                                  Boolean(props.errors.birth)
+                                }
+                                aria-describedby="component-helper-text"
+                                // disabled={isCountDown}
+                                // helperText={
+                                //   props.touched.birth && props.errors.birth
+                                // }
+                              />
+                              <FormHelperText
+                                id="component-helper-text"
+                                sx={{
+                                  fontSize: '1.2rem',
+                                  color: 'var(--color-tertiary-dark-2)',
+                                }}
+                              >
+                                {props.touched.birth && props.errors.birth}
+                              </FormHelperText>
+                            </FormControl>
+                          )}
+                        </Field>
+                      )}
+                      {registerPage.numPage === 6 && (
+                        <FormControl
+                          sx={{
+                            display: 'grid',
+                            rowGap: '0.8rem',
+                            gridTemplateColumns: '1fr 1fr',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <MUIButtonCustom04
+                            variant="contained"
+                            component="label"
+                          >
+                            Image front
+                            <input
+                              type="file"
+                              hidden
+                              id="imageFront"
+                              name="imageFront"
+                              onChange={(event) => {
+                                const files = event.target.files[0];
+                                // let myFiles = Array.from(files);
+                                props.setFieldValue('imageFront', files);
+                              }}
+                            />
+                          </MUIButtonCustom04>
 
-                    {/* <DefaultParagraph
-                      inputSize="1.2rem"
-                      className="justify-self__end"
-                    > */}
-                    {/* {getValues().imageFront
-                        ? `${getValues().imageFront[0].name}`
-                        : `Name image here`}
-                    </DefaultParagraph> */}
-                  </FormControl>
-                )}
-                {registerPage.numPage === 8 && <Box>Success</Box>}
+                          <DefaultParagraph
+                            inputSize="1.2rem"
+                            className="justify-self__start"
+                          >
+                            {props.values.imageFront.name}
+                          </DefaultParagraph>
 
+                          <ImageList
+                            sx={{
+                              gridArea: '1 / 2 / 3 / 3',
+                              justifySelf: 'end',
+                            }}
+                          >
+                            <ImageListItem
+                              sx={{ width: 64, height: 64, objectFit: 'cover' }}
+                            >
+                              <img
+                                src={
+                                  props.values.imageFront.name
+                                    ? URL.createObjectURL(
+                                        props.values.imageFront
+                                      )
+                                    : defaultAvt
+                                }
+                              />
+                            </ImageListItem>
+                            <ImageListItem
+                              sx={{ width: 64, height: 64, objectFit: 'cover' }}
+                            >
+                              <img
+                                src={
+                                  props.values.imageBack.name
+                                    ? URL.createObjectURL(
+                                        props.values.imageBack
+                                      )
+                                    : defaultAvt
+                                }
+                              />
+                            </ImageListItem>
+                          </ImageList>
+                        </FormControl>
+                      )}
+
+                      {registerPage.numPage === 7 && (
+                        <>
+                          <FormControl
+                            sx={{
+                              display: 'grid',
+                              rowGap: '0.8rem',
+                              gridTemplateColumns: '1fr 1fr',
+                              alignItems: 'center',
+                            }}
+                          >
+                            <MUIButtonCustom04
+                              variant="contained"
+                              component="label"
+                            >
+                              Image back
+                              <input
+                                type="file"
+                                hidden
+                                id="imageBack"
+                                name="imageBack"
+                                onChange={(event) => {
+                                  const files = event.target.files[0];
+                                  // let myFiles = Array.from(files);
+                                  props.setFieldValue('imageBack', files);
+                                }}
+                              />
+                            </MUIButtonCustom04>
+
+                            <DefaultParagraph
+                              inputSize="1.2rem"
+                              className="justify-self__start"
+                            >
+                              {props.values.imageBack.name}
+                            </DefaultParagraph>
+
+                            <ImageList
+                              sx={{
+                                gridArea: '1 / 2 / 3 / 3',
+                                justifySelf: 'end',
+                              }}
+                            >
+                              <ImageListItem
+                                sx={{
+                                  width: 64,
+                                  height: 64,
+                                  objectFit: 'cover',
+                                }}
+                              >
+                                <img
+                                  src={
+                                    props.values.imageFront.name
+                                      ? URL.createObjectURL(
+                                          props.values.imageFront
+                                        )
+                                      : defaultAvt
+                                  }
+                                />
+                              </ImageListItem>
+                              <ImageListItem
+                                sx={{
+                                  width: 64,
+                                  height: 64,
+                                  objectFit: 'cover',
+                                }}
+                              >
+                                <img
+                                  src={
+                                    props.values.imageBack.name
+                                      ? URL.createObjectURL(
+                                          props.values.imageBack
+                                        )
+                                      : defaultAvt
+                                  }
+                                />
+                              </ImageListItem>
+                            </ImageList>
+                          </FormControl>
+
+                          <FormControl
+                            sx={{
+                              alignSelf: 'end',
+                              justifySelf: 'end',
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(2, max-content)',
+                              alignItems: 'center',
+                              gap: '0 1.6rem',
+                            }}
+                          >
+                            <MUIButtonCustom02
+                              variant="contained"
+                              type="button"
+                              onClick={handleClickPre}
+                            >
+                              Back
+                            </MUIButtonCustom02>
+
+                            {isLoadingForm ? (
+                              <MUIButtonLoading01
+                                // onClick={handleClick}
+                                endIcon={<SendIcon />}
+                                loading={isLoadingForm}
+                                loadingPosition="end"
+                                variant="contained"
+                              >
+                                Register...
+                              </MUIButtonLoading01>
+                            ) : (
+                              <MUIButtonCustom02
+                                variant="contained"
+                                type="submit"
+                              >
+                                Register
+                              </MUIButtonCustom02>
+                            )}
+                          </FormControl>
+                        </>
+                      )}
+                      {/* {registerPage.numPage === 8 && (
+                      <MUIButtonCustom02 variant="contained" type="submit">
+                        Submit
+                      </MUIButtonCustom02>
+                    )} */}
+                      {/* <FormControl
+                      sx={{
+                        alignSelf: 'end',
+                        justifySelf: 'end',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, max-content)',
+                        alignItems: 'center',
+                        gap: '0 1.6rem',
+                      }}
+                    >
+                      <MUIButtonCustom02
+                        type="button"
+                        variant="contained"
+                        onClick={handleClickPre}
+                      >
+                        Back
+                      </MUIButtonCustom02>
+                      {registerPage.numPage === 7 ? (
+                        <MUIButtonCustom02 variant="contained" type="submit">
+                          Submit
+                        </MUIButtonCustom02>
+                      ) : (
+                        <MUIButtonCustom02
+                          variant="contained"
+                          type="button"
+                          onClick={handleClickNext}
+                        >
+                          Next
+                        </MUIButtonCustom02>
+                      )}
+                    </FormControl> */}
+                    </Form>
+                  )}
+                </Formik>
+              )}
+
+              {registerPage.numPage < 7 && (
                 <FormControl
                   sx={{
                     alignSelf: 'end',
@@ -301,7 +627,6 @@ const NewRegister = () => {
                     gap: '0 1.6rem',
                   }}
                 >
-                  {' '}
                   <MUIButtonCustom02
                     variant="contained"
                     type="button"
@@ -309,21 +634,57 @@ const NewRegister = () => {
                   >
                     Back
                   </MUIButtonCustom02>
-                  {registerPage.numPage === 7 ? (
-                    <MUIButtonCustom02 variant="contained" type="submit">
-                      Submit
-                    </MUIButtonCustom02>
-                  ) : (
-                    <MUIButtonCustom02
-                      type="button"
-                      variant="contained"
-                      onClick={handleClickNext}
-                    >
-                      Next
-                    </MUIButtonCustom02>
-                  )}
+                  <MUIButtonCustom02
+                    type="button"
+                    variant="contained"
+                    onClick={handleClickNext}
+                  >
+                    Next
+                  </MUIButtonCustom02>
                 </FormControl>
-              </form>
+              )}
+
+              {registerPage.numPage === 8 && (
+                <div className="new-register__right--result">
+                  {/* <h2 className="new-register__right--result-heading">
+                    Success
+                  </h2>
+                  <p className="new-register__right--result-text">
+                    Please check you email to validation account!
+                  </p> */}
+                  {isErrorForm ? (
+                    <>
+                      <HeadingPrimary
+                        inputSize="2rem"
+                        inputColor="var(--color-tertiary-dark-3)"
+                      >
+                        Error
+                      </HeadingPrimary>
+                      <DefaultParagraph
+                        inputSize="1.4rem"
+                        inputColor="var(--color-tertiary-dark)"
+                      >
+                        Error here
+                      </DefaultParagraph>
+                    </>
+                  ) : (
+                    <>
+                      <HeadingPrimary
+                        inputColor="var(--color-grey-light-3)"
+                        inputSize="2rem"
+                      >
+                        Success
+                      </HeadingPrimary>
+                      <DefaultParagraph
+                        inputColor="var(--color-grey-light-1)"
+                        inputSize="1.4rem"
+                      >
+                        Please check your email to validation account!
+                      </DefaultParagraph>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           <div className="new-register__right">
@@ -346,6 +707,8 @@ const NewRegister = () => {
             </MUIButtonCustom03>
           </div>
         </div>
+
+        <Toast position={'top-right'}></Toast>
       </section>
     </NewRegisterStyled>
   );

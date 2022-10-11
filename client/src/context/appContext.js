@@ -143,6 +143,8 @@ const defaultState = {
     length: 3,
     actionType: 'default',
   },
+
+  registerTempUser: { email: '' },
 };
 
 const AppContext = React.createContext();
@@ -601,14 +603,14 @@ const AppProvider = ({ children }) => {
       } else {
         if (isOK) {
           const page = numPage + 1;
-          showToast('Valid phone and email', 2000, 'success');
+          // showToast('Valid phone and email', 2000, 'success');
 
           dispatch({
             type: NUM_PAGE_REGISTER,
             payload: { numPage: page, isOK, type, length },
           });
         } else {
-          showToast('Not valid phone or email', 2000, 'error');
+          // showToast('Not valid phone or email', 2000, 'error');
 
           dispatch({
             type: NUM_PAGE_REGISTER,
@@ -776,6 +778,11 @@ const AppProvider = ({ children }) => {
         addUserToLocalStorage({ user, token, isFirstLogin });
 
         if (loginFail === 6) {
+          showToast(
+            'You login wrong 6 time, you account is blocked forever! Please contact with 1800-00 to solve problem!',
+            5000,
+            'error'
+          );
           dispatch({
             type: LOGIN_ERROR,
             payloadMsg:
@@ -953,10 +960,12 @@ const AppProvider = ({ children }) => {
     }, 1500);
   };
 
-  const registerNode = async (user) => {
+  const registerNode = async (user, actions) => {
     dispatch({ type: REGISTER_BEGIN });
 
     console.log('register begin');
+
+    console.log(user);
 
     setTimeout(async () => {
       try {
@@ -967,6 +976,14 @@ const AppProvider = ({ children }) => {
         });
         console.log(postUser);
         dispatch({ type: REGISTER_SUCCESS, payload: postUser });
+        dispatch({
+          type: NUM_PAGE_REGISTER,
+          payload: { numPage: 8, isOK: true, type: 'plus', length: 8 },
+        });
+
+        showToast('Register success', 4000, 'success');
+
+        actions.resetForm();
       } catch (error) {
         dispatch({ type: REGISTER_ERROR });
         console.log(`Cannot register ${error}`);
@@ -975,7 +992,12 @@ const AppProvider = ({ children }) => {
         const { data } = response;
         const { msg } = data;
 
-        dispatch({ type: REGISTER_ERROR, payload: msg });
+        const { email } = user;
+
+        console.log(data);
+
+        dispatch({ type: REGISTER_ERROR, payload: msg, payloadEmail: email });
+        showToast(msg, 4000, 'error');
       }
     }, 2000);
   };
@@ -996,7 +1018,7 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const firstLogin = async ({ pwd, pwdConfirm }) => {
+  const firstLogin = async (pwd, pwdConfirm, loginSuccess) => {
     resetLoginForm();
     dispatch({ type: FIRST_LOGIN_BEGIN });
 
@@ -1028,10 +1050,13 @@ const AppProvider = ({ children }) => {
             isFirstPwdConfirm: 'false',
           },
         });
+
+        loginSuccess();
       } catch (error) {
         const { response } = error;
         const { data } = response;
         const { msg } = data;
+        showToast(msg, 5000, 'error');
 
         let isFirstPwd = 'default';
         let isFirstPwdConfirm = 'default';
