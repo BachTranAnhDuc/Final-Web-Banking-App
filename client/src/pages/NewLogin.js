@@ -171,28 +171,6 @@ const NewLogin = () => {
     navigate(inputPath);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      username: '',
-      password: '',
-    },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-
-    validationSchema: validationSchema,
-    onSubmit: async (values, actions) => {
-      login(
-        {
-          username: values.username,
-          password: values.password,
-        },
-        actions,
-        loginSuccess
-      );
-    },
-  });
-
   if (isLoading) {
     return <Loading></Loading>;
   }
@@ -233,20 +211,6 @@ const NewLogin = () => {
             </div>
 
             <div className="new-login__right--body">
-              {/* <form className="new-login__form" onSubmit={formik.handleSubmit}>
-                <MyTextField
-                  id="username"
-                  name="username"
-                  label="Username"
-                  // value={props.values.username}
-                  // onChange={props.handleChange}
-                  // error={
-                  //   props.touched.username && Boolean(props.errors.username)
-                  // }
-                  // aria-describedby="component-helper-text"
-                  // disabled={isCountDown}
-                />
-              </form> */}
               <Formik
                 initialValues={{ username: '', password: '' }}
                 validationSchema={validationSchema}
@@ -443,106 +407,14 @@ const NewLogin = () => {
                       </FormControl>
 
                       <Box sx={{ justifySelf: 'end' }}>
-                        <InputLabel>Forgot password</InputLabel>
+                        <InputLabel>
+                          <Link to={'/forgot-password'}>Forgot password</Link>
+                        </InputLabel>
                       </Box>
                     </Box>
                   </Form>
                 )}
               </Formik>
-              {/* <form onSubmit={formik.handleSubmit} className="new-login__form">
-                <FormControl>
-                  <MUIInputCustom02
-                    id="username"
-                    name="username"
-                    label="username"
-                    value={formik.values.username}
-                    onChange={formik.handleChange}
-                    // validate={validateUsername}
-                    error={
-                      formik.touched.username && Boolean(formik.errors.username)
-                    }
-                    helperText={
-                      formik.touched.username && formik.errors.username
-                    }
-                  />
-
-                </FormControl>
-                <FormControl>
-                  <MUIInputCustom02
-                    id="password"
-                    name="password"
-                    label="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    error={
-                      formik.touched.password && Boolean(formik.errors.password)
-                    }
-                    helperText={
-                      formik.touched.password && formik.errors.password
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {values.showPassword ? (
-                              <AiFillEyeInvisible />
-                            ) : (
-                              <AiFillEye />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </FormControl>
-                <MUIButtonCustom02
-                  variant="contained"
-                  type="submit"
-                  // onClick={onSubmit}
-                >
-                  Login
-                </MUIButtonCustom02>
-
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'max-content 1fr',
-                    alignItems: 'center',
-                  }}
-                >
-                  <FormControl component="fieldset">
-                    <FormGroup aria-label="position" row>
-                      <FormControlLabel
-                        value="remember"
-                        control={
-                          <Checkbox
-                            {...label}
-                            defaultChecked
-                            sx={{
-                              color: 'var(--color-primary-light-2)',
-
-                              '&.Mui-checked': {
-                                color: 'var(--color-primary)',
-                              },
-                            }}
-                          />
-                        }
-                        label="Remember me"
-                        labelPlacement="start"
-                      />
-                    </FormGroup>
-                  </FormControl>
-
-                  <Box sx={{ justifySelf: 'end' }}>
-                    <InputLabel>Forgot password</InputLabel>
-                  </Box>
-                </Box>
-              </form> */}
             </div>
           </div>
         </div>

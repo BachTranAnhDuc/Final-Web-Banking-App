@@ -28,14 +28,17 @@ const ForgotPwdStyle = styled.main`
   }
 
   .forgot-right__content {
+    /* background-color: orange; */
     width: 36rem;
+    height: 44rem;
+
     /* background-color: var(--color-fifth); */
 
     /* padding: 1.6rem 3.2rem; */
 
     display: grid;
 
-    grid-template-rows: min-content repeat(2, max-content) min-content;
+    grid-template-rows: min-content max-content 4rem 1fr;
 
     gap: 1.2rem;
   }
@@ -56,6 +59,18 @@ const ForgotPwdStyle = styled.main`
     font-weight: 300;
     letter-spacing: 0.1rem;
     color: var(--color-white);
+  }
+
+  .forgot-right__form {
+    height: 100%;
+    background-color: inherit;
+    padding: 3.2rem 0;
+    display: grid;
+    /* display: grid;
+
+    grid-template-rows: 1fr max-content;
+
+    gap: 1.6rem 0; */
   }
 
   .forgot-left__content--page2 {

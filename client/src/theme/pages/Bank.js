@@ -337,8 +337,17 @@ const BankStyled = styled.main`
     grid-template-rows: max-content 1fr;
   }
 
+  .recharge-body__right--header {
+    justify-self: end;
+  }
   .recharge-form {
+    padding: 1.2rem 2.4rem;
+    height: 100%;
+
+    width: 100%;
     display: grid;
+
+    grid-template-rows: 1fr max-content;
 
     gap: 1.6rem 0;
 
@@ -749,19 +758,33 @@ const BankStyled = styled.main`
 
     display: grid;
 
-    justify-items: center;
+    justify-items: end;
     align-items: start;
 
-    grid-template-rows: max-content 1fr max-content;
+    grid-template-rows: max-content 1fr;
+
+    gap: 1.6rem 0;
+  }
+
+  .transfer-body__right--body {
+    width: 100%;
+    height: 100%;
+    padding: 1.6rem 3.2rem;
   }
 
   .transfer-form {
+    height: 100%;
+
     display: grid;
 
-    gap: 1.6rem 0;
+    grid-template-rows: 1fr max-content;
+    /* width: 80%; */
+    /* display: grid; */
 
+    /* gap: 2.4rem 0; */
+    /* 
     justify-items: start;
-    align-items: center;
+    align-items: center; */
   }
 
   .transfer-form__control {
@@ -897,19 +920,21 @@ const BankStyled = styled.main`
   }
 
   .transfer-information__body {
-    margin-top: 1.6rem;
+    /* margin-top: 1.6rem; */
     width: 100%;
     display: grid;
 
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(4, max-content);
 
-    gap: 1.6rem;
+    gap: 2.8rem 0;
+
+    align-items: center;
   }
 
   .transfer-information__control {
     display: grid;
 
-    grid-template-columns: min-content 1fr 1.5fr;
+    grid-template-columns: min-content 1fr 2fr;
 
     align-items: center;
 

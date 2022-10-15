@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import TextField from '@mui/joy/TextField';
-import Input from '@mui/joy/Input';
-import FormControl from '@mui/joy/FormControl';
-import Box from '@mui/joy/Sheet';
-import Button from '@mui/joy/Button';
 // import Button from '@mui/material/Button';
 import { useGlobalContext } from '../context/appContext';
 
@@ -14,7 +9,56 @@ import { MuiOtpInput } from 'mui-one-time-password-input';
 // import { styled } from 'styled-component';
 import styled from 'styled-components';
 
+import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
+import * as yup from 'yup';
+
 import ForgotPwdStyle from '../theme/pages/ForgotPwd';
+
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import FilledInput from '@mui/material/FilledInput';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import Typography from '@mui/material/Typography';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import ButtonGroup from '@mui/material/ButtonGroup';
+
+import {
+  MUIInputCustom01,
+  MUIInputCustom02,
+  MUIInputCustom03,
+  RedditTextField,
+} from '../theme/components/Input';
+import {
+  MUIButtonCustom02,
+  MUIButtonCustom03,
+  MUIComplexButton,
+} from '../theme/components/Buttons';
+import { HeadingPrimary, DefaultParagraph } from '../theme/base/Typography';
+
+import NewLoginStyled from '../theme/pages/NewLogin';
+
+import { BsFacebook, BsMenuButton } from 'react-icons/bs';
+import { AiFillInstagram, AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+
+import { pink } from '@mui/material/colors';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+
+import SendIcon from '@mui/icons-material/Send';
+
+import Countdown from 'react-countdown';
+
+import CloseIcon from '@mui/icons-material/Close';
 
 const initState = {
   phone: '',
@@ -27,47 +71,59 @@ const initValidInput = {
   isValidEmail: false,
 };
 
-const MuiOtpInputStyled = styled(MuiOtpInput)`
-  display: flex;
-  gap: 30px;
-  max-width: 650px;
-  margin-inline: auto;
-  /* background-color: var(--color-fourth); */
-`;
-
 const ForgotPassword = () => {
   const [values, setValues] = useState(initState);
   const [validValues, setValidValues] = useState(initValidInput);
 
   const { actionForgotPage, forgotPage, showToast } = useGlobalContext();
 
-  const handleChangeOTP = (newValue) => {
-    setValues({ ...values, otp: newValue });
-  };
+  const validateUsername = (value) => {
+    let error;
 
-  const checkValidInput = () => {
-    if (values.email === 'anhduc@gmail.com' && values.phone === '123456789') {
-      // showToast('Valid phone and email', 2000, 'success');
-      setValidValues({ isValidEmail: true, isValidPhone: true });
-
-      return true;
-    } else {
-      // showToast('Not valid phone or email', 2000, 'error');
-      setValidValues({ isValidEmail: false, isValidPhone: false });
-
-      return false;
+    if (!value) {
+      error = 'This is required';
     }
+    if (value.length !== 6) {
+      error = 'Username must equal 6 characters';
+    }
+    return error;
+  };
+  const validatePhone = (value) => {
+    let error;
+
+    if (!value) {
+      error = 'This is required';
+    }
+    if (value.length < 8) {
+      error = 'Phone must at least 8 characters';
+    }
+    return error;
+  };
+  const validateOTP = (value) => {
+    let error;
+
+    if (!value) {
+      error = 'This is required';
+    }
+    if (value.length !== 6) {
+      error = 'OTP must equal 6 characters';
+    }
+    return error;
   };
 
-  const handleChangeInput = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
-
-  const handleClickNext = (e) => {
+  const handleClickNext = (inputOk) => {
     actionForgotPage({
-      numPage: 1,
-      isOK: checkValidInput(),
+      numPage: forgotPage.numPage,
+      isOK: inputOk,
       type: 'plus',
+      length: 3,
+    });
+  };
+  const handleClickBack = (inputOk) => {
+    actionForgotPage({
+      numPage: forgotPage.numPage,
+      isOK: true,
+      type: 'minus',
       length: 3,
     });
   };
@@ -92,119 +148,209 @@ const ForgotPassword = () => {
             />
           </div>
         </div>
-        {forgotPage.numPage === 1 && (
-          <div className="forgot-right">
-            <div className="forgot-right__content">
-              <h2 className="forgot-right__content--logo">Logo</h2>
 
-              <h2 className="forgot-right__content--heading">Password Reset</h2>
+        <div className="forgot-right">
+          <div className="forgot-right__content">
+            <h2 className="forgot-right__content--logo">Logo</h2>
 
-              <p className="forgot-right__content--text">
-                To reset your password, enter the email address you use to sign
-                in to iofrm
-              </p>
+            <h2 className="forgot-right__content--heading">Password Reset</h2>
 
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateRows: 'repeat(2, min-content)',
-                  gap: '1.2rem',
-                  backgroundColor: 'inherit',
+            <p className="forgot-right__content--text">
+              To reset your password, enter the email address you use to sign in
+              to iofrm
+            </p>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateRows: '1fr max-content',
+                gap: '1.2rem',
+                backgroundColor: 'inherit',
+              }}
+            >
+              <Formik
+                initialValues={{ username: '', phone: '', otp: '' }}
+                // validationSchema={validationSchema}
+                onSubmit={async (values, actions) => {
+                  console.log(values);
                 }}
               >
-                <FormControl>
-                  <Input
-                    placeholder="Phone"
-                    // color="#fff"
-                    color="common.white"
-                    variant="solid"
-                    sx={{
-                      // backgroundColor: '#fff',
-                      height: '4rem',
-                      paddingRight: '0.4rem',
-                    }}
-                    size="lg"
-                    name="phone"
-                    value={values.phone}
-                    onChange={handleChangeInput}
-                    disabled={
-                      validValues.isValidEmail && validValues.isValidPhone
-                        ? true
-                        : false
-                    }
-                  />
-                </FormControl>
-                <FormControl>
-                  <Input
-                    placeholder="Email"
-                    color="#fff"
-                    variant="solid"
-                    sx={{
-                      backgroundColor: '#fff',
-                      height: '4rem',
-                      paddingRight: '0.4rem',
-                    }}
-                    size="lg"
-                    name="email"
-                    value={values.email}
-                    onChange={handleChangeInput}
-                    disabled={
-                      validValues.isValidEmail && validValues.isValidPhone
-                        ? true
-                        : false
-                    }
-                  />
-                </FormControl>
+                {(props) => (
+                  <>
+                    <Form
+                      onSubmit={props.handleSubmit}
+                      className="forgot-right__form"
+                    >
+                      {forgotPage.numPage === 1 && (
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            gridTemplateRows: 'repeat(2, max-content)',
+                            rowGap: '1.2rem',
+                          }}
+                        >
+                          <Field name="username" validate={validateUsername}>
+                            {({ field, form, meta }) => (
+                              <FormControl>
+                                <RedditTextField
+                                  variant="filled"
+                                  // style={{ marginTop: 11 }}
+                                  {...field}
+                                  id="username"
+                                  name="username"
+                                  label="Username"
+                                  value={props.values.username}
+                                  onChange={props.handleChange}
+                                  error={
+                                    props.touched.username &&
+                                    Boolean(props.errors.username)
+                                  }
+                                  aria-describedby="component-helper-text"
+                                />
+                                <FormHelperText
+                                  id="component-helper-text"
+                                  sx={{
+                                    fontSize: '1.2rem',
+                                    color: 'var(--color-tertiary-dark-2)',
+                                  }}
+                                >
+                                  {props.touched.username &&
+                                    props.errors.username}
+                                </FormHelperText>
+                              </FormControl>
+                            )}
+                          </Field>
 
-                <Button
-                  size="lg"
-                  variant="solid"
-                  sx={{
-                    backgroundColor: '#fff',
-                    justifySelf: 'end',
-                    letterSpacing: '0.1rem',
-                    color: '#44C97D',
-                  }}
-                  onClick={handleClickNext}
-                >
-                  {validValues.isValidEmail && validValues.isValidPhone
-                    ? 'Next'
-                    : 'Send'}
-                </Button>
-              </Box>
-            </div>
+                          <Field name="phone" validate={validatePhone}>
+                            {({ field, form, meta }) => (
+                              <FormControl>
+                                <RedditTextField
+                                  variant="filled"
+                                  style={{ marginTop: 11 }}
+                                  {...field}
+                                  id="phone"
+                                  name="phone"
+                                  label="Phone"
+                                  value={props.values.phone}
+                                  onChange={props.handleChange}
+                                  error={
+                                    props.touched.phone &&
+                                    Boolean(props.errors.phone)
+                                  }
+                                />
+                                <FormHelperText
+                                  id="component-helper-text"
+                                  sx={{
+                                    fontSize: '1.2rem',
+                                    color: 'var(--color-tertiary-dark-2)',
+                                  }}
+                                >
+                                  {props.touched.phone && props.errors.phone}
+                                </FormHelperText>
+                              </FormControl>
+                            )}
+                          </Field>
+                        </Box>
+                      )}
+
+                      {forgotPage.numPage === 2 && (
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            gridTemplateRows: 'repeat(2, max-content)',
+                            rowGap: '0.8rem',
+                            // backgroundColor: 'orange',
+                            height: '100%',
+                          }}
+                        >
+                          <Field name="otp" validate={validateOTP}>
+                            {({ field, form, meta }) => (
+                              <FormControl>
+                                <RedditTextField
+                                  variant="filled"
+                                  style={{ marginTop: 11 }}
+                                  {...field}
+                                  id="otp"
+                                  name="otp"
+                                  label="OTP"
+                                  value={props.values.otp}
+                                  onChange={props.handleChange}
+                                  error={
+                                    props.touched.otp &&
+                                    Boolean(props.errors.otp)
+                                  }
+                                  aria-describedby="component-helper-text"
+                                />
+                                <FormHelperText
+                                  id="component-helper-text"
+                                  sx={{
+                                    fontSize: '1.2rem',
+                                    color: 'var(--color-tertiary-dark-2)',
+                                  }}
+                                >
+                                  {props.touched.otp && props.errors.otp}
+                                </FormHelperText>
+                              </FormControl>
+                            )}
+                          </Field>
+                        </Box>
+                      )}
+                      {forgotPage.numPage === 3 && (
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            gridTemplateRows: 'repeat(2, max-content)',
+                            rowGap: '0.8rem',
+                            backgroundColor: 'blue',
+                            height: '100%',
+                          }}
+                        ></Box>
+                      )}
+                    </Form>
+
+                    <ButtonGroup
+                      disableElevation
+                      variant="contained"
+                      aria-label="Disabled elevation buttons"
+                      sx={{
+                        justifySelf: 'end',
+                        alignSelf: 'end',
+                        gap: '1.2rem',
+                      }}
+                    >
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          handleClickBack(true);
+                        }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (props.errors.username !== undefined) {
+                            showToast(props.errors.username, 3000, 'error');
+                            handleClickNext(
+                              props.errors.username === undefined
+                            );
+                          } else if (props.errors.phone !== undefined) {
+                            showToast(props.errors.phone, 3000, 'error');
+                            handleClickNext(false);
+                          } else {
+                            handleClickNext(true);
+                          }
+                        }}
+                      >
+                        Next
+                      </Button>
+                    </ButtonGroup>
+                  </>
+                )}
+              </Formik>
+            </Box>
           </div>
-        )}
-
-        {forgotPage.numPage === 2 && (
-          <div className="forgot-right">
-            <div className="forgot-left__content--page2">
-              <div className="forgot-left__content--heading">OTP</div>
-
-              <MuiOtpInputStyled
-                value={values.otp}
-                onChange={handleChangeOTP}
-                length={6}
-              />
-
-              <Button
-                size="lg"
-                variant="solid"
-                sx={{
-                  backgroundColor: '#fff',
-                  justifySelf: 'end',
-                  letterSpacing: '0.1rem',
-                  color: '#44C97D',
-                }}
-                onClick={handleClickNext}
-              >
-                {validValues.isValidEmail && validValues.isValidPhone
-                  ? 'Next'
-                  : 'Send'}
-              </Button>
-            </div>
-          </div>
-        )}
+        </div>
 
         <Toast position={'top-center'}></Toast>
       </section>

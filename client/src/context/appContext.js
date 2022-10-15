@@ -329,9 +329,9 @@ const AppProvider = ({ children }) => {
           });
         }
 
-        // is your are in page 2 then you must enter your password to continue
-        else if (numPage === 1) {
-          // if you enter correct password
+        // is your are in page 2 then you must enter your money to continue
+        else {
+          // if you enter correct money
           if (isOK) {
             const page = numPage + 1;
             dispatch({
@@ -339,7 +339,7 @@ const AppProvider = ({ children }) => {
               payload: { numPage: page, name, length, actionType, isOK },
             });
           }
-          // if you enter wrong password
+          // if you enter wrong money
           else {
             dispatch({
               type: NUM_PAGE_BANK,
@@ -348,17 +348,17 @@ const AppProvider = ({ children }) => {
           }
         }
         // other
-        else {
-          // console.log('check page here');
+        // else {
+        //   // console.log('check page here');
 
-          // if this is not last page then page = page + 1
-          const page = numPage + 1;
+        //   // if this is not last page then page = page + 1
+        //   const page = numPage + 1;
 
-          dispatch({
-            type: NUM_PAGE_BANK,
-            payload: { numPage: page, name, length, actionType, isOK },
-          });
-        }
+        //   dispatch({
+        //     type: NUM_PAGE_BANK,
+        //     payload: { numPage: page, name, length, actionType, isOK },
+        //   });
+        // }
       }
       // if you click previous page
       else if (actionType === 'minus') {
@@ -479,7 +479,7 @@ const AppProvider = ({ children }) => {
           // if you enter valid money
           if (isOK) {
             const page = numPage + 1;
-            showToast('Valid money', 2000, 'success');
+            // showToast('Valid money', 2000, 'success');
             dispatch({
               type: NUM_PAGE_BANK,
               payload: { numPage: page, name, length, actionType, isOK },
@@ -562,14 +562,14 @@ const AppProvider = ({ children }) => {
       } else {
         if (isOK) {
           const page = numPage + 1;
-          showToast('Valid phone and email', 2000, 'success');
+          // showToast('Valid phone and email', 2000, 'success');
 
           dispatch({
             type: NUM_PAGE_FORGOT_PASSWORD,
             payload: { numPage: page, isOK, type, length },
           });
         } else {
-          showToast('Not valid phone or email', 2000, 'error');
+          // showToast('Not valid phone or email', 2000, 'error');
 
           dispatch({
             type: NUM_PAGE_FORGOT_PASSWORD,
