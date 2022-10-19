@@ -49,9 +49,24 @@ import * as yup from 'yup';
 import {
   MUIInputCustom01,
   MUIInputCustom02,
+  MUIInputCustom03,
   MUIFileInputStyled,
   MUIFileInputCustom,
+  RedditTextField,
 } from '../../theme/components/Input';
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+  ButtonAccountEdit,
+  MUIButtonCustom01,
+  MUIButtonCustom02,
+  MUIButtonCustom03,
+  MUIButtonCustom04,
+  MUIButtonLoading01,
+} from '../../theme/components/Buttons';
 
 import FaceIcon from '@mui/icons-material/Face';
 
@@ -474,23 +489,31 @@ const Recharge = () => {
                     aria-labelledby="variant-modal-title"
                     aria-describedby="variant-modal-description"
                     variant={open || undefined}
+                    sx={{
+                      width: '40rem',
+                      height: '24rem',
+                      padding: '3.2rem 4.4rem',
+                      display: 'grid',
+                      gridTemplateRows: 'repeat(max-content) min-content',
+                      gap: '1.6rem 0',
+                    }}
                   >
                     <ModalClose />
                     <Typography
                       id="variant-modal-title"
                       component="h2"
                       level="inherit"
-                      fontSize="1.25em"
+                      fontSize="1.6rem"
                       mb="0.25em"
                     >
                       Modal Dialog
                     </Typography>
-                    <Typography
+                    {/* <Typography
                       id="variant-modal-description"
                       textColor="inherit"
                     >
                       This is a `{open}` modal dialog.
-                    </Typography>
+                    </Typography> */}
                     <Field name="password">
                       {({ field, form, meta }) => (
                         <FormControl>
@@ -518,6 +541,8 @@ const Recharge = () => {
                         </FormControl>
                       )}
                     </Field>
+
+                    <MUIButtonCustom02 type="button">Confirm</MUIButtonCustom02>
                   </ModalDialog>
                 </Modal>
               </Form>

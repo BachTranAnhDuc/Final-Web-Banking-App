@@ -390,33 +390,57 @@ const AppProvider = ({ children }) => {
             type: NUM_PAGE_BANK,
             payload: { numPage, name, length, actionType, isOK },
           });
-        } else if (numPage === 1) {
-          // if you enter valid money
-          if (isOK) {
-            const page = numPage + 1;
-            showToast('Valid money', 2000, 'success');
-            dispatch({
-              type: NUM_PAGE_BANK,
-              payload: { numPage: page, name, length, actionType, isOK },
-            });
-          }
-          // if you enter not valid money
-          else {
-            showToast('💣 Not valid money', 2000, 'error');
+          // } else if (numPage === 1) {
+          //   // if you enter valid money
+          //   if (isOK) {
+          //     const page = numPage + 1;
+          //     showToast('Valid money', 2000, 'success');
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage: page, name, length, actionType, isOK },
+          //     });
+          //   }
+          //   // if you enter not valid money
+          //   else {
+          //     showToast('💣 Not valid money', 2000, 'error');
 
-            dispatch({
-              type: NUM_PAGE_BANK,
-              payload: { numPage, name, length, actionType, isOK },
-            });
-          }
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage, name, length, actionType, isOK },
+          //     });
+          //   }
+          // }
+
+          // // is your are in page 2 then you must enter your password to continue
+          // else if (numPage === 2) {
+          //   // if you enter correct password
+          //   if (isOK) {
+          //     const page = numPage + 1;
+          //     showToast('Valid card', 2000, 'success');
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage: page, name, length, actionType, isOK },
+          //     });
+          //   }
+          //   // if you enter wrong password
+          //   else {
+          //     showToast('💣 Not valid card', 2000, 'error');
+
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage, name, length, actionType, isOK },
+          //     });
+          //   }
         }
+        // other
+        else {
+          // console.log('check page here');
 
-        // is your are in page 2 then you must enter your password to continue
-        else if (numPage === 2) {
-          // if you enter correct password
+          // if this is not last page then page = page + 1
+
           if (isOK) {
             const page = numPage + 1;
-            showToast('Valid card', 2000, 'success');
+
             dispatch({
               type: NUM_PAGE_BANK,
               payload: { numPage: page, name, length, actionType, isOK },
@@ -424,19 +448,11 @@ const AppProvider = ({ children }) => {
           }
           // if you enter wrong password
           else {
-            showToast('💣 Not valid card', 2000, 'error');
-
             dispatch({
               type: NUM_PAGE_BANK,
               payload: { numPage, name, length, actionType, isOK },
             });
           }
-        }
-        // other
-        else {
-          // console.log('check page here');
-
-          // if this is not last page then page = page + 1
           const page = numPage + 1;
 
           dispatch({

@@ -7,7 +7,81 @@ import successSvg from '../../assets/images/design/success.svg';
 
 import { useGlobalContext } from '../../context/appContext';
 
-import { DialogMUIPwd } from '../../components';
+import Box from '@mui/material/Box';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import StepContent from '@mui/material/StepContent';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+// import Typography from '@mui/material/Typography';
+// import { alpha, styled } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+// import RadioGroup from '@mui/material/RadioGroup';
+// import Radio from '@mui/material/Radio';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Input from '@mui/material/Input';
+import FilledInput from '@mui/material/FilledInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormGroup from '@mui/material/FormGroup';
+import FormLabel from '@mui/material/FormLabel';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+// import Chip from '@mui/material/Chip';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Modal from '@mui/joy/Modal';
+import ModalClose from '@mui/joy/ModalClose';
+import ModalDialog from '@mui/joy/ModalDialog';
+
+import { pink } from '@mui/material/colors';
+
+import { MuiOtpInput } from 'mui-one-time-password-input';
+
+import { FaLinux, FaGithub } from 'react-icons/fa';
+
+import { Toast } from '../../components';
+
+import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
+// import { TimePicker, DatePicker, DateTimePicker } from 'formik-mui-lab';
+import * as yup from 'yup';
+
+import {
+  MUIInputCustom01,
+  MUIInputCustom02,
+  MUIInputCustom03,
+  MUIFileInputStyled,
+  MUIFileInputCustom,
+  RedditTextField,
+} from '../../theme/components/Input';
+import {
+  DefaultButton,
+  LoginButton,
+  Button83,
+  ContactButton,
+  DownloadButton,
+  ButtonAccountEdit,
+  MUIButtonCustom01,
+  MUIButtonCustom02,
+  MUIButtonCustom03,
+  MUIButtonCustom04,
+  MUIButtonLoading01,
+} from '../../theme/components/Buttons';
+
+import FaceIcon from '@mui/icons-material/Face';
+
+import CheckIcon from '@mui/icons-material/Check';
+
+import Chip from '@mui/joy/Chip';
+import Radio from '@mui/joy/Radio';
+import RadioGroup from '@mui/joy/RadioGroup';
+import Typography from '@mui/joy/Typography';
+import ChipDelete from '@mui/joy/ChipDelete';
 
 const initSwitchCard = {
   viettel: true,
@@ -35,7 +109,11 @@ const BuyCard = () => {
 
   const [getAmount, setAmount] = useState(1);
 
-  const [getPage, setPage] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
+  const [selectedCardName, setSelectedCardName] = React.useState('');
+  const [selectedCardType, setSelectedCardType] = React.useState('');
+  const [selectedValue, setSelectedValue] = React.useState('a');
+  const [open, setOpen] = React.useState('');
 
   const {
     showToast,
@@ -101,28 +179,7 @@ const BuyCard = () => {
     }
   };
 
-  const handleClickMinus = (e) => {
-    handleCheckMinus();
-    if (getAmount === 1) {
-      setAmount(1);
-    } else {
-      setAmount(getAmount - 1);
-    }
-  };
-
-  const handleClickPlus = (e) => {
-    handleCheckPlus();
-    if (getAmount === 5) {
-      setAmount(5);
-    } else {
-      setAmount(getAmount + 1);
-    }
-  };
-
-  const handleClickNextPage = (e) => {
-    if (bankPage.numPage === 1) {
-      confirmPwdBuy(false);
-    }
+  const handleClickNext = (e) => {
     actionBankPage({
       numPage: bankPage.numPage,
       name: 'buy-card',
@@ -131,7 +188,7 @@ const BuyCard = () => {
       isOK: true,
     });
   };
-  const handleClickPrePage = (e) => {
+  const handleClickBack = (e) => {
     actionBankPage({
       numPage: bankPage.numPage,
       name: 'buy-card',
@@ -147,7 +204,403 @@ const BuyCard = () => {
         <h2 className="buy-card__header--heading">Buy card</h2>
       </div>
       <div className="buy-card__body">
-        {bankPage.numPage === 1 && (
+        <Formik
+          initialValues={{
+            nameCard: '',
+            typeCard: '',
+            numberCard: '1',
+            password: '',
+          }}
+          // validationSchema={validationSchema}
+          onSubmit={async (values, actions) => {
+            console.log('submit here');
+            // actions.setFieldValue('idCard', otp);
+            console.log(values);
+          }}
+        >
+          {(props) => (
+            <Form onSubmit={props.handleSubmit} className="buy-card__form">
+              {bankPage.numPage === 1 && (
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'grid',
+                    gridTemplateRows: '1fr 1fr max-content',
+                    rowGap: '1.6rem',
+                    // padding: '1.6rem 3.2rem',
+                  }}
+                >
+                  <Box sx={{ display: 'grid' }}>
+                    <RadioGroup
+                      name="nameCard"
+                      aria-labelledby="best-movie"
+                      row
+                      sx={{
+                        // padding: '2.4rem 2.4rem',
+                        justifySelf: 'center',
+                        alignSelf: 'center',
+                        flexWrap: 'wrap',
+                        gap: 2,
+                        // backgroundColor: 'red',
+                      }}
+                    >
+                      {['Viettel', 'MobiFone', 'VinaPhone'].map((name) => {
+                        const checked = selectedCardName === name;
+                        return (
+                          <Chip
+                            key={name}
+                            variant={checked ? 'soft' : 'plain'}
+                            color={checked ? 'primary' : 'neutral'}
+                            // endDecorator={checked && <ChipDelete />}
+                            sx={{ padding: '1.6rem 3.2rem' }}
+                            startDecorator={
+                              checked && (
+                                <CheckIcon
+                                  sx={{
+                                    zIndex: 1,
+                                    pointerEvents: 'none',
+                                  }}
+                                />
+                              )
+                            }
+                          >
+                            <Radio
+                              sx={{ fontSize: '1.2rem' }}
+                              variant="outlined"
+                              color={checked ? 'primary' : 'neutral'}
+                              disableIcon
+                              overlay
+                              label={name}
+                              value={name}
+                              checked={checked}
+                              onChange={(event) => {
+                                if (event.target.checked) {
+                                  setSelectedCardName(name);
+                                  props.setFieldValue('nameCard', name);
+                                  // props.handleChange();
+                                }
+                              }}
+                            />
+                          </Chip>
+                        );
+                      })}
+                    </RadioGroup>
+                  </Box>
+                  <Box
+                    sx={{
+                      // backgroundColor: 'blue',
+                      display: 'grid',
+                      justifyItems: 'center',
+                      alignItems: 'start',
+                    }}
+                  >
+                    <RadioGroup
+                      name="typeCard"
+                      aria-labelledby="best-movie"
+                      row
+                      sx={{
+                        flexWrap: 'wrap',
+                        gap: 1,
+                        // backgroundColor: 'orange',
+                      }}
+                    >
+                      {['10,000d', '20,000d', '50,000d', '100,000d'].map(
+                        (name) => {
+                          const checked = selectedCardType === name;
+                          return (
+                            <Chip
+                              key={name}
+                              variant={checked ? 'soft' : 'plain'}
+                              color={checked ? 'primary' : 'neutral'}
+                              sx={{ padding: '1.2rem 2.4rem' }}
+                              // endDecorator={checked && <ChipDelete />}
+                              startDecorator={
+                                checked && (
+                                  <CheckIcon
+                                    sx={{
+                                      zIndex: 1,
+                                      pointerEvents: 'none',
+                                    }}
+                                  />
+                                )
+                              }
+                            >
+                              <Radio
+                                sx={{ fontSize: '1.2rem' }}
+                                variant="outlined"
+                                color={checked ? 'primary' : 'neutral'}
+                                disableIcon
+                                overlay
+                                label={name}
+                                value={name}
+                                checked={checked}
+                                onChange={(event) => {
+                                  if (event.target.checked) {
+                                    setSelectedCardType(name);
+                                    props.setFieldValue('typeCard', name);
+                                    // props.handleChange();
+                                  }
+                                }}
+                              />
+                            </Chip>
+                          );
+                        }
+                      )}
+                    </RadioGroup>
+                  </Box>
+
+                  <div className="buy-card__item-number">
+                    <div className="buy-card__item-number--left">
+                      <span className="buy-card__item--text">Number</span>
+                      <button
+                        className="btn__buy-card--action"
+                        type="button"
+                        onClick={() => {
+                          let re;
+
+                          if (Number(props.values.numberCard) <= 1) {
+                            props.setFieldValue('numberCard', '1');
+                            showToast(
+                              'Number of card must at least 1 item',
+                              2000,
+                              'error'
+                            );
+                          } else {
+                            props.setFieldValue(
+                              'numberCard',
+                              `${Number(props.values.numberCard) - 1}`
+                            );
+                          }
+                        }}
+                      >
+                        <HiOutlineMinusCircle className="buy-card__icon"></HiOutlineMinusCircle>
+                      </button>
+                      <span className="buy-card__item--span">
+                        {props.values.numberCard}
+                      </span>
+                      <button
+                        className="btn__buy-card--action"
+                        type="button"
+                        onClick={() => {
+                          let re;
+
+                          if (Number(props.values.numberCard) >= 5) {
+                            props.setFieldValue('numberCard', '5');
+                            showToast(
+                              'Number of card must not more than 5',
+                              2000,
+                              'error'
+                            );
+                          } else {
+                            props.setFieldValue(
+                              'numberCard',
+                              `${Number(props.values.numberCard) + 1}`
+                            );
+                          }
+                        }}
+                      >
+                        <HiOutlinePlusCircle className="buy-card__icon"></HiOutlinePlusCircle>
+                      </button>
+                    </div>
+                  </div>
+                </Box>
+              )}
+              {bankPage.numPage == 2 && (
+                <div className="buy-card__shop--body-infor">
+                  <div className="buy-card__shop--header">
+                    <h2 className="buy-card__shop--heading">Infomation</h2>
+                  </div>
+                  <div className="buy-card__shop--body">
+                    <div className="buy-card__shop--body__content">
+                      <div className="buy-card__shop--body__content--left">
+                        <img
+                          src={viettelLogo}
+                          alt="logo"
+                          className="buy-card__shop--body__content--img"
+                        />
+                      </div>
+                      <div className="buy-card__shop--body__content--right">
+                        <div className="buy-card__shop--body__content-control">
+                          <h2 className="buy-card__shop--body__content-heading">
+                            Type
+                          </h2>
+                          <span className="buy-card__shop--body__content-span">
+                            Viettel
+                          </span>
+                        </div>
+                        <div className="buy-card__shop--body__content-control">
+                          <h2 className="buy-card__shop--body__content-heading">
+                            Value
+                          </h2>
+                          <span className="buy-card__shop--body__content-span">
+                            100000vnd
+                          </span>
+                        </div>
+                        <div className="buy-card__shop--body__content-control">
+                          <h2 className="buy-card__shop--body__content-heading">
+                            Amount
+                          </h2>
+                          <span className="buy-card__shop--body__content-span">
+                            4
+                          </span>
+                        </div>
+                        <div className="buy-card__shop--body__content-control">
+                          <h2 className="buy-card__shop--body__content-heading">
+                            Total
+                          </h2>
+                          <span className="buy-card__shop--body__content-span">
+                            400000vnd
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {bankPage.numPage === 3 && (
+                <Box sx={{ height: '100%' }}>
+                  <h2 className="heading--secondary">buy-card success</h2>
+                </Box>
+              )}
+
+              <ButtonGroup
+                disableElevation
+                variant="contained"
+                aria-label="Disabled elevation buttons"
+                sx={{ justifySelf: 'end', alignSelf: 'end', gap: '1.2rem' }}
+              >
+                {bankPage.numPage < 2 && (
+                  <>
+                    {bankPage.numPage !== 1 && (
+                      <Button onClick={() => handleClickBack()}>Back</Button>
+                    )}
+                    <Button
+                      onClick={() => {
+                        // console.log(props.errors.money === undefined);
+
+                        // if (props.errors.money !== undefined) {
+                        //   showToast(props.errors.money, 3000, 'error');
+                        //   handleClickNext(props.errors.money === undefined);
+                        // } else if (props.errors.phone !== undefined) {
+                        //   showToast(props.errors.phone, 3000, 'error');
+                        //   handleClickNext(false);
+                        // } else {
+                        //   handleClickNext(true);
+                        // }
+                        if (selectedCardName && selectedCardType) {
+                          handleClickNext(true);
+                        } else {
+                          showToast(
+                            'Please choose name and type card',
+                            4000,
+                            'error'
+                          );
+                        }
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </>
+                )}
+                {bankPage.numPage === 2 && (
+                  <>
+                    {bankPage.numPage !== 1 && (
+                      <Button onClick={() => handleClickBack()}>Back</Button>
+                    )}
+                    <Button
+                      onClick={() => {
+                        // console.log(props.errors.money === undefined);
+
+                        // if (props.errors.money !== undefined) {
+                        //   showToast(props.errors.money, 3000, 'error');
+                        //   handleClickNext(props.errors.money === undefined);
+                        // } else if (props.errors.phone !== undefined) {
+                        //   showToast(props.errors.phone, 3000, 'error');
+                        //   handleClickNext(false);
+                        // } else {
+                        //   handleClickNext(true);
+                        // }
+                        setOpen('plain');
+
+                        // handleClickNext(true);
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </>
+                )}
+              </ButtonGroup>
+              <Modal
+                open={!!open}
+                onClose={() => setOpen('')}
+                // sx={{ width: '20rem' }}
+              >
+                <ModalDialog
+                  aria-labelledby="variant-modal-title"
+                  aria-describedby="variant-modal-description"
+                  variant={open || undefined}
+                  sx={{
+                    width: '40rem',
+                    height: '24rem',
+                    padding: '3.2rem 4.4rem',
+                    display: 'grid',
+                    gridTemplateRows: 'repeat(max-content) min-content',
+                    gap: '1.6rem 0',
+                  }}
+                >
+                  <ModalClose />
+                  <Typography
+                    id="variant-modal-title"
+                    component="h2"
+                    level="inherit"
+                    fontSize="1.6rem"
+                    mb="0.25em"
+                  >
+                    Modal Dialog
+                  </Typography>
+                  {/* <Typography
+                      id="variant-modal-description"
+                      textColor="inherit"
+                    >
+                      This is a `{open}` modal dialog.
+                    </Typography> */}
+                  <Field name="password">
+                    {({ field, form, meta }) => (
+                      <FormControl>
+                        <MUIInputCustom02
+                          {...field}
+                          id="password"
+                          name="password"
+                          label="Password"
+                          value={props.values.password}
+                          onChange={props.handleChange}
+                          error={
+                            props.touched.password &&
+                            Boolean(props.errors.password)
+                          }
+                        />
+                        <FormHelperText
+                          id="component-helper-text"
+                          sx={{
+                            fontSize: '1.2rem',
+                            color: 'var(--color-tertiary-dark-2)',
+                          }}
+                        >
+                          {props.touched.password && props.errors.password}
+                        </FormHelperText>
+                      </FormControl>
+                    )}
+                  </Field>
+
+                  <MUIButtonCustom02 type="button">Confirm</MUIButtonCustom02>
+                </ModalDialog>
+              </Modal>
+            </Form>
+          )}
+        </Formik>
+        {/* {bankPage.numPage === 1 && (
           <>
             <div className="buy-card__body--top">
               <div className="buy-card__list">
@@ -428,10 +881,10 @@ const BuyCard = () => {
               </div>
             </div>
           </>
-        )}
+        )} */}
       </div>
 
-      <DialogMUIPwd
+      {/* <DialogMUIPwd
         open={openModalMUI}
         handleClose={handleCloseModalMUI}
         namePage={'buy-card'}
@@ -440,7 +893,7 @@ const BuyCard = () => {
         // handleChangePwd={handleChangePwd}
         // handleClickShowPassword={handleClickShowPassword}
         // handleMouseDownPassword={handleMouseDownPassword}
-      ></DialogMUIPwd>
+      ></DialogMUIPwd> */}
     </div>
   );
 };

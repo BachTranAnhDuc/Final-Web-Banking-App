@@ -553,7 +553,11 @@ const BankStyled = styled.main`
   }
 
   .withdraw-form {
+    height: 100%;
+    width: 100%;
     display: grid;
+
+    grid-template-rows: 1fr max-content;
 
     gap: 1.6rem 0;
 
@@ -998,7 +1002,14 @@ const BankStyled = styled.main`
   .buy-card__body {
     display: grid;
 
-    grid-template-rows: max-content 1fr;
+    /* grid-template-rows: max-content 1fr; */
+  }
+
+  .buy-card__form {
+    padding: 1.6rem 3.2rem;
+    display: grid;
+
+    grid-template-rows: 1fr max-content;
   }
 
   .buy-card__body--top {
