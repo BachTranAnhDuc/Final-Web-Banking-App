@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'antd/dist/antd.css';
 import './index.css';
 import App from './App';
 import { AppProvider } from './context/appContext';
@@ -14,6 +15,7 @@ import {
 } from '@mui/joy/styles';
 import styled from 'styled-components';
 import ThemeStyled from './theme/Theme';
+// import 'antd/dist/antd.css';
 
 const muiTheme = extendMuiTheme({
   // This is required to point to `var(--joy-*)` because we are using `CssVarsProvider` from Joy UI.

@@ -27,6 +27,7 @@ import {
   ForgotPassword,
   NewLogin,
   NewRegister,
+  History,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -105,6 +106,8 @@ const App = () => {
               <Route path="withdraw" element={<WithDraw></WithDraw>}></Route>
               <Route path="buy" element={<BuyCard></BuyCard>}></Route>
             </Route>
+
+            <Route path="history" element={<History></History>}></Route>
           </>
         </Route>
       </Routes>

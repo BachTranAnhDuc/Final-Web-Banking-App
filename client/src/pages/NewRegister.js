@@ -360,9 +360,10 @@ const NewRegister = () => {
                             <FormControl>
                               <MUIInputCustom02
                                 {...field}
+                                type="date"
                                 id="birth"
                                 name="birth"
-                                label="birth"
+                                // label="birth"
                                 value={props.values.birth}
                                 onChange={props.handleChange}
                                 error={
