@@ -69,7 +69,7 @@ const Navbar = () => {
           </li>
         </ul>
 
-        <NavLink to={'/login'}>
+        <NavLink to={'/new-login'}>
           <DefaultButton onClick={() => switchPage()}>Sign In</DefaultButton>
         </NavLink>
       </nav>

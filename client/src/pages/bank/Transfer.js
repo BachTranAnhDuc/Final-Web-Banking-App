@@ -7,18 +7,29 @@ import StepLabel from '@mui/material/StepLabel';
 import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-
-import { alpha, styled } from '@mui/material/styles';
+// import Typography from '@mui/material/Typography';
+// import { alpha, styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
-import RadioGroup from '@mui/material/RadioGroup';
+// import RadioGroup from '@mui/material/RadioGroup';
+// import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Input from '@mui/material/Input';
+import FilledInput from '@mui/material/FilledInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormGroup from '@mui/material/FormGroup';
+import FormLabel from '@mui/material/FormLabel';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+// import Chip from '@mui/material/Chip';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 import { pink } from '@mui/material/colors';
-import Radio from '@mui/material/Radio';
 
 import { MuiOtpInput } from 'mui-one-time-password-input';
 
@@ -28,38 +39,27 @@ import { Toast } from '../../components';
 
 import { useGlobalContext } from '../../context/appContext';
 
-// import { SteppBank } from '../../components';
+import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
+import * as yup from 'yup';
 
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#c2edc2',
-    fontSize: 14,
-  },
-  '& label': {
-    fontSize: 16,
-    color: '#388078',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#388078',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#20c997',
-      border: '2px solid #388078',
-      fontSize: 16,
-    },
-    '&:hover fieldset': {
-      borderColor: '#388078',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#c2edc2',
-    },
-  },
-  '& .MuiInputBase-input': {
-    fontSize: 16,
-    letterSpacing: 1.6,
-  },
-});
+import {
+  MUIInputCustom01,
+  MUIInputCustom02,
+  MUIFileInputStyled,
+  MUIFileInputCustom,
+} from '../../theme/components/Input';
+
+import FaceIcon from '@mui/icons-material/Face';
+
+import CheckIcon from '@mui/icons-material/Check';
+
+import Chip from '@mui/joy/Chip';
+import Radio from '@mui/joy/Radio';
+import RadioGroup from '@mui/joy/RadioGroup';
+import Typography from '@mui/joy/Typography';
+import ChipDelete from '@mui/joy/ChipDelete';
+
+// import { SteppBank } from '../../components';
 
 const steps = [
   {
@@ -85,19 +85,26 @@ const steps = [
 ];
 
 const initState = {
-  money: 0,
+  money: '',
   idCard: '',
   cvv: '',
   date: '',
   fee: 'me',
 };
 
+const longText = `
+Aliquam eget finibus ante, non facilisis lectus. Sed vitae dignissim est, vel aliquam tellus.
+Praesent non nunc mollis, fermentum neque at, semper arcu.
+Nullam eget est sed sem iaculis gravida eget vitae justo.
+`;
+
 const Transfer = () => {
   const [getNext, setNext] = useState(0);
 
-  const [values, setValues] = useState(initState);
+  // const [values, setValues] = useState(initState);
 
   const [activeStep, setActiveStep] = useState(0);
+  const [selected, setSelected] = React.useState('');
 
   const {
     showToast,
@@ -107,74 +114,48 @@ const Transfer = () => {
     isCorrectMoney,
   } = useGlobalContext();
 
-  const handleChangeId = (input) => {
-    setValues({ ...values, idCard: input });
-  };
+  const validateMoney = (value) => {
+    let error;
 
-  const handleChangeCvv = (input) => {
-    setValues({ ...values, cvv: input });
-  };
-
-  const isValidMoney = (input) => {
-    if (input % 1000 === 0 && input !== 0) {
-      confirmMoneyInput(true);
-      console.log('check money success');
-      showToast('Valid money', 1000, 'success');
-    } else {
-      confirmMoneyInput(false);
-      console.log('check money error');
-      showToast('Money must divide 10000 and != 0', 1000, 'error');
+    if (!value) {
+      error = 'This is required';
     }
-  };
-
-  const handleChangeMoney = (e) => {
-    console.log(`${e.target.value}`);
-    isValidMoney(e.target.value);
-
-    setValues({ ...values, money: e.target.value });
-  };
-
-  const handleChangeDate = (e) => {
-    setValues({ ...values, date: e.target.value });
-  };
-
-  const handleClick10 = () => {
-    isValidMoney(10000);
-    setValues({ ...values, money: 10000 });
-  };
-  const handleClick20 = () => {
-    isValidMoney(20000);
-    setValues({ ...values, money: 20000 });
-  };
-  const handleClick50 = () => {
-    isValidMoney(50000);
-    setValues({ ...values, money: 50000 });
-  };
-  const handleClick100 = () => {
-    isValidMoney(100000);
-    setValues({ ...values, money: 100000 });
-  };
-  const handleClick200 = () => {
-    isValidMoney(200000);
-    setValues({ ...values, money: 200000 });
-  };
-  const handleClick500 = () => {
-    isValidMoney(500000);
-    setValues({ ...values, money: 500000 });
-  };
-
-  const handleClickNext = (e) => {
-    if (!isCorrectMoney) {
-      showToast('Not valid money', 1000, 'error');
-    } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (value % 10000 !== 0) {
+      error = 'Money must devide 10000';
     }
+    return error;
+  };
+  const validatePhone = (value) => {
+    let error;
+
+    if (!value) {
+      error = 'This is required';
+    }
+    if (value.length < 8) {
+      error = 'Phone must at least 8 characters';
+    }
+    return error;
+  };
+  const validateOTP = (value) => {
+    let error;
+
+    if (!value) {
+      error = 'This is required';
+    }
+    if (value.length !== 6) {
+      error = 'OTP must equal 6 characters';
+    }
+    return error;
+  };
+
+  const handleClickNext = (inputOk) => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     actionBankPage({
       numPage: bankPage.numPage,
       name: 'transfer',
       length: 5,
       actionType: 'plus',
-      isOK: isCorrectMoney,
+      isOK: inputOk,
     });
   };
 
@@ -186,7 +167,7 @@ const Transfer = () => {
       name: 'transfer',
       length: 5,
       actionType: 'minus',
-      isOK: isCorrectMoney,
+      isOK: true,
     });
   };
 
@@ -211,7 +192,6 @@ const Transfer = () => {
       </div>
       <div className="transfer-body">
         <div className="transfer-body__left">
-          {/* <Stepper steps={steps} activeStep={activeStep}></Stepper> */}
           <Box sx={{ maxWidth: 400 }}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((step, index) => (
@@ -237,254 +217,341 @@ const Transfer = () => {
           </Box>
         </div>
         <div className="transfer-body__right">
-          {bankPage.numPage === 1 && (
-            <div className="transfer-body__right--header">
-              <h2 className="heading--secondary">Heading here</h2>
-            </div>
-          )}
-
-          {bankPage.numPage === 1 && (
-            <form className="transfer-form transfer-1">
-              <Box sx={{ '& .MuiTextField-root': { m: 1, width: '32ch' } }}>
-                <CssTextField
-                  id="outlined-number-size-normal"
-                  label="Number"
-                  type="number"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  sx={{
-                    // backgroundColor: '#e9faf5',
-                    letterSpacing: 1,
-                  }}
-                  onChange={handleChangeMoney}
-                  value={values.money}
-                />
-              </Box>
-
-              <div className="transfer-suggestion">
-                <button
-                  className="transfer-suggestion__item"
-                  onClick={handleClick10}
-                  type="button"
-                >
-                  10000đ
-                </button>
-                <button
-                  className="transfer-suggestion__item"
-                  onClick={handleClick20}
-                  type="button"
-                >
-                  20000đ
-                </button>
-                <button
-                  className="transfer-suggestion__item"
-                  onClick={handleClick50}
-                  type="button"
-                >
-                  50000đ
-                </button>
-                <button
-                  className="transfer-suggestion__item"
-                  onClick={handleClick100}
-                  type="button"
-                >
-                  100000đ
-                </button>
-                <button
-                  className="transfer-suggestion__item"
-                  onClick={handleClick200}
-                  type="button"
-                >
-                  200000đ
-                </button>
-                <button
-                  className="transfer-suggestion__item"
-                  onClick={handleClick500}
-                  type="button"
-                >
-                  500000đ
-                </button>
-              </div>
-
-              <div className="transfer-notes">
-                <textarea
-                  name="note"
-                  id="note"
-                  cols="24"
-                  rows="4"
-                  className="transfer-note"
-                  placeholder="Note here..."
-                ></textarea>
-              </div>
-
-              {/* <div className="transfer-form__control">
-                <div className="transfer-form__label--first">
-                  <input
-                    type="text"
-                    className="transfer-form__input"
-                    placeholder="Enter amount here"
-                  />
-                </div>
-              </div> */}
-            </form>
-          )}
-
-          {bankPage.numPage === 2 && (
-            <>
-              <div className="transfer-information__header">
-                <h2 className="transfer-information__heading">Phone Number</h2>
-              </div>
-              <div className="transfer-form transfer-1">
-                <div className="transfer-form__control--2">
-                  <label htmlFor="phone" className="transfer-form__label">
-                    Phone
-                  </label>
-                  <input
-                    type="text"
-                    className="transfer-form__input"
-                    id="phone"
-                    name="phone"
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {bankPage.numPage === 3 && (
-            <>
-              <div className="transfer-information__header">
-                <h2 className="transfer-information__heading">Information</h2>
-              </div>
-              <div className="transfer-information__body">
-                <div className="transfer-information__control">
-                  <FaGithub></FaGithub>
-                  <h3 className="transfer-information__heading">Name</h3>
-
-                  <p className="transfer-information__text">
-                    Bach Tran Anh Duc
-                  </p>
-                </div>
-                <div className="transfer-information__control">
-                  <FaGithub></FaGithub>
-                  <h3 className="transfer-information__heading">Phone</h3>
-
-                  <p className="transfer-information__text">88888888</p>
-                </div>
-                <div className="transfer-information__control">
-                  <FaGithub></FaGithub>
-                  <h3 className="transfer-information__heading">Money</h3>
-
-                  <p className="transfer-information__text">1000000vnd</p>
-                </div>
-                <div className="transfer-information__control">
-                  <FaGithub></FaGithub>
-                  <h3 className="transfer-information__heading">Fee</h3>
-
-                  <div className="transfer-information__radios">
-                    <RadioGroup
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
-                      value={values.fee}
-                      onChange={handleChange}
+          {/* {bankPage.numPage === 1 && ( */}
+          <div className="transfer-body__right--header">
+            <Tooltip title={longText}>
+              <Button sx={{ m: 1 }}>Default Width [300px]</Button>
+            </Tooltip>
+          </div>
+          {/* )} */}
+          <div className="transfer-body__right--body">
+            <Formik
+              initialValues={{
+                money: '',
+                note: '',
+                otp: '',
+                fee: 'me',
+                phone: '',
+              }}
+              // validationSchema={validationSchema}
+              onSubmit={async (values, actions) => {
+                console.log('submit here');
+                // actions.setFieldValue('idCard', otp);
+                console.log(values);
+              }}
+            >
+              {(props) => (
+                <Form onSubmit={props.handleSubmit} className="transfer-form">
+                  {bankPage.numPage === 1 && (
+                    <Box
                       sx={{
+                        width: '85%',
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 1fr)',
-                        columnGap: 2,
+                        gridTemplateRows: 'repeat(3, max-content)',
+                        rowGap: '1.6rem',
                       }}
                     >
-                      <FormControlLabel
-                        value="me"
-                        control={
-                          <Radio
-                            sx={{
-                              color: pink[800],
-                              '&.Mui-checked': {
-                                color: pink[600],
-                              },
-                              '& .MuiSvgIcon-root': {
-                                fontSize: 24,
-                              },
-                            }}
-                          />
-                        }
-                        label="Me"
+                      <Field name="money" validate={validateMoney}>
+                        {({ field, form, meta }) => (
+                          <FormControl>
+                            <MUIInputCustom02
+                              {...field}
+                              id="money"
+                              name="money"
+                              label="Money"
+                              value={props.values.money}
+                              onChange={props.handleChange}
+                              error={
+                                props.touched.money &&
+                                Boolean(props.errors.money)
+                              }
+                              aria-describedby="component-helper-text"
+                            />
+                            <FormHelperText
+                              id="component-helper-text"
+                              sx={{
+                                fontSize: '1.2rem',
+                                color: 'var(--color-tertiary-dark-2)',
+                              }}
+                            >
+                              {props.touched.money && props.errors.money}
+                            </FormHelperText>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Box>
+                        <RadioGroup
+                          name="money"
+                          aria-labelledby="best-movie"
+                          row
+                          sx={{ flexWrap: 'wrap', gap: 1 }}
+                        >
+                          {['50000', '100000', '200000', '500000'].map(
+                            (name) => {
+                              const checked = selected === name;
+                              return (
+                                <Chip
+                                  key={name}
+                                  variant={checked ? 'soft' : 'plain'}
+                                  color={checked ? 'primary' : 'neutral'}
+                                  // endDecorator={checked && <ChipDelete />}
+                                  startDecorator={
+                                    checked && (
+                                      <CheckIcon
+                                        sx={{
+                                          zIndex: 1,
+                                          pointerEvents: 'none',
+                                        }}
+                                      />
+                                    )
+                                  }
+                                >
+                                  <Radio
+                                    sx={{ fontSize: '1.2rem' }}
+                                    variant="outlined"
+                                    color={checked ? 'primary' : 'neutral'}
+                                    disableIcon
+                                    overlay
+                                    label={name}
+                                    value={name}
+                                    checked={checked}
+                                    onChange={(event) => {
+                                      if (event.target.checked) {
+                                        setSelected(name);
+                                        props.setFieldValue('money', name);
+                                        // props.handleChange();
+                                      }
+                                    }}
+                                  />
+                                </Chip>
+                              );
+                            }
+                          )}
+                        </RadioGroup>
+                      </Box>
+
+                      <TextareaAutosize
+                        name="note"
+                        value={props.values.note}
+                        onChange={props.handleChange}
+                        minRows={5}
+                        aria-label="maximum height"
+                        placeholder="Maximum 4 rows"
+                        defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                    ut labore et dolore magna aliqua."
+                        style={{ width: '100%', padding: '1.2rem 2.4rem' }}
                       />
-                      <FormControlLabel
-                        value="friend"
-                        control={
-                          <Radio
-                            sx={{
-                              color: pink[800],
-                              '&.Mui-checked': {
-                                color: pink[600],
-                              },
-                              '& .MuiSvgIcon-root': {
-                                fontSize: 24,
-                              },
-                            }}
-                          />
+                    </Box>
+                  )}
+                  {bankPage.numPage == 2 && (
+                    <Box
+                      sx={{
+                        width: '85%',
+                        display: 'grid',
+                        gridTemplateRows: 'max-content',
+                        rowGap: '1.6rem',
+                      }}
+                    >
+                      <Field name="phone" validate={validatePhone}>
+                        {({ field, form, meta }) => (
+                          <FormControl>
+                            <MUIInputCustom02
+                              {...field}
+                              id="phone"
+                              name="phone"
+                              label="phone"
+                              value={props.values.phone}
+                              onChange={props.handleChange}
+                              error={
+                                props.touched.phone &&
+                                Boolean(props.errors.phone)
+                              }
+                            />
+                            <FormHelperText
+                              id="component-helper-text"
+                              sx={{
+                                fontSize: '1.2rem',
+                                color: 'var(--color-tertiary-dark-2)',
+                              }}
+                            >
+                              {props.touched.phone && props.errors.phone}
+                            </FormHelperText>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Box>
+                  )}
+                  {bankPage.numPage == 3 && (
+                    <Box
+                      sx={
+                        {
+                          // width: '85%',
+                          // display: 'grid',
+                          // gridTemplateRows: 'repeat(3, max-content)',
+                          // rowGap: '1.6rem',
                         }
-                        label="Friend"
-                      />
-                    </RadioGroup>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+                      }
+                    >
+                      <div className="transfer-information__body">
+                        <div className="transfer-information__control">
+                          <FaGithub></FaGithub>
+                          <h3 className="transfer-information__heading">
+                            Name
+                          </h3>
 
-          {bankPage.numPage === 4 && (
-            <>
-              <div className="transfer-information__header">
-                <h2 className="transfer-information__heading">OTP</h2>
-              </div>
-              <div className="transfer-form transfer-2">
-                <div className="transfer-form__control--2">
-                  <MuiOtpInput
-                    value={values.idCard}
-                    onChange={handleChangeId}
-                    name="idCard"
-                    length={6}
-                    className="transfer-form__otp"
-                  />
-                </div>
-              </div>
-            </>
-          )}
+                          <p className="transfer-information__text">
+                            Bach Tran Anh Duc
+                          </p>
+                        </div>
+                        <div className="transfer-information__control">
+                          <FaGithub></FaGithub>
+                          <h3 className="transfer-information__heading">
+                            Phone
+                          </h3>
 
-          {bankPage.numPage === 5 && (
-            <>
-              <div className="transfer-result__header">
-                <h2 className="heading--secondary">Success</h2>
-              </div>
-              <div className="transfer-result__body">
-                <p className="transfer-result__text">Text here</p>
-              </div>
-            </>
-          )}
+                          <p className="transfer-information__text">88888888</p>
+                        </div>
+                        <div className="transfer-information__control">
+                          <FaGithub></FaGithub>
+                          <h3 className="transfer-information__heading">
+                            Money
+                          </h3>
 
-          <div className="transfer__group-btns">
-            {bankPage.numPage !== 1 && (
-              <button
-                className="transfer__btn"
-                type="button"
-                onClick={handleClickBack}
-              >
-                Back
-              </button>
-            )}
+                          <p className="transfer-information__text">
+                            1000000vnd
+                          </p>
+                        </div>
+                        <div className="transfer-information__control">
+                          <FaGithub></FaGithub>
+                          <h3 className="transfer-information__heading">Fee</h3>
 
-            <button
-              className="transfer__btn"
-              type="button"
-              onClick={handleClickNext}
-            >
-              Next
-            </button>
+                          <div className="transfer-information__radios">
+                            <FormControl>
+                              <RadioGroup
+                                defaultValue="friend"
+                                name="fee"
+                                value={props.values.fee}
+                                onChange={props.handleChange}
+                                row
+                                sx={{ gap: 2, mt: 1 }}
+                              >
+                                <Radio value="me" label="Me" />
+                                <Radio value="friend" label="Friend" />
+                              </RadioGroup>
+                            </FormControl>
+                          </div>
+                        </div>
+                      </div>
+                    </Box>
+                  )}
+                  {bankPage.numPage === 4 && (
+                    <div className="transfer-form transfer-2">
+                      <Box
+                        sx={{
+                          height: '100%',
+                          display: 'grid',
+                          gridTemplateRows: '1fr max-content',
+                          paddingBottom: '3.2rem',
+                        }}
+                      >
+                        <>
+                          <Field name="otp" validate={validateOTP}>
+                            {({ field, form, meta }) => (
+                              <FormControl>
+                                <MUIInputCustom02
+                                  {...field}
+                                  id="otp"
+                                  name="otp"
+                                  label="OTP"
+                                  value={props.values.otp}
+                                  onChange={props.handleChange}
+                                  error={
+                                    props.touched.otp &&
+                                    Boolean(props.errors.otp)
+                                  }
+                                />
+                                <FormHelperText
+                                  id="component-helper-text"
+                                  sx={{
+                                    fontSize: '1.2rem',
+                                    color: 'var(--color-tertiary-dark-2)',
+                                  }}
+                                >
+                                  {props.touched.otp && props.errors.otp}
+                                </FormHelperText>
+                              </FormControl>
+                            )}
+                          </Field>
+                          <ButtonGroup
+                            disableElevation
+                            variant="contained"
+                            aria-label="Disabled elevation buttons"
+                            sx={{
+                              justifySelf: 'end',
+                              alignSelf: 'end',
+                              gap: '1.2rem',
+                            }}
+                          >
+                            {bankPage.numPage === 4 && (
+                              <>
+                                <Button onClick={() => handleClickBack()}>
+                                  Back
+                                </Button>
+                                <Button type="submit">Submit</Button>
+                              </>
+                            )}
+                          </ButtonGroup>
+                        </>
+                      </Box>
+                    </div>
+                  )}
+
+                  {bankPage.numPage === 5 && (
+                    <Box sx={{ height: '100%' }}>
+                      <h2 className="heading--secondary">Transfer success</h2>
+                    </Box>
+                  )}
+
+                  <ButtonGroup
+                    disableElevation
+                    variant="contained"
+                    aria-label="Disabled elevation buttons"
+                    sx={{ justifySelf: 'end', alignSelf: 'end', gap: '1.2rem' }}
+                  >
+                    {bankPage.numPage < 4 && (
+                      <>
+                        {bankPage.numPage !== 1 && (
+                          <Button onClick={() => handleClickBack()}>
+                            Back
+                          </Button>
+                        )}
+                        <Button
+                          onClick={() => {
+                            console.log(props.errors.money === undefined);
+
+                            if (props.errors.money !== undefined) {
+                              showToast(props.errors.money, 3000, 'error');
+                              handleClickNext(props.errors.money === undefined);
+                            } else if (props.errors.phone !== undefined) {
+                              showToast(props.errors.phone, 3000, 'error');
+                              handleClickNext(false);
+                            } else {
+                              handleClickNext(true);
+                            }
+                          }}
+                        >
+                          Next
+                        </Button>
+                      </>
+                    )}
+                  </ButtonGroup>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>
+      {/* <Toast position={'bottom-right'}></Toast> */}
     </div>
   );
 };

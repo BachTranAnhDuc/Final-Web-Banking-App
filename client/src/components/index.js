@@ -17,6 +17,7 @@ import FooterDash from './FooterDash';
 import DialogMUIPwd from './DialogMUIPwd';
 
 import StepperBank from './bank/StepperBank';
+import CustomizedSteppers from './Stepper';
 
 export {
   Navbar,
@@ -37,4 +38,5 @@ export {
   FooterDash,
   StepperBank,
   DialogMUIPwd,
+  CustomizedSteppers,
 };

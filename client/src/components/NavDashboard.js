@@ -57,7 +57,7 @@ const NavDashboard = () => {
     // navigate('/login');
 
     setTimeout(() => {
-      navigate('/login');
+      navigate('/');
     }, 1000);
   };
 

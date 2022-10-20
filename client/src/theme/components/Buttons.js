@@ -1,6 +1,11 @@
-import styled from 'styled-components';
+import style from 'styled-components';
+import { alpha, styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import { purple } from '@mui/material/colors';
+import ButtonBase from '@mui/material/ButtonBase';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-const DefaultButton = styled.button.attrs((/* props */) => ({ tabIndex: 0 }))`
+const DefaultButton = style.button.attrs((/* props */) => ({ tabIndex: 0 }))`
   font-size: 1.8rem;
   font-weight: 700;
 
@@ -26,11 +31,11 @@ const DefaultButton = styled.button.attrs((/* props */) => ({ tabIndex: 0 }))`
   }
 `;
 
-const LoginButton = styled(DefaultButton)`
+const LoginButton = style(DefaultButton)`
   align-self: center;
 `;
 
-const ContactButton = styled(DefaultButton).attrs(() => ({ tabIndex: 0 }))`
+const ContactButton = style(DefaultButton).attrs(() => ({ tabIndex: 0 }))`
   appearance: none;
   background-color: transparent;
   border: 2px solid #1a1a1a;
@@ -78,7 +83,7 @@ const ContactButton = styled(DefaultButton).attrs(() => ({ tabIndex: 0 }))`
   }
 `;
 
-const Button83 = styled.button.attrs(() => ({ tabIndex: 0 }))`
+const Button83 = style.button.attrs(() => ({ tabIndex: 0 }))`
   appearance: button;
   background-color: transparent;
   background-image: linear-gradient(
@@ -124,7 +129,7 @@ const Button83 = styled.button.attrs(() => ({ tabIndex: 0 }))`
   }
 `;
 
-const DownloadButton = styled(DefaultButton).attrs(() => ({ tabIndex: 0 }))`
+const DownloadButton = style(DefaultButton).attrs(() => ({ tabIndex: 0 }))`
   background-color: var(--color-primary-light-7);
   border: 2px solid #422800;
   border-radius: 30px;
@@ -152,7 +157,7 @@ const DownloadButton = styled(DefaultButton).attrs(() => ({ tabIndex: 0 }))`
   }
 `;
 
-const ButtonAccountEdit = styled(DefaultButton)`
+const ButtonAccountEdit = style(DefaultButton)`
   font-size: 1.6rem;
   font-weight: 500;
   letter-spacing: 0.2rem;
@@ -162,6 +167,60 @@ const ButtonAccountEdit = styled(DefaultButton)`
 
   cursor: pointer;
 `;
+
+const MUIButtonCustom01 = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: purple[500],
+  '&:hover': {
+    backgroundColor: purple[700],
+  },
+}));
+const MUIButtonCustom02 = styled(MUIButtonCustom01)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'var(--color-primary)',
+  '&:hover': {
+    backgroundColor: 'var(--color-primary-dark-1)',
+  },
+  padding: '1.2rem 2.4rem',
+  fontSize: '1.2rem',
+  letterSpacing: '0.2rem',
+}));
+const MUIButtonCustom03 = styled(MUIButtonCustom01)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'inherit',
+  '&:hover': {
+    backgroundColor: 'var(--color-white)',
+    color: 'var(--color-primary)',
+  },
+  padding: '1.2rem 2.4rem',
+  fontSize: '1.2rem',
+  letterSpacing: '0.2rem',
+  border: '2px solid var(--color-white)',
+}));
+const MUIButtonCustom04 = styled(MUIButtonCustom01)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  color: 'var(--color-primary)',
+  backgroundColor: 'inherit',
+  '&:hover': {
+    backgroundColor: 'var(--color-white)',
+    color: 'var(--color-primary)',
+  },
+  padding: '1.2rem 2.4rem',
+  fontSize: '1.2rem',
+  letterSpacing: '0.2rem',
+  border: '2px solid var(--color-primary)',
+}));
+
+const MUIButtonLoading01 = styled(LoadingButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  color: 'var(--color-white)',
+  backgroundColor: 'var(--color-primary)',
+  padding: '1.2rem 2.4rem',
+  fontSize: '1.2rem',
+  letterSpacing: '0.2rem',
+  border: '2px solid var(--color-primary)',
+}));
+
 export {
   DefaultButton,
   LoginButton,
@@ -169,4 +228,9 @@ export {
   ContactButton,
   DownloadButton,
   ButtonAccountEdit,
+  MUIButtonCustom01,
+  MUIButtonCustom02,
+  MUIButtonCustom03,
+  MUIButtonCustom04,
+  MUIButtonLoading01,
 };

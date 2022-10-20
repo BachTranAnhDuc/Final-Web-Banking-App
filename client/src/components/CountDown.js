@@ -7,26 +7,32 @@ const CountDown = ({ textCountdown, timeCountDown }) => {
   const { styleAlert, closeCountDown, closeAlert } = useGlobalContext();
 
   const Completionist = () => {
-    return (
-      <div className={'form__alert form__alert--success'}>
-        <button type="button" onClick={() => closeAlert()}>
-          <AiOutlineClose className="form__alert--close"></AiOutlineClose>
-        </button>
-        <p>You can login now</p>
-      </div>
-    );
+    return <p>You can login now</p>;
+    // return (
+    //   <div className={'form__alert form__alert--success'}>
+    //     <button type="button" onClick={() => closeAlert()}>
+    //       <AiOutlineClose className="form__alert--close"></AiOutlineClose>
+    //     </button>
+    //     <p>You can login now</p>
+    //   </div>
+    // );
   };
 
   const BeforeCompletionist = ({ hours, minutes, seconds }) => {
+    // return (
+    //   <div className={styleAlert}>
+    //     <button type="button" onClick={() => closeAlert()}>
+    //       <AiOutlineClose className="form__alert--close"></AiOutlineClose>
+    //     </button>
+    //     <p>
+    //       {textCountdown} {hours}:{minutes}:{seconds}
+    //     </p>
+    //   </div>
+    // );
     return (
-      <div className={styleAlert}>
-        <button type="button" onClick={() => closeAlert()}>
-          <AiOutlineClose className="form__alert--close"></AiOutlineClose>
-        </button>
-        <p>
-          {textCountdown} {hours}:{minutes}:{seconds}
-        </p>
-      </div>
+      <p>
+        {textCountdown} {hours}:{minutes}:{seconds}
+      </p>
     );
   };
 

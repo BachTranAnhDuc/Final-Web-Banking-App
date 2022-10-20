@@ -25,6 +25,8 @@ import {
   WithDraw,
   BuyCard,
   ForgotPassword,
+  NewLogin,
+  NewRegister,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -44,6 +46,11 @@ const App = () => {
 
           <Route path="*" element={<Error></Error>}></Route>
         </Route>
+        <Route path="/new-login" element={<NewLogin></NewLogin>}></Route>
+        <Route
+          path="/new-register"
+          element={<NewRegister></NewRegister>}
+        ></Route>
 
         <Route path="/first-login" element={<FirstLogin></FirstLogin>}></Route>
         <Route

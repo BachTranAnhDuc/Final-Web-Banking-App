@@ -44,6 +44,7 @@ import {
   CONFIRM_DIGITAL_CARD,
   VALID_MONEY_INPUT,
   NUM_PAGE_FORGOT_PASSWORD,
+  NUM_PAGE_REGISTER,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -135,12 +136,39 @@ const defaultState = {
     length: 3,
     actionType: 'default',
   },
+
+  registerPage: {
+    numPage: 1,
+    isOK: false,
+    length: 3,
+    actionType: 'default',
+  },
+
+  registerTempUser: { email: '' },
 };
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, defaultState);
+
+  // Random component
+  const Completionist = () => <span>You are good to go!</span>;
+
+  // Renderer callback with condition
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a complete state
+      return <Completionist />;
+    } else {
+      // Render a countdown
+      return (
+        <span>
+          {hours}:{minutes}:{seconds}
+        </span>
+      );
+    }
+  };
 
   // custom toast
   // msg: message, time: time countdown, type: error, success, warming...
@@ -301,9 +329,9 @@ const AppProvider = ({ children }) => {
           });
         }
 
-        // is your are in page 2 then you must enter your password to continue
-        else if (numPage === 1) {
-          // if you enter correct password
+        // is your are in page 2 then you must enter your money to continue
+        else {
+          // if you enter correct money
           if (isOK) {
             const page = numPage + 1;
             dispatch({
@@ -311,7 +339,7 @@ const AppProvider = ({ children }) => {
               payload: { numPage: page, name, length, actionType, isOK },
             });
           }
-          // if you enter wrong password
+          // if you enter wrong money
           else {
             dispatch({
               type: NUM_PAGE_BANK,
@@ -320,17 +348,17 @@ const AppProvider = ({ children }) => {
           }
         }
         // other
-        else {
-          // console.log('check page here');
+        // else {
+        //   // console.log('check page here');
 
-          // if this is not last page then page = page + 1
-          const page = numPage + 1;
+        //   // if this is not last page then page = page + 1
+        //   const page = numPage + 1;
 
-          dispatch({
-            type: NUM_PAGE_BANK,
-            payload: { numPage: page, name, length, actionType, isOK },
-          });
-        }
+        //   dispatch({
+        //     type: NUM_PAGE_BANK,
+        //     payload: { numPage: page, name, length, actionType, isOK },
+        //   });
+        // }
       }
       // if you click previous page
       else if (actionType === 'minus') {
@@ -362,33 +390,57 @@ const AppProvider = ({ children }) => {
             type: NUM_PAGE_BANK,
             payload: { numPage, name, length, actionType, isOK },
           });
-        } else if (numPage === 1) {
-          // if you enter valid money
-          if (isOK) {
-            const page = numPage + 1;
-            showToast('Valid money', 2000, 'success');
-            dispatch({
-              type: NUM_PAGE_BANK,
-              payload: { numPage: page, name, length, actionType, isOK },
-            });
-          }
-          // if you enter not valid money
-          else {
-            showToast('💣 Not valid money', 2000, 'error');
+          // } else if (numPage === 1) {
+          //   // if you enter valid money
+          //   if (isOK) {
+          //     const page = numPage + 1;
+          //     showToast('Valid money', 2000, 'success');
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage: page, name, length, actionType, isOK },
+          //     });
+          //   }
+          //   // if you enter not valid money
+          //   else {
+          //     showToast('💣 Not valid money', 2000, 'error');
 
-            dispatch({
-              type: NUM_PAGE_BANK,
-              payload: { numPage, name, length, actionType, isOK },
-            });
-          }
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage, name, length, actionType, isOK },
+          //     });
+          //   }
+          // }
+
+          // // is your are in page 2 then you must enter your password to continue
+          // else if (numPage === 2) {
+          //   // if you enter correct password
+          //   if (isOK) {
+          //     const page = numPage + 1;
+          //     showToast('Valid card', 2000, 'success');
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage: page, name, length, actionType, isOK },
+          //     });
+          //   }
+          //   // if you enter wrong password
+          //   else {
+          //     showToast('💣 Not valid card', 2000, 'error');
+
+          //     dispatch({
+          //       type: NUM_PAGE_BANK,
+          //       payload: { numPage, name, length, actionType, isOK },
+          //     });
+          //   }
         }
+        // other
+        else {
+          // console.log('check page here');
 
-        // is your are in page 2 then you must enter your password to continue
-        else if (numPage === 2) {
-          // if you enter correct password
+          // if this is not last page then page = page + 1
+
           if (isOK) {
             const page = numPage + 1;
-            showToast('Valid card', 2000, 'success');
+
             dispatch({
               type: NUM_PAGE_BANK,
               payload: { numPage: page, name, length, actionType, isOK },
@@ -396,19 +448,11 @@ const AppProvider = ({ children }) => {
           }
           // if you enter wrong password
           else {
-            showToast('💣 Not valid card', 2000, 'error');
-
             dispatch({
               type: NUM_PAGE_BANK,
               payload: { numPage, name, length, actionType, isOK },
             });
           }
-        }
-        // other
-        else {
-          // console.log('check page here');
-
-          // if this is not last page then page = page + 1
           const page = numPage + 1;
 
           dispatch({
@@ -451,7 +495,7 @@ const AppProvider = ({ children }) => {
           // if you enter valid money
           if (isOK) {
             const page = numPage + 1;
-            showToast('Valid money', 2000, 'success');
+            // showToast('Valid money', 2000, 'success');
             dispatch({
               type: NUM_PAGE_BANK,
               payload: { numPage: page, name, length, actionType, isOK },
@@ -534,14 +578,14 @@ const AppProvider = ({ children }) => {
       } else {
         if (isOK) {
           const page = numPage + 1;
-          showToast('Valid phone and email', 2000, 'success');
+          // showToast('Valid phone and email', 2000, 'success');
 
           dispatch({
             type: NUM_PAGE_FORGOT_PASSWORD,
             payload: { numPage: page, isOK, type, length },
           });
         } else {
-          showToast('Not valid phone or email', 2000, 'error');
+          // showToast('Not valid phone or email', 2000, 'error');
 
           dispatch({
             type: NUM_PAGE_FORGOT_PASSWORD,
@@ -560,6 +604,47 @@ const AppProvider = ({ children }) => {
         const page = numPage - 1;
         dispatch({
           type: NUM_PAGE_FORGOT_PASSWORD,
+          payload: { numPage: page, isOK, type, length },
+        });
+      }
+    }
+  };
+  const actionRegisterPage = ({ numPage, isOK, type, length }) => {
+    if (type === 'plus') {
+      if (numPage === length) {
+        dispatch({
+          type: NUM_PAGE_REGISTER,
+          payload: { numPage, isOK, type, length },
+        });
+      } else {
+        if (isOK) {
+          const page = numPage + 1;
+          // showToast('Valid phone and email', 2000, 'success');
+
+          dispatch({
+            type: NUM_PAGE_REGISTER,
+            payload: { numPage: page, isOK, type, length },
+          });
+        } else {
+          // showToast('Not valid phone or email', 2000, 'error');
+
+          dispatch({
+            type: NUM_PAGE_REGISTER,
+            payload: { numPage, isOK, type, length },
+          });
+        }
+      }
+    }
+    if (type === 'minus') {
+      if (numPage === 1) {
+        dispatch({
+          type: NUM_PAGE_REGISTER,
+          payload: { numPage, isOK, type, length },
+        });
+      } else {
+        const page = numPage - 1;
+        dispatch({
+          type: NUM_PAGE_REGISTER,
           payload: { numPage: page, isOK, type, length },
         });
       }
@@ -675,15 +760,15 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const login = async (userInput) => {
+  const login = async (userInput, actions, loginSuccess) => {
     dispatch({ type: LOGIN_BEGIN });
     resetLoginForm();
 
-    showToastPromise(
-      axios.post('/api/v1/auth/login', userInput),
-      'Login success',
-      'Login error'
-    );
+    // showToastPromise(
+    //   axios.post('/api/v1/auth/login', userInput),
+    //   'Login success',
+    //   'Login error'
+    // );
 
     setTimeout(async () => {
       try {
@@ -709,6 +794,11 @@ const AppProvider = ({ children }) => {
         addUserToLocalStorage({ user, token, isFirstLogin });
 
         if (loginFail === 6) {
+          showToast(
+            'You login wrong 6 time, you account is blocked forever! Please contact with 1800-00 to solve problem!',
+            5000,
+            'error'
+          );
           dispatch({
             type: LOGIN_ERROR,
             payloadMsg:
@@ -735,6 +825,7 @@ const AppProvider = ({ children }) => {
             },
           });
         } else {
+          showToast('Loggin success', 5000, 'success');
           dispatch({
             type: LOGIN_SUCCESS,
             payloadMsg: msg,
@@ -749,6 +840,8 @@ const AppProvider = ({ children }) => {
               style: 'form-input',
             },
           });
+
+          loginSuccess();
         }
 
         // return <Navigate to={'/dashboard'}></Navigate>;
@@ -769,18 +862,43 @@ const AppProvider = ({ children }) => {
           if (message === 'Please provide password') {
             styleInput = 'form-input form-input__error';
             isPwdErr = 'true';
+
+            // actions.setErrors({
+            //   password: 'Password is not correct',
+            // });
+
+            // if (loginFail !== 3 && loginFail !== 6) {
+            showToast('Password is not correct', 4000, 'error');
+            // }
           }
 
           if (message === 'Invalid password') {
             styleInput = 'form-input form-input__error';
             isPwdErr = 'true';
+
+            actions.setErrors({
+              password: 'Password is not correct',
+            });
+            showToast('Password is not correct', 5000, 'error');
           }
 
           const { loginFail } = user;
 
           if (loginFail === 3) {
             message = '3 fails, your account is lock in 1 minute';
+
+            showToast(
+              'You login wrong 3 time, you account is blocked!',
+              3000,
+              'success'
+            );
             dispatch({ type: OPEN_COUNTDONW });
+
+            setTimeout(() => {
+              dispatch({ type: CLOSE_COUNTDOWN });
+
+              showToast('You can login now', 3000, 'success');
+            }, 5000);
           } else {
             dispatch({ type: CLOSE_COUNTDOWN });
           }
@@ -788,6 +906,12 @@ const AppProvider = ({ children }) => {
           if (loginFail === 6) {
             message =
               '6 fails, your account is blocked forever, please contact with admin';
+
+            showToast(
+              'You login wrong 6 time, you account is blocked forever! Please contact with 1800-00 to solve problem!',
+              5000,
+              'error'
+            );
           }
 
           dispatch({
@@ -804,15 +928,36 @@ const AppProvider = ({ children }) => {
           if (message === 'Please provide username') {
             styleInput = 'form-input form-input__error';
             isUserErr = 'true';
+
+            actions.setErrors({
+              username: 'Username must not empty',
+            });
+
+            showToast('Username must empty', 4000, 'error');
           }
           if (message === 'Please provide username and password') {
             styleInput = 'form-input form-input__error';
             isUserErr = 'true';
             isPwdErr = 'true';
+
+            // actions.setErrors({
+            //   username: 'Username must not empty',
+            // });
+            // actions.setErrors({
+            //   password: 'Password must not empty',
+            // });
+
+            showToast('Username and password must empty', 4000, 'error');
           }
           if (message === 'Can not find user, please provide true username') {
             styleInput = 'form-input form-input__error';
             isUserErr = 'true';
+
+            actions.setErrors({
+              username: 'User is not exist',
+            });
+
+            showToast('Cannot find any user', 4000, 'error');
           }
 
           dispatch({
@@ -831,10 +976,12 @@ const AppProvider = ({ children }) => {
     }, 1500);
   };
 
-  const register = async (user) => {
+  const registerNode = async (user, actions) => {
     dispatch({ type: REGISTER_BEGIN });
 
     console.log('register begin');
+
+    console.log(user);
 
     setTimeout(async () => {
       try {
@@ -845,6 +992,14 @@ const AppProvider = ({ children }) => {
         });
         console.log(postUser);
         dispatch({ type: REGISTER_SUCCESS, payload: postUser });
+        dispatch({
+          type: NUM_PAGE_REGISTER,
+          payload: { numPage: 8, isOK: true, type: 'plus', length: 8 },
+        });
+
+        showToast('Register success', 4000, 'success');
+
+        actions.resetForm();
       } catch (error) {
         dispatch({ type: REGISTER_ERROR });
         console.log(`Cannot register ${error}`);
@@ -853,7 +1008,12 @@ const AppProvider = ({ children }) => {
         const { data } = response;
         const { msg } = data;
 
-        dispatch({ type: REGISTER_ERROR, payload: msg });
+        const { email } = user;
+
+        console.log(data);
+
+        dispatch({ type: REGISTER_ERROR, payload: msg, payloadEmail: email });
+        showToast(msg, 4000, 'error');
       }
     }, 2000);
   };
@@ -874,7 +1034,7 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const firstLogin = async ({ pwd, pwdConfirm }) => {
+  const firstLogin = async (pwd, pwdConfirm, loginSuccess) => {
     resetLoginForm();
     dispatch({ type: FIRST_LOGIN_BEGIN });
 
@@ -906,10 +1066,13 @@ const AppProvider = ({ children }) => {
             isFirstPwdConfirm: 'false',
           },
         });
+
+        loginSuccess();
       } catch (error) {
         const { response } = error;
         const { data } = response;
         const { msg } = data;
+        showToast(msg, 5000, 'error');
 
         let isFirstPwd = 'default';
         let isFirstPwdConfirm = 'default';
@@ -981,7 +1144,7 @@ const AppProvider = ({ children }) => {
         showLoading,
         switchPage,
         login,
-        register,
+        registerNode,
         closeSidebar,
         openModal,
         openSidebar,
@@ -1009,6 +1172,7 @@ const AppProvider = ({ children }) => {
         confirmDigitalCard,
         confirmMoneyInput,
         actionForgotPage,
+        actionRegisterPage,
       }}
     >
       {children}

@@ -36,6 +36,7 @@ import {
   CONFIRM_DIGITAL_CARD,
   VALID_MONEY_INPUT,
   NUM_PAGE_FORGOT_PASSWORD,
+  NUM_PAGE_REGISTER,
 } from './action';
 
 const reducer = (state, action) => {
@@ -97,7 +98,7 @@ const reducer = (state, action) => {
   }
 
   if (action.type === REGISTER_BEGIN) {
-    return { ...state };
+    return { ...state, isLoadingForm: true };
   }
 
   if (action.type === REGISTER_SUCCESS) {
@@ -106,6 +107,7 @@ const reducer = (state, action) => {
       isErrorForm: false,
       messageErrorForm: 'Login success',
       typeErrorForm: 'success',
+      isLoadingForm: false,
       // isError: false,
     };
   }
@@ -116,6 +118,8 @@ const reducer = (state, action) => {
       isErrorForm: true,
       messageErrorForm: action.payload,
       typeErrorForm: 'form__error',
+      isLoadingForm: false,
+      registerTempUser: { email: action.payloadEmail },
       // isError: true,
     };
   }
@@ -152,6 +156,7 @@ const reducer = (state, action) => {
       messageErrorForm: 'Loading is processing...',
       typeErrorForm: 'processing',
       styleAlert: 'form__alert form__alert--processing',
+      isLoadingForm: true,
     };
   }
   if (action.type === FIRST_LOGIN_SUCCESS) {
@@ -165,11 +170,13 @@ const reducer = (state, action) => {
       user: action.payloadUser,
       isFirstLogin: action.payloadIsFirst,
       styleInputLogin: action.payloadStyle,
+      isLoadingForm: false,
     };
   }
   if (action.type === FIRST_LOGIN_ERROR) {
     return {
       ...state,
+      isLoadingForm: false,
       isErrorForm: true,
       messageErrorForm: action.payloadMsg,
       styleInputLogin: action.payloadStyle,
@@ -309,6 +316,12 @@ const reducer = (state, action) => {
     const { numPage, isOK, type, length } = action.payload;
 
     return { ...state, forgotPage: { numPage, isOK, type, length } };
+  }
+
+  if (action.type === NUM_PAGE_REGISTER) {
+    const { numPage, isOK, type, length } = action.payload;
+
+    return { ...state, registerPage: { numPage, isOK, type, length } };
   }
 };
 
