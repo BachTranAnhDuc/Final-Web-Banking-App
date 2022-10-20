@@ -542,7 +542,18 @@ const Recharge = () => {
                       )}
                     </Field>
 
-                    <MUIButtonCustom02 type="button">Confirm</MUIButtonCustom02>
+                    <MUIButtonCustom02
+                      type="button"
+                      onClick={() => {
+                        if (props.values.password === '123456') {
+                          handleClickNext(true);
+                        } else {
+                          showToast('Password is not correct!', 4000, 'error');
+                        }
+                      }}
+                    >
+                      Confirm
+                    </MUIButtonCustom02>
                   </ModalDialog>
                 </Modal>
               </Form>

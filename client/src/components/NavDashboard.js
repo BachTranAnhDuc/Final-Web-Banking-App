@@ -76,7 +76,7 @@ const NavDashboard = () => {
   const stickyNavbar = () => {
     if (window !== undefined) {
       let windowHeight = window.scrollY;
-      windowHeight > 400
+      windowHeight > 600
         ? setStickyClass('nav-dash sticky')
         : setStickyClass('nav-dash');
     }
@@ -102,26 +102,15 @@ const NavDashboard = () => {
   return (
     <NavLanding>
       <nav className={stickyClass}>
+        <button onClick={openSidebar} className="sidebar-toggle">
+          <FaBars />
+        </button>
         <div className="nav-dash__left-side">
-          <button onClick={openSidebar} className="sidebar-toggle">
-            <FaBars />
-          </button>
           <NavLink to={'/dashboard'} onClick={handleClickToHome}>
             <img src={Logo} alt="" className="nav-dash__logo" />
           </NavLink>
 
           <ul className="nav-dash__list">
-            <li className="nav-dash__list--item">
-              <NavLink
-                to={'/dashboard'}
-                className={({ isActive }) =>
-                  isActive ? 'nav-link nav-link__active' : 'nav-link'
-                }
-                onClick={() => switchPage()}
-              >
-                Home
-              </NavLink>
-            </li>
             <li className="nav-dash__list--item">
               <NavLink
                 to={'/dashboard/deposit'}
@@ -131,6 +120,17 @@ const NavDashboard = () => {
                 onClick={() => switchPage()}
               >
                 <span>Deposit</span>
+              </NavLink>
+            </li>
+            <li className="nav-dash__list--item">
+              <NavLink
+                to={'/dashboard/history'}
+                className={({ isActive }) =>
+                  isActive ? 'nav-link nav-link__active' : 'nav-link'
+                }
+                onClick={() => switchPage()}
+              >
+                <span>HISTORY</span>
               </NavLink>
             </li>
           </ul>

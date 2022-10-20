@@ -24,6 +24,7 @@ import BuyCard from './bank/BuyCard';
 import ForgotPassword from './ForgotPassword';
 import NewLogin from './NewLogin';
 import NewRegister from './NewRegister';
+import History from './History';
 
 export {
   Landing,
@@ -52,4 +53,5 @@ export {
   ForgotPassword,
   NewLogin,
   NewRegister,
+  History,
 };

@@ -346,7 +346,7 @@ body {
   align-items: center;
 } */
 .sidebar-toggle {
-  position: fixed;
+  position: absolute;
   top: 5rem;
   left: 4rem;
   font-size: 2.4rem;
@@ -357,6 +357,18 @@ body {
   cursor: pointer;
   /* animation: bounce 2s ease-in-out infinite; */
 }
+/* .sidebar-toggle {
+  position: fixed;
+  top: 5rem;
+  left: 4rem;
+  font-size: 2.4rem;
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-primary-dark-5);
+  transition: all 0.3s linear;
+  cursor: pointer;
+
+} */
 
 @keyframes bounce {
   /* 0% {
