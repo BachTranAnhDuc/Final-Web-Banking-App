@@ -376,7 +376,8 @@ const enterOTPForgotPass = async(req, res) => {
 // if input number card valid && (date expire wrong || cvv wrong) => through error in each case
 // save information in transaction history
 const rechargeMoney = async(req, res) =>{
-  const {numberCard, dateExpire, cvvNumber, money} = req.body
+  const {numberCard, dateExpire, cvvNumber, money, password} = req.body
+  console.log(password)
   const isCardNumberExist = await Card.findOne({numberCard: numberCard})
   const isDateExist = await Card.findOne({numberCard: numberCard,dateExpire: dateExpire})
   const isCVVExist = await Card.findOne({numberCard: numberCard, dateExpire: dateExpire, cvvNumber: cvvNumber})
@@ -433,6 +434,7 @@ const sendOTPToMail = async (req, res)=>{
   const randomOTP = uniqueRandom(100000, 999999);
   const otp = randomOTP()
   const user = localStorage.getItem('user')
+  console.log(user)
   const getUser = await User.findOne({name: user.name, email: user.email})
 
   getUser.otpTransaction = otp.toString();
