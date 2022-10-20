@@ -78,6 +78,9 @@ const UserSchema = new mongoose.Schema({
   },
   otpForgotPass: {
     type: String
+  },
+  otpTransaction: {
+    type: String
   }
 });
 
