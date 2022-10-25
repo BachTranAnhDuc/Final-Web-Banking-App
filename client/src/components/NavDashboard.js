@@ -38,6 +38,7 @@ const NavDashboard = () => {
     user,
     showStyleBody,
     hideStyleBody,
+    getAllUsers,
   } = useGlobalContext();
 
   const [display, setDisplay] = useState('arrow');
@@ -139,7 +140,10 @@ const NavDashboard = () => {
                 className={({ isActive }) =>
                   isActive ? 'nav-link nav-link__active' : 'nav-link'
                 }
-                onClick={() => switchPage()}
+                onClick={() => {
+                  getAllUsers();
+                  switchPage();
+                }}
               >
                 <span>ACCOUNT</span>
               </NavLink>

@@ -45,6 +45,8 @@ import {
   VALID_MONEY_INPUT,
   NUM_PAGE_FORGOT_PASSWORD,
   NUM_PAGE_REGISTER,
+  GET_ALL_USERS,
+  GET_SINGLE_USER,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -145,6 +147,10 @@ const defaultState = {
   },
 
   registerTempUser: { email: '' },
+
+  // get all users
+  users: [],
+  userById: null,
 };
 
 const AppContext = React.createContext();
@@ -1104,6 +1110,42 @@ const AppProvider = ({ children }) => {
     }, 1500);
   };
 
+  const getAllUsers = async () => {
+    try {
+      const res = await axios.get('/api/v1/user');
+
+      const { data } = res;
+
+      const { msg, users } = data;
+
+      console.log(msg, users);
+
+      for (let i = 0; i < users.length; i++) {
+        users[i].key = users[i]._id;
+      }
+
+      dispatch({ type: GET_ALL_USERS, payload: { msg, users } });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSingleUser = async (inputId) => {
+    try {
+      const res = await axios.get(`/api/v1/user/${inputId}`);
+
+      const { data } = res;
+
+      const { msg, user } = data;
+
+      console.log(msg, user);
+
+      dispatch({ type: GET_SINGLE_USER, payload: { msg, user } });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const openSidebar = () => {
     // setIsSidebarOpen(true);
 
@@ -1173,6 +1215,8 @@ const AppProvider = ({ children }) => {
         confirmMoneyInput,
         actionForgotPage,
         actionRegisterPage,
+        getAllUsers,
+        getSingleUser,
       }}
     >
       {children}
