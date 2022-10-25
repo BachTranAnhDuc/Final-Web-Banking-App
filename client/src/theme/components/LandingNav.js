@@ -135,7 +135,7 @@ const NavLanding = styled.section`
 
     align-items: center;
 
-    grid-template-columns: repeat(2, max-content);
+    grid-template-columns: repeat(3, max-content);
 
     gap: 4rem;
   }

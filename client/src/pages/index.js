@@ -25,6 +25,7 @@ import ForgotPassword from './ForgotPassword';
 import NewLogin from './NewLogin';
 import NewRegister from './NewRegister';
 import History from './History';
+import ManageAccount from './ManageAccount';
 
 export {
   Landing,
@@ -54,4 +55,5 @@ export {
   NewLogin,
   NewRegister,
   History,
+  ManageAccount,
 };

@@ -116,7 +116,7 @@ const SettingStyled = styled.main`
   }
 
   .setting-form {
-    /* padding: 0 8rem; */
+    padding: 3.2rem 6rem;
 
     /* height: 100%; */
 
@@ -132,7 +132,7 @@ const SettingStyled = styled.main`
 
     align-items: center;
 
-    grid-template-rows: repeat(5, max-content);
+    grid-template-rows: max-content 1fr;
 
     row-gap: 4.8rem;
   }

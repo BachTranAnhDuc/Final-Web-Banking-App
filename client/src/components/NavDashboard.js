@@ -133,6 +133,17 @@ const NavDashboard = () => {
                 <span>HISTORY</span>
               </NavLink>
             </li>
+            <li className="nav-dash__list--item">
+              <NavLink
+                to={'/dashboard/manage'}
+                className={({ isActive }) =>
+                  isActive ? 'nav-link nav-link__active' : 'nav-link'
+                }
+                onClick={() => switchPage()}
+              >
+                <span>ACCOUNT</span>
+              </NavLink>
+            </li>
           </ul>
         </div>
 
@@ -189,28 +200,35 @@ const NavDashboard = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem>
+            <MenuItem sx={{ fontSize: '1.4rem' }}>
               <Avatar /> Profile
             </MenuItem>
-            <MenuItem onClick={(e) => handleClickToSetting('account')}>
+            <MenuItem
+              onClick={(e) => handleClickToSetting('account')}
+              sx={{ fontSize: '1.4rem' }}
+            >
               <Avatar /> My account
             </MenuItem>
             <Divider />
-            <MenuItem>
+            <MenuItem sx={{ fontSize: '1.4rem' }}>
               <ListItemIcon>
                 {/* <PersonAdd fontSize="small" /> */}
                 <RiUserLine></RiUserLine>
               </ListItemIcon>
               Add another account
             </MenuItem>
-            <MenuItem name="all" onClick={(e) => handleClickToSetting('all')}>
+            <MenuItem
+              name="all"
+              onClick={(e) => handleClickToSetting('all')}
+              sx={{ fontSize: '1.4rem' }}
+            >
               <ListItemIcon>
                 {/* <Settings fontSize="small" /> */}
                 <VscSettingsGear></VscSettingsGear>
               </ListItemIcon>
               Settings
             </MenuItem>
-            <MenuItem onClick={handleClickLog}>
+            <MenuItem onClick={handleClickLog} sx={{ fontSize: '1.4rem' }}>
               <ListItemIcon>
                 {/* <Logout fontSize="small" /> */}
                 <RiLogoutCircleRLine></RiLogoutCircleRLine>

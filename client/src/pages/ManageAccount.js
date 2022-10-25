@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { DownOutlined } from '@ant-design/icons';
 import { Form, Radio, Space, Switch, Table, Tag } from 'antd';
-import HistoryStyled from '../theme/pages/History';
+import ManageAccountStyled from '../theme/pages/ManageAccount';
 
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -37,6 +37,7 @@ import Divider from '@mui/joy/Divider';
 import { DefaultParagraph } from '../theme/base/Typography';
 import { HeadingPrimary } from '../theme/base/Typography';
 import { Descriptions } from 'antd';
+
 // import { DataGrid } from '@mui/x-data-grid';
 // import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -61,7 +62,7 @@ for (let i = 1; i <= 20; i++) {
     type: `Transfer ${i}`,
     money: Number(`${i}2`),
     date: '12-12-2021',
-    status: i % 2 === 0 ? ['success'] : i % 3 === 0 ? ['processing'] : ['fail'],
+    status: ['success'],
     description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
   });
 }
@@ -71,7 +72,7 @@ const defaultExpandable = {
 const defaultTitle = () => 'Here is title';
 const defaultFooter = () => 'Here is footer';
 
-const History = () => {
+const ManageAccount = () => {
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [size, setSize] = useState('large');
@@ -138,9 +139,9 @@ const History = () => {
             if (tag === 'success') {
               color = 'green';
             } else if (tag === 'processing') {
-              color = 'blue';
+              color = 'yellow';
             } else {
-              color = 'red';
+              color = 'blue';
             }
             return (
               <Tag color={color} key={tag}>
@@ -248,8 +249,8 @@ const History = () => {
   };
 
   return (
-    <HistoryStyled>
-      <section className="section-history">
+    <ManageAccountStyled>
+      <section className="section-manageAccount">
         <Form
           layout="inline"
           className="components-table-demo-control-bar"
@@ -488,8 +489,8 @@ const History = () => {
           {/* <DefaultParagraph>This is paragraph</DefaultParagraph> */}
         </ModalDialog>
       </Modal>
-    </HistoryStyled>
+    </ManageAccountStyled>
   );
 };
 
-export default History;
+export default ManageAccount;
