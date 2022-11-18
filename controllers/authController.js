@@ -370,65 +370,6 @@ const enterOTPForgotPass = async(req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'OTP Forgot password is true, redirect to change password' });
 }
 
-// Function: recharge money input numberCard, date expire, cvv
-// 3 type of card(numberCard length 6, date expire, CVV length 3)
-// if input number card length === 6 && not in 3 card support => through message: "This card not support"
-// if input number card valid && (date expire wrong || cvv wrong) => through error in each case
-// save information in transaction history
-const rechargeMoney = async(req, res) =>{
-  const {numberCard, dateExpire, cvvNumber, money, password} = req.body
-  console.log(password)
-  const isCardNumberExist = await Card.findOne({numberCard: numberCard})
-  const isDateExist = await Card.findOne({numberCard: numberCard,dateExpire: dateExpire})
-  const isCVVExist = await Card.findOne({numberCard: numberCard, dateExpire: dateExpire, cvvNumber: cvvNumber})
-  const user = localStorage.getItem('user')
-  const getUser = await User.findOne({username: user.username})
-  // VALIDATION INPUT
-  if(numberCard.length !== 6){
-    throw new badRequestError("Number Card must be 6 characters")
-  }
-  
-  if(cvvNumber.length !== 3){
-    throw new badRequestError("CVV number must be 3 characters")
-  }
-
-  if(numberCard.length === 6 && (isCardNumberExist === undefined || isCardNumberExist === null)) {
-    throw new badRequestError("This card is not support")
-  }
-
-  if(numberCard.length === 6 && (isDateExist === undefined || isDateExist === null)) {
-    throw new badRequestError("Date Expire is wrong")
-  }
-
-  if(numberCard.length === 6 && (isCVVExist === undefined || isCVVExist === null)) {
-    throw new badRequestError("CVV is wrong")
-  }
-
-  // PROCESSING EACH TYPE OF CARD NUMBER
-  // 111111 NOT LIMIT MONEY RECHARGE AND TIMES RECHARGE
-  // 222222 NOT LIMIT TIMES RECHARGE BUT LIMIT MONEY 1 000 000 IN EACH TIMES RECHARGE
-  // 333333 WITH THIS CARD WILL RETURN MESSENGER "THIS CARD OUT OF MONEY"
-
-  /* if(numberCard === "111111"){
-
-    res.status(StatusCodes.OK).json({msg: "111111 Recharge success"})
-  } */
-  if(numberCard === "222222"){
-    if(Number(money) > 1000000){
-      throw new badRequestError("this number card limit 1 000 000/time recharge")
-    }
-    //res.status(StatusCodes.OK).json({ msg: '222222 Recharge success' });
-  }
-  if(numberCard === "333333"){
-    throw new badRequestError("this number card is card out of money")
-  }
-  // random OTP and send email user
-  const statusEmail = await sendOTPToMail()
-  // enter otp form
-  const result = await enterOTP()
-  res.status(StatusCodes.OK).json({ msg: 'Recharge success' });
-}
-
 //random OTP to send email user for Transaction 
 const sendOTPToMail = async (req, res)=>{
   const randomOTP = uniqueRandom(100000, 999999);
@@ -538,7 +479,6 @@ export {
   firstLogin,
   enterOTPForgotPass,
   uploadUserImage1,
-  rechargeMoney,
 };
 
 // admin: 620277

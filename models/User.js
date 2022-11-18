@@ -81,6 +81,9 @@ const UserSchema = new mongoose.Schema({
   },
   otpTransaction: {
     type: String
+  },
+  money: {
+    type: Number
   }
 });
 

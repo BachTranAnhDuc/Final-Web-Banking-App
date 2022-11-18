@@ -15,7 +15,14 @@ const CardSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please provide cvv number"],
         minlength: [3, "CVV number must be 3 characters"]
-    }
+    },
+    limitMoney:{
+        type: Boolean,
+    },
+    maxRecharge: {
+        type: Number,
+    },
 })
+
 
 export default mongoose.model('Card', CardSchema);
