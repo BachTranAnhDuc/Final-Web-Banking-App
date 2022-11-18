@@ -13,6 +13,8 @@ const NavLanding = styled.section`
     gap: 12rem;
 
     align-items: center;
+
+    position: fixed;
   }
 
   .nav-logo {

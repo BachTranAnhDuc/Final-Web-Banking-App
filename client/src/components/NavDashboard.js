@@ -77,7 +77,7 @@ const NavDashboard = () => {
   const stickyNavbar = () => {
     if (window !== undefined) {
       let windowHeight = window.scrollY;
-      windowHeight > 600
+      windowHeight > 10
         ? setStickyClass('nav-dash sticky')
         : setStickyClass('nav-dash');
     }

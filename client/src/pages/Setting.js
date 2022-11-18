@@ -41,11 +41,6 @@ import { Descriptions } from 'antd';
 
 import { Loader2 } from '../components';
 
-import { HiOutlineUser } from 'react-icons/hi';
-import { AiOutlineMail } from 'react-icons/ai';
-import { BsCalendar2Date } from 'react-icons/bs';
-import { FaPhone } from 'react-icons/fa';
-
 import styled from 'styled-components';
 
 import { useGlobalContext } from '../context/appContext';

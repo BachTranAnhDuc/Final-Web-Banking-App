@@ -509,7 +509,7 @@ const AppProvider = ({ children }) => {
           }
           // if you enter not valid money
           else {
-            showToast('💣 Not valid money', 2000, 'error');
+            // showToast('💣 Not valid money', 2000, 'error');
 
             dispatch({
               type: NUM_PAGE_BANK,
