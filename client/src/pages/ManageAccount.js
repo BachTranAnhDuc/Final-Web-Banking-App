@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { DownOutlined } from '@ant-design/icons';
 import { Form, Radio, Space, Switch, Table, Tag } from 'antd';
-import HistoryStyled from '../theme/pages/History';
+import ManageAccountStyled from '../theme/pages/ManageAccount';
 
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -37,6 +37,7 @@ import Divider from '@mui/joy/Divider';
 import { DefaultParagraph } from '../theme/base/Typography';
 import { HeadingPrimary } from '../theme/base/Typography';
 import { Descriptions } from 'antd';
+
 // import { DataGrid } from '@mui/x-data-grid';
 // import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -53,15 +54,17 @@ import {
   MUIButtonCustom04,
   MUIButtonLoading01,
 } from '../theme/components/Buttons';
+import { useGlobalContext } from '../context/appContext';
 
 const data = [];
 for (let i = 1; i <= 20; i++) {
   data.push({
     key: i,
-    type: `Transfer ${i}`,
-    money: Number(`${i}2`),
-    date: '12-12-2021',
-    status: i % 2 === 0 ? ['success'] : i % 3 === 0 ? ['processing'] : ['fail'],
+    name: `Transfer ${i}`,
+    email: Number(`${i}2`),
+    username: '12-12-2021',
+    fail: `${i}`,
+    identify: ['success'],
     description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
   });
 }
@@ -71,7 +74,9 @@ const defaultExpandable = {
 const defaultTitle = () => 'Here is title';
 const defaultFooter = () => 'Here is footer';
 
-const History = () => {
+const ManageAccount = () => {
+  const { users, userById, getSingleUser } = useGlobalContext();
+
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [size, setSize] = useState('large');
@@ -80,7 +85,7 @@ const History = () => {
   const [showHeader, setShowHeader] = useState(true);
   const [showfooter, setShowFooter] = useState(true);
   const [rowSelection, setRowSelection] = useState({});
-  const [hasData, setHasData] = useState(true);
+  const [hasData, setHasData] = useState(users ? true : false);
   const [tableLayout, setTableLayout] = useState(undefined);
   const [top, setTop] = useState('none');
   const [bottom, setBottom] = useState('bottomRight');
@@ -94,61 +99,38 @@ const History = () => {
 
   const columns = [
     {
-      title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
-      filters: [
-        {
-          text: 'Transfer',
-          value: 'transfer',
-        },
-        {
-          text: 'Recharge',
-          value: 'recharge',
-        },
-        {
-          text: 'Withdraw',
-          value: 'withdraw',
-        },
-        {
-          text: 'Buy-card',
-          value: 'buy-card',
-        },
-      ],
-      onFilter: (value, record) => record.type.indexOf(value) === 0,
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: 'Money',
-      dataIndex: 'money',
-      sorter: (a, b) => a.money - b.money,
+      title: 'Email',
+      dataIndex: 'email',
     },
     {
-      title: 'Date/Time',
-      dataIndex: 'date',
-      sorter: (a, b) => a.age - b.age,
+      title: 'Username',
+      dataIndex: 'username',
     },
     {
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
-      render: (_, { status }) => (
-        <>
-          {status.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'success') {
-              color = 'green';
-            } else if (tag === 'processing') {
-              color = 'blue';
-            } else {
-              color = 'red';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
+      title: 'Number fail',
+      dataIndex: 'loginFail',
+    },
+    {
+      title: 'Identify',
+      key: 'identify',
+      dataIndex: 'identify',
+      render: (_, { identify }) => (
+        <Tag
+          color={
+            identify === 'success'
+              ? 'green'
+              : identify === 'processing'
+              ? 'yellow'
+              : 'red'
+          }
+        >
+          {identify}
+        </Tag>
       ),
     },
     {
@@ -164,6 +146,7 @@ const History = () => {
             onClick={(e) => {
               // console.log(e);
               console.log(key);
+              getSingleUser(key);
               setOpen(true);
             }}
             startDecorator={<OpenInNew />}
@@ -248,8 +231,8 @@ const History = () => {
   };
 
   return (
-    <HistoryStyled>
-      <section className="section-history">
+    <ManageAccountStyled>
+      <section className="section-manageAccount">
         <Form
           layout="inline"
           className="components-table-demo-control-bar"
@@ -343,7 +326,7 @@ const History = () => {
             position: [top, bottom],
           }}
           columns={tableColumns}
-          dataSource={hasData ? data : []}
+          dataSource={hasData ? users : []}
           scroll={scroll}
         />
       </section>
@@ -435,10 +418,14 @@ const History = () => {
                 }}
               >
                 <Descriptions title="Information">
-                  <Descriptions.Item label="ID">13434343434</Descriptions.Item>
-                  <Descriptions.Item label="To">Zhou Maomao</Descriptions.Item>
-                  <Descriptions.Item label="Money">
-                    100,000vnd
+                  <Descriptions.Item label="ID">
+                    {userById ? userById._id : 'ID is loading'}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Name">
+                    {userById ? userById.name : 'Name is loading'}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Email">
+                    {userById ? userById.email : 'Email is loading'}
                   </Descriptions.Item>
                   <Descriptions.Item label="Status">Success</Descriptions.Item>
                 </Descriptions>
@@ -488,8 +475,8 @@ const History = () => {
           {/* <DefaultParagraph>This is paragraph</DefaultParagraph> */}
         </ModalDialog>
       </Modal>
-    </HistoryStyled>
+    </ManageAccountStyled>
   );
 };
 
-export default History;
+export default ManageAccount;

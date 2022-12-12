@@ -2,12 +2,44 @@ import React, { useState } from 'react';
 
 import { NavLink } from 'react-router-dom';
 
-import { Loader2 } from '../components';
+import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
 
-import { HiOutlineUser } from 'react-icons/hi';
-import { AiOutlineMail } from 'react-icons/ai';
-import { BsCalendar2Date } from 'react-icons/bs';
-import { FaPhone } from 'react-icons/fa';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Input from '@mui/material/Input';
+import FilledInput from '@mui/material/FilledInput';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormGroup from '@mui/material/FormGroup';
+import FormLabel from '@mui/material/FormLabel';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+// import Chip from '@mui/material/Chip';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Modal from '@mui/joy/Modal';
+import ModalClose from '@mui/joy/ModalClose';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Button from '@mui/joy/Button';
+import IconButton from '@mui/joy/IconButton';
+import OpenInNew from '@mui/icons-material/OpenInNew';
+import Tabs from '@mui/joy/Tabs';
+import TabList from '@mui/joy/TabList';
+import Tab from '@mui/joy/Tab';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import PhoneIcon from '@mui/icons-material/Phone';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+import TabPanel from '@mui/joy/TabPanel';
+import Divider from '@mui/joy/Divider';
+import { DefaultParagraph } from '../theme/base/Typography';
+import { HeadingPrimary } from '../theme/base/Typography';
+import { Descriptions } from 'antd';
+
+import { Loader2 } from '../components';
 
 import styled from 'styled-components';
 
@@ -23,6 +55,13 @@ import {
   DownloadButton,
   ButtonAccountEdit,
 } from '../theme/components/Buttons';
+
+import {
+  MUIInputCustom01,
+  MUIInputCustom02,
+  MUIFileInputStyled,
+  MUIFileInputCustom,
+} from '../theme/components/Input';
 
 const initGridButton = {
   jus: 'start',
@@ -55,7 +94,86 @@ const Setting = () => {
   return (
     <SettingStyled>
       <div className="section-setting setting-all">
-        <form className="setting-form">
+        <Formik
+          initialValues={{
+            money: '',
+            note: '',
+            otp: '',
+            fee: 'me',
+            phone: '',
+          }}
+          // validationSchema={validationSchema}
+          onSubmit={async (values, actions) => {
+            console.log('submit here');
+            // actions.setFieldValue('idCard', otp);
+            console.log(values);
+          }}
+        >
+          {(props) => (
+            <Form onSubmit={props.handleSubmit} className="setting-form">
+              <Box>
+                <ButtonGroup
+                  disableElevation
+                  variant="contained"
+                  aria-label="Disabled elevation buttons"
+                  sx={{ justifySelf: 'end', alignSelf: 'end', gap: '1.2rem' }}
+                >
+                  <Button
+                    onClick={() => {
+                      console.log('Save');
+                    }}
+                  >
+                    Save
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      console.log('Cancel');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </ButtonGroup>
+              </Box>
+              <Box
+                sx={{
+                  width: '85%',
+                  display: 'grid',
+                  gridTemplateRows: 'max-content',
+                  rowGap: '1.6rem',
+                }}
+              >
+                <Field name="phone">
+                  {({ field, form, meta }) => (
+                    <FormControl>
+                      <MUIInputCustom02
+                        {...field}
+                        id="phone"
+                        name="phone"
+                        label="phone"
+                        value={props.values.phone}
+                        onChange={props.handleChange}
+                        error={
+                          props.touched.phone && Boolean(props.errors.phone)
+                        }
+                      />
+                      <FormHelperText
+                        id="component-helper-text"
+                        sx={{
+                          fontSize: '1.2rem',
+                          color: 'var(--color-tertiary-dark-2)',
+                        }}
+                      >
+                        {props.touched.phone && props.errors.phone}
+                      </FormHelperText>
+                    </FormControl>
+                  )}
+                </Field>
+              </Box>
+            </Form>
+          )}
+        </Formik>
+        {/* <form className="setting-form">
           <div className="setting-heading__content">
             <div className="setting-heading__context">
               <h3 className="heading--tertiary setting-form__heading">
@@ -151,7 +269,7 @@ const Setting = () => {
               <BsCalendar2Date className="setting__icon"></BsCalendar2Date>
             </div>
           </div>
-        </form>
+        </form> */}
       </div>
     </SettingStyled>
   );

@@ -28,6 +28,7 @@ import {
   NewLogin,
   NewRegister,
   History,
+  ManageAccount,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -108,6 +109,10 @@ const App = () => {
             </Route>
 
             <Route path="history" element={<History></History>}></Route>
+            <Route
+              path="manage"
+              element={<ManageAccount></ManageAccount>}
+            ></Route>
           </>
         </Route>
       </Routes>

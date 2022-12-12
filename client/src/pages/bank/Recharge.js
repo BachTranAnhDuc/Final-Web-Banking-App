@@ -1,40 +1,42 @@
 import React, { useState } from 'react';
 
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-// import Typography from '@mui/material/Typography';
-// import { alpha, styled } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import InputLabel from '@mui/material/InputLabel';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-// import RadioGroup from '@mui/material/RadioGroup';
-// import Radio from '@mui/material/Radio';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Input from '@mui/material/Input';
-import FilledInput from '@mui/material/FilledInput';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormGroup from '@mui/material/FormGroup';
-import FormLabel from '@mui/material/FormLabel';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-// import Chip from '@mui/material/Chip';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Modal from '@mui/joy/Modal';
-import ModalClose from '@mui/joy/ModalClose';
-import ModalDialog from '@mui/joy/ModalDialog';
-
 import { pink } from '@mui/material/colors';
 
-import { MuiOtpInput } from 'mui-one-time-password-input';
+import {
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Button,
+  Paper,
+  InputBase,
+  InputLabel,
+  TextField,
+  FormControl,
+  FormControlLabel,
+  Input,
+  FilledInput,
+  FormHelperText,
+  FormGroup,
+  FormLabel,
+  Alert,
+  AlertTitle,
+  TextareaAutosize,
+  Tooltip,
+  ButtonGroup,
+} from '@mui/material';
+
+import {
+  Modal,
+  ModalClose,
+  ModalDialog,
+  Chip,
+  Radio,
+  RadioGroup,
+  Typography,
+  ChipDelete,
+} from '@mui/joy';
 
 import { FaLinux, FaGithub } from 'react-icons/fa';
 
@@ -43,7 +45,7 @@ import { Toast } from '../../components';
 import { useGlobalContext } from '../../context/appContext';
 
 import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
-// import { TimePicker, DatePicker, DateTimePicker } from 'formik-mui-lab';
+
 import * as yup from 'yup';
 
 import {
@@ -69,16 +71,7 @@ import {
 } from '../../theme/components/Buttons';
 
 import FaceIcon from '@mui/icons-material/Face';
-
 import CheckIcon from '@mui/icons-material/Check';
-
-import Chip from '@mui/joy/Chip';
-import Radio from '@mui/joy/Radio';
-import RadioGroup from '@mui/joy/RadioGroup';
-import Typography from '@mui/joy/Typography';
-import ChipDelete from '@mui/joy/ChipDelete';
-
-// import { SteppBank } from '../../components';
 
 const steps = [
   {
@@ -161,6 +154,19 @@ const Recharge = () => {
     return error;
   };
 
+  const validatePassword = (value) => {
+    let error;
+
+    if (!value) {
+      error = 'This is required';
+    }
+    if (value !== '123456') {
+      error = 'Password is not correct';
+    }
+
+    return error;
+  };
+
   const handleClickNext = (inputOk) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     actionBankPage({
@@ -168,7 +174,7 @@ const Recharge = () => {
       name: 'recharge',
       length: 3,
       actionType: 'plus',
-      isOK: true,
+      isOK: inputOk,
     });
   };
 
@@ -438,18 +444,21 @@ const Recharge = () => {
                       )}
                       <Button
                         onClick={() => {
-                          // console.log(props.errors.money === undefined);
+                          console.log(props.errors.money === undefined);
+                          console.log(props.errors.money);
 
-                          // if (props.errors.money !== undefined) {
-                          //   showToast(props.errors.money, 3000, 'error');
-                          //   handleClickNext(props.errors.money === undefined);
-                          // } else if (props.errors.phone !== undefined) {
-                          //   showToast(props.errors.phone, 3000, 'error');
-                          //   handleClickNext(false);
-                          // } else {
-                          //   handleClickNext(true);
-                          // }
-                          handleClickNext(true);
+                          if (props.errors.money !== undefined) {
+                            showToast(props.errors.money, 3000, 'error');
+                            handleClickNext(false);
+                          } else {
+                            handleClickNext(true);
+                          }
+
+                          if (props.errors.phone !== undefined) {
+                            showToast(props.errors.phone, 3000, 'error');
+                            handleClickNext(false);
+                          }
+                          // handleClickNext(true);
                         }}
                       >
                         Next
@@ -474,7 +483,30 @@ const Recharge = () => {
                           // } else {
                           //   handleClickNext(true);
                           // }
-                          setOpen('plain');
+
+                          console.log(props.values.dateEnd);
+
+                          if (
+                            props.errors.idCard !== undefined ||
+                            props.errors.cvv !== undefined ||
+                            props.errors.dateEnd !== undefined
+                          ) {
+                            showToast(
+                              `PLease provide all values!`,
+                              3000,
+                              'error'
+                            );
+                          } else {
+                            if (
+                              props.values.idCard === '123456' &&
+                              props.values.cvv === '123' &&
+                              props.values.dateEnd === '2023-01-01'
+                            ) {
+                              setOpen('plain');
+                            } else {
+                              showToast(`Not correct card!`, 3000, 'error');
+                            }
+                          }
 
                           // handleClickNext(true);
                         }}
@@ -514,7 +546,7 @@ const Recharge = () => {
                     >
                       This is a `{open}` modal dialog.
                     </Typography> */}
-                    <Field name="password">
+                    <Field name="password" validate={validatePassword}>
                       {({ field, form, meta }) => (
                         <FormControl>
                           <MUIInputCustom02
@@ -547,6 +579,7 @@ const Recharge = () => {
                       onClick={() => {
                         if (props.values.password === '123456') {
                           handleClickNext(true);
+                          setOpen('');
                         } else {
                           showToast('Password is not correct!', 4000, 'error');
                         }

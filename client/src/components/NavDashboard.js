@@ -38,6 +38,7 @@ const NavDashboard = () => {
     user,
     showStyleBody,
     hideStyleBody,
+    getAllUsers,
   } = useGlobalContext();
 
   const [display, setDisplay] = useState('arrow');
@@ -76,7 +77,7 @@ const NavDashboard = () => {
   const stickyNavbar = () => {
     if (window !== undefined) {
       let windowHeight = window.scrollY;
-      windowHeight > 600
+      windowHeight > 10
         ? setStickyClass('nav-dash sticky')
         : setStickyClass('nav-dash');
     }
@@ -131,6 +132,20 @@ const NavDashboard = () => {
                 onClick={() => switchPage()}
               >
                 <span>HISTORY</span>
+              </NavLink>
+            </li>
+            <li className="nav-dash__list--item">
+              <NavLink
+                to={'/dashboard/manage'}
+                className={({ isActive }) =>
+                  isActive ? 'nav-link nav-link__active' : 'nav-link'
+                }
+                onClick={() => {
+                  getAllUsers();
+                  switchPage();
+                }}
+              >
+                <span>ACCOUNT</span>
               </NavLink>
             </li>
           </ul>
@@ -189,28 +204,35 @@ const NavDashboard = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem>
+            <MenuItem sx={{ fontSize: '1.4rem' }}>
               <Avatar /> Profile
             </MenuItem>
-            <MenuItem onClick={(e) => handleClickToSetting('account')}>
+            <MenuItem
+              onClick={(e) => handleClickToSetting('account')}
+              sx={{ fontSize: '1.4rem' }}
+            >
               <Avatar /> My account
             </MenuItem>
             <Divider />
-            <MenuItem>
+            <MenuItem sx={{ fontSize: '1.4rem' }}>
               <ListItemIcon>
                 {/* <PersonAdd fontSize="small" /> */}
                 <RiUserLine></RiUserLine>
               </ListItemIcon>
               Add another account
             </MenuItem>
-            <MenuItem name="all" onClick={(e) => handleClickToSetting('all')}>
+            <MenuItem
+              name="all"
+              onClick={(e) => handleClickToSetting('all')}
+              sx={{ fontSize: '1.4rem' }}
+            >
               <ListItemIcon>
                 {/* <Settings fontSize="small" /> */}
                 <VscSettingsGear></VscSettingsGear>
               </ListItemIcon>
               Settings
             </MenuItem>
-            <MenuItem onClick={handleClickLog}>
+            <MenuItem onClick={handleClickLog} sx={{ fontSize: '1.4rem' }}>
               <ListItemIcon>
                 {/* <Logout fontSize="small" /> */}
                 <RiLogoutCircleRLine></RiLogoutCircleRLine>

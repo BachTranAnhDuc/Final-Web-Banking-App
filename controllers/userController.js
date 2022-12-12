@@ -22,7 +22,10 @@ const getAllUsers = async (req, res) => {
 const getUser = async (req, res) => {
   const { id } = req.params;
 
-  const user = User.findById({ _id: id });
+  // console.log('Find user here');
+  // console.log(id);
+
+  const user = await User.findById({ _id: id });
 
   if (!user) {
     throw new badRequestError(`Can not find any user with id: ${id}`);

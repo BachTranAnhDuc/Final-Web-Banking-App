@@ -37,6 +37,8 @@ import {
   VALID_MONEY_INPUT,
   NUM_PAGE_FORGOT_PASSWORD,
   NUM_PAGE_REGISTER,
+  GET_ALL_USERS,
+  GET_SINGLE_USER,
 } from './action';
 
 const reducer = (state, action) => {
@@ -322,6 +324,18 @@ const reducer = (state, action) => {
     const { numPage, isOK, type, length } = action.payload;
 
     return { ...state, registerPage: { numPage, isOK, type, length } };
+  }
+
+  if (action.type === GET_ALL_USERS) {
+    const { msg, users } = action.payload;
+
+    return { ...state, users: users };
+  }
+
+  if (action.type === GET_SINGLE_USER) {
+    const { msg, user } = action.payload;
+
+    return { ...state, userById: user };
   }
 };
 
