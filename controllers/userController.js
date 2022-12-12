@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/User.js';
 import Card from '../models/Card.js';
+import History from '../models/History.js'
 
 import {
   errorHandler,
@@ -10,6 +11,7 @@ import {
   unauthenticationError,
   unauthorizedError,
 } from '../error/index.js';
+
 
 const getAllUsers = async (req, res) => {
   const users = await User.find({});
@@ -55,18 +57,18 @@ const identifyUser = async (req, res) => {
 // if input number card length === 6 && not in 3 card support => through message: "This card not support"
 // if input number card valid && (date expire wrong || cvv wrong) => through error in each case
 // save information in transaction history
-const rechargeMoney = async(req, res) =>{
-  const {numberCard, dateExpire, cvvNumber, money} = req.body
+const rechargeMoney = async (req, res) => {
+  const { numberCard, dateExpire, cvvNumber, money } = req.body
   // const isCardNumberExist = await Card.findOne({numberCard: numberCard})
   // const isDateExist = await Card.findOne({numberCard: numberCard,dateExpire: dateExpire})
   // const isCVVExist = await Card.findOne({numberCard: numberCard, dateExpire: dateExpire, cvvNumber: cvvNumber})
   const user = req.user
-  const getUser = await User.findOne({_id: user.userId})
+  const getUser = await User.findOne({ _id: user.userId })
   // VALIDATION INPUT
   // if(numberCard.length !== 6){
   //   throw new badRequestError("Number Card must be 6 characters")
   // }
-  
+
   // if(cvvNumber.length !== 3){
   //   throw new badRequestError("CVV number must be 3 characters")
   // }
@@ -101,14 +103,89 @@ const rechargeMoney = async(req, res) =>{
   // if(numberCard === "333333"){
   //   throw new badRequestError("this number card is card out of money")
   // }
-  if(!getUser){
+  if (!getUser) {
     throw new badRequestError("Cannot find this user")
   }
 
   getUser.money += money
-  getUser.save()
-  res.status(StatusCodes.OK).json({ msg: 'Recharge success' , user: getUser});
+  getUser.save() // update the user balance
+
+
+  //-------------------------------------------------------
+  // save action recharge money to history
+
+  const history = await History.create({
+    type: "Recharge",
+    money: money,
+    message: "",
+    date: Date.now(),
+    status: "SUCCESS",
+    fromUser: getUser.username,
+    toUser: getUser.username,
+    feeTransfer: 0,
+    userBearFee: "",
+  })
+  res.status(StatusCodes.OK).json({ msg: 'Recharge success', user: getUser, history: history });
 }
 
+// transfer money from user to another user and save to history
+// have fee transfer 5% money transfer
+// OTP 1 minute transfer
+// have email report transfer
+const transferMoney = async(req,res)=>{
+  // input: amount money transfer
+  //        number phone of user receive money
+  //        message of user transfer money
+  //        user bear fee transfer 5% money transfer
+  const {money, numberPhone,message, userBearFee} = req.body;
+  // get information about user login 
+  const user = req.user
+  const getUser = await User.findOne({ _id: user.userId })
 
-export { getAllUsers, getUser, identifyUser, rechargeMoney };
+  // get user who receive money
+  const getReceiver = await User.findOne({phone: numberPhone})
+
+
+  // check user balance transfer money 
+  if(getUser.money < money)
+    throw new badRequestError("Your balance is not enough to transfer money")
+  
+  
+  // else execute process transfer money
+  // check user bear to fee transfer
+  // - money of user transfer and + money to balance of user receive
+  // must check money > 5 000 000 admin must allow ****** CHUA LAM GI CA
+  let usernameFee = ""
+  if(userBearFee === "Me"){
+    getUser.money = getUser.money - (money*0.05)
+    usernameFee = getUser.username
+  }
+  else{
+    money = money - (money * 0.05)
+    usernameFee = getReceiver.username
+  }
+
+  getUser.money -= money
+  getUser.save()
+  getReceiver.money += money
+  getReceiver.save()
+
+  //-------------------------------------------------------
+  // save action recharge money to history
+
+  const history = await History.create({
+    type: "Transfer",
+    money: money,
+    message: message,
+    date: Date.now(),
+    status: "SUCCESS",
+    fromUser: getUser.username,
+    toUser: getReceiver.username,
+    feeTransfer: money*0.05,
+    userBearFee: usernameFee,
+  })
+
+  res.status(StatusCodes.OK).json({ msg: 'Transfer money success', user: getUser, receiver: getReceiver, history: history });
+
+}
+export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney };

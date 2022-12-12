@@ -6,7 +6,8 @@ import {
   getAllUsers,
   getUser,
   identifyUser,
-  rechargeMoney
+  rechargeMoney,
+  transferMoney
 } from '../controllers/userController.js';
 import { unauthorizedError } from '../error/index.js';
 import { authenticateUser, authorizePermissions } from '../middleware/index.js';
@@ -23,6 +24,8 @@ router
 
 router.route('/recharge').post(authenticateUser, authorizePermissions(['user']),validateCard,validateMoneyRecharge,rechargeMoney); // this function will recharge money
 
+//transfer money
+router.route('/transfer').post(authenticateUser, authorizePermissions(['user']),transferMoney)
 
 
 export default router;
