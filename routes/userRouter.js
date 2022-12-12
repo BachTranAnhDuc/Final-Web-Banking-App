@@ -24,4 +24,5 @@ router
 router.route('/recharge').post(authenticateUser, authorizePermissions(['user']),validateCard,validateMoneyRecharge,rechargeMoney); // this function will recharge money
 
 
+
 export default router;
