@@ -7,7 +7,8 @@ import {
   getUser,
   identifyUser,
   rechargeMoney,
-  transferMoney
+  transferMoney,
+  updateStatus
 } from '../controllers/userController.js';
 import { unauthorizedError } from '../error/index.js';
 import { authenticateUser, authorizePermissions } from '../middleware/index.js';
@@ -26,6 +27,9 @@ router.route('/recharge').post(authenticateUser, authorizePermissions(['user']),
 
 //transfer money
 router.route('/transfer').post(authenticateUser, authorizePermissions(['user']),transferMoney)
+
+// update status history for transfer 
+router.route("/updateStatus").post(authenticateUser, authorizePermissions(['admin']),updateStatus)
 
 
 export default router;

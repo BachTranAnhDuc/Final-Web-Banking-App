@@ -132,22 +132,30 @@ const rechargeMoney = async (req, res) => {
 // have fee transfer 5% money transfer
 // OTP 1 minute transfer
 // have email report transfer
-const transferMoney = async(req,res)=>{
+const transferMoney = async (req, res) => {
   // input: amount money transfer
   //        number phone of user receive money
   //        message of user transfer money
   //        user bear fee transfer 5% money transfer
-  const {money, numberPhone,message, userBearFee} = req.body;
+  const { money, numberPhone, message, userBearFee } = req.body;
   // get information about user login 
   const user = req.user
   const getUser = await User.findOne({ _id: user.userId })
 
   // get user who receive money
-  const getReceiver = await User.findOne({phone: numberPhone})
+  const getReceiver = await User.findOne({ phone: numberPhone })
 
-
+  let usernameFee = ""
+  if (userBearFee === "Me") {
+    getUser.money = getUser.money - (money * 0.05)
+    usernameFee = getUser.username
+  }
+  else {
+    money = money - (money * 0.05)
+    usernameFee = getReceiver.username
+  }
   // check user balance transfer money 
-  if(getUser.money < money){
+  if (getUser.money < money) {
     const history = await History.create({
       type: "Transfer",
       money: money,
@@ -156,25 +164,32 @@ const transferMoney = async(req,res)=>{
       status: "FAIL",
       fromUser: getUser.username,
       toUser: getReceiver.username,
-      feeTransfer: money*0.05,
+      feeTransfer: money * 0.05,
       userBearFee: usernameFee,
     })
+    return res.status(StatusCodes.OK).json({ msg: 'Transfer money fail your balance not have enough money to transfer', user: getUser, receiver: getReceiver, history: history });
   }
-  
-  
+
+
   // else execute process transfer money
   // check user bear to fee transfer
   // - money of user transfer and + money to balance of user receive
-  // must check money > 5 000 000 admin must allow ****** CHUA LAM GI CA
-  let usernameFee = ""
-  if(userBearFee === "Me"){
-    getUser.money = getUser.money - (money*0.05)
-    usernameFee = getUser.username
+  // must check money > 5 000 000 admin must allow
+  if (money >= 5000000) {
+    const history = await History.create({
+      type: "Transfer",
+      money: money,
+      message: message,
+      date: Date.now(),
+      status: "PROCESSING",
+      fromUser: getUser.username,
+      toUser: getReceiver.username,
+      feeTransfer: money * 0.05,
+      userBearFee: usernameFee,
+    })
+    return res.status(StatusCodes.OK).json({ msg: 'Transfer money more than 5 000 000 please wait admin allow', user: getUser, receiver: getReceiver, history: history });
   }
-  else{
-    money = money - (money * 0.05)
-    usernameFee = getReceiver.username
-  }
+
 
   getUser.money -= money
   getUser.save()
@@ -192,7 +207,7 @@ const transferMoney = async(req,res)=>{
     status: "SUCCESS",
     fromUser: getUser.username,
     toUser: getReceiver.username,
-    feeTransfer: money*0.05,
+    feeTransfer: money * 0.05,
     userBearFee: usernameFee,
   })
 
@@ -201,14 +216,28 @@ const transferMoney = async(req,res)=>{
 }
 
 // This function for admin to allow transfer greater than 5 000 000
-const updateStatus = async (req,res) => {
-  const idHistory = req.params
+const updateStatus = async (req, res) => {
+  const idHistory = req.params.id
   const status = req.body.status
-  const getHistory = await History.findOne({_id: idHistory})
-  if(!getHistory)
+
+  const getHistory = await History.findOne({ _id: idHistory })
+  const preStatus = getHistory.status
+  if (!getHistory)
     throw new badRequestError(`Cannot find history ${idHistory}`)
   getHistory.status = status
   getHistory.save()
-  res.status(StatusCodes.OK).json({msg:"Update status success", history: getHistory})
+
+  // when admin update status success to allow this transfer will complete final stage
+  // history status will change to SUCCESS and execute process transfer to balance of user
+  if (preStatus === 'PROCESSING' && getHistory.status === "SUCCESS") {
+    // get two user in transaction money of this history
+    const getTransfer = await User.findOne({ username: getHistory.fromUser })
+    const getReceiver = await User.findOne({ username: getHistory.toUser })
+    getUser.money -= money
+    getUser.save()
+    getReceiver.money += money
+    getReceiver.save()
+  }
+  res.status(StatusCodes.OK).json({ msg: "Update status success", history: getHistory })
 }
-export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney };
+export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney, updateStatus };
