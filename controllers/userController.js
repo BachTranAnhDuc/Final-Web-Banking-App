@@ -147,8 +147,19 @@ const transferMoney = async(req,res)=>{
 
 
   // check user balance transfer money 
-  if(getUser.money < money)
-    throw new badRequestError("Your balance is not enough to transfer money")
+  if(getUser.money < money){
+    const history = await History.create({
+      type: "Transfer",
+      money: money,
+      message: message,
+      date: Date.now(),
+      status: "FAIL",
+      fromUser: getUser.username,
+      toUser: getReceiver.username,
+      feeTransfer: money*0.05,
+      userBearFee: usernameFee,
+    })
+  }
   
   
   // else execute process transfer money
@@ -187,5 +198,17 @@ const transferMoney = async(req,res)=>{
 
   res.status(StatusCodes.OK).json({ msg: 'Transfer money success', user: getUser, receiver: getReceiver, history: history });
 
+}
+
+// This function for admin to allow transfer greater than 5 000 000
+const updateStatus = async (req,res) => {
+  const idHistory = req.params
+  const status = req.body.status
+  const getHistory = await History.findOne({_id: idHistory})
+  if(!getHistory)
+    throw new badRequestError(`Cannot find history ${idHistory}`)
+  getHistory.status = status
+  getHistory.save()
+  res.status(StatusCodes.OK).json({msg:"Update status success", history: getHistory})
 }
 export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney };
