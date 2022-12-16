@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const HistorySchema = new mongoose.Schema({
     type:{
-        type:String
+        type:String,
+        enum: ["RECHARGE", "WITHDRAW", "TRANSFER", "BUY MOBILE CARD"]
     },
     money:{
         type:Number,
@@ -15,7 +16,7 @@ const HistorySchema = new mongoose.Schema({
     },
     status:{
         type: String,
-        enum: ['PROCESSING', 'FAIL', 'SUCCESS']
+        enum: ['PROCESSING', 'FAIL', 'SUCCESS', 'CANCEL']
     },
     fromUser:{
         type: String,
@@ -30,6 +31,7 @@ const HistorySchema = new mongoose.Schema({
         type:String,
     }
 })
+
 
 
 export default mongoose.model('History', HistorySchema);

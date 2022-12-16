@@ -115,7 +115,7 @@ const rechargeMoney = async (req, res) => {
   // save action recharge money to history
 
   const history = await History.create({
-    type: "Recharge",
+    type: "RECHARGE",
     money: money,
     message: "",
     date: Date.now(),
@@ -137,14 +137,16 @@ const transferMoney = async (req, res) => {
   //        number phone of user receive money
   //        message of user transfer money
   //        user bear fee transfer 5% money transfer
-  const { money, numberPhone, message, userBearFee } = req.body;
+  const { money, numberPhone, message, userBearFee, otpTransaction } = req.body;
   // get information about user login 
   const user = req.user
   const getUser = await User.findOne({ _id: user.userId })
 
   // get user who receive money
   const getReceiver = await User.findOne({ phone: numberPhone })
-
+  if(otpTransaction !== getUser.otpTransaction){
+    throw new badRequestError("Your otp enter is not valid. Please check otp again")
+  }
   let usernameFee = ""
   if (userBearFee === "Me") {
     getUser.money = getUser.money - (money * 0.05)
@@ -155,7 +157,7 @@ const transferMoney = async (req, res) => {
     usernameFee = getReceiver.username
   }
   // check user balance transfer money 
-  if (getUser.money < money) {
+  /* if (getUser.money < money) {
     const history = await History.create({
       type: "Transfer",
       money: money,
@@ -168,7 +170,7 @@ const transferMoney = async (req, res) => {
       userBearFee: usernameFee,
     })
     return res.status(StatusCodes.OK).json({ msg: 'Transfer money fail your balance not have enough money to transfer', user: getUser, receiver: getReceiver, history: history });
-  }
+  } */
 
 
   // else execute process transfer money
@@ -177,7 +179,7 @@ const transferMoney = async (req, res) => {
   // must check money > 5 000 000 admin must allow
   if (money >= 5000000) {
     const history = await History.create({
-      type: "Transfer",
+      type: "TRANSFER",
       money: money,
       message: message,
       date: Date.now(),
@@ -200,7 +202,7 @@ const transferMoney = async (req, res) => {
   // save action recharge money to history
 
   const history = await History.create({
-    type: "Transfer",
+    type: "TRANSFER",
     money: money,
     message: message,
     date: Date.now(),

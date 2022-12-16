@@ -42,6 +42,7 @@ const UserSchema = new mongoose.Schema({
   },
   username: {
     type: String,
+    unique: true,
   },
   password: {
     type: String,
@@ -77,10 +78,12 @@ const UserSchema = new mongoose.Schema({
     default: 'processing',
   },
   otpForgotPass: {
-    type: String
+    type: String,
+    default: ''
   },
   otpTransaction: {
-    type: String
+    type: String,
+    default: ''
   },
   money: {
     type: Number,
