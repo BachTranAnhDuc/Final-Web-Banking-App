@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import User from '../models/User.js';
 import Card from '../models/Card.js';
 import History from '../models/History.js'
+import uniqueRandom from 'unique-random';
 import sendEmailBalance from '../utils/sendEmailBalance.js'
 import {
   errorHandler,
@@ -336,4 +337,52 @@ const updateStatusWithdrawMoney = async(req,res) => {
   }
   return res.status(StatusCodes.OK).json({ msg: "Update status transaction success", history: getHistory })
 }
-export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney, updateStatus, withdrawMoney, updateStatusWithdrawMoney };
+
+
+// ---------------------------------------------------------------------
+// Buy card Function card have 10 number 11111: Viettel, 22222: Mobifone, 33333: Vinaphone
+const buyMobileCard = async (req,res) => {
+  const {amount, nameCard, price, password} = req.body;
+  const cardCatogries = {"Viettel":"11111","Mobifone":"11111","Vinaphone":"33333"}
+  if(amount > 5)
+    throw new badRequestError("The amount of card must <= 5!")
+  const user = req.user
+  const money = price*amount;
+  const feeTransaction = money * 0;
+  const getUser = await User.findOne({ _id: user.userId })
+  const isMatch = await getUser.comparePassword(password)
+  if(isMatch !== true) {
+    throw new badRequestError("Your password is incorrect!")
+  }
+  if(getUser.money < (money + feeTransaction)){
+    throw new badRequestError("Your money in balance is not enough to buy")
+  }
+  /* getUser.money -= (money + feeTransaction)
+  getUser.save() */
+  const randomNumber = uniqueRandom(100000, 999999);
+  let inforCard = []
+  for (let i = 0; i < amount; i++) {
+      let random = randomNumber()
+      let numberCard = cardCatogries[nameCard]+ random.toString()
+      inforCard.push({nameCard: nameCard,price: price,numberCard: numberCard})
+  }
+  
+  
+  let message = "YOUR IMFORMATION CARD \n"
+  for (let i = 0; i < inforCard.length; i++) {
+    message += "Name Card: " + inforCard[i].nameCard + " , Number Card: " + inforCard[i].numberCard + "\n"
+  }
+  const history = await History.create({
+      type: "BUY MOBILE CARD",
+      money: money,
+      message: message,
+      date: Date.now(),
+      status: "SUCCESS",
+      fromUser: getUser.username,
+      toUser: "",
+      feeTransfer: feeTransaction,
+      userBearFee: getUser.username,
+  })
+  return res.status(StatusCodes.OK).json({ msg: "Buy mobile Card success", getUser: getUser, history: history})
+}
+export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney, updateStatus, withdrawMoney, updateStatusWithdrawMoney,buyMobileCard };

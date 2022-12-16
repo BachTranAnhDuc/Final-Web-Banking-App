@@ -9,7 +9,8 @@ import {
   rechargeMoney,
   transferMoney,
   updateStatus,
-  withdrawMoney, updateStatusWithdrawMoney
+  withdrawMoney, updateStatusWithdrawMoney,
+  buyMobileCard
 } from '../controllers/userController.js';
 import { unauthorizedError } from '../error/index.js';
 import { authenticateUser, authorizePermissions } from '../middleware/index.js';
@@ -44,4 +45,7 @@ router.route("/withdraw").post(authenticateUser, authorizePermissions(['user']),
 
 router.route("/updateStatusWithdrawMoney/:id").post(authenticateUser, authorizePermissions(['admin']),updateStatusWithdrawMoney)
 
+
+// buy mobile card
+router.route("/buyMobileCard").post(authenticateUser, authorizePermissions(['user']), buyMobileCard)
 export default router;
