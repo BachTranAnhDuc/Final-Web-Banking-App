@@ -3,6 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 import { authenticateUser, authorizePermissions } from '../middleware/index.js';
+
 import {getAllHistory,
     getHistory,
     getHistoryByType,
@@ -10,7 +11,7 @@ import {getAllHistory,
     getHistoryByFromUser,
     getHistoryByToUser} from '../controllers/historyController.js'
 
-router.route("/getAllHistory").get(authenticateUser, authorizePermissions['admin'],getAllHistory)
+router.route("/getAllHistory").get(authenticateUser, authorizePermissions(['admin']),getAllHistory)
 
 router.route("/getHistory/:id").get(authenticateUser,getHistory)
 
