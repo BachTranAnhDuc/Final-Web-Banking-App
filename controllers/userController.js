@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import User from '../models/User.js';
 import Card from '../models/Card.js';
 import History from '../models/History.js'
-
+import sendEmailBalance from '../utils/sendEmailBalance.js'
 import {
   errorHandler,
   notFound,
@@ -141,19 +141,24 @@ const transferMoney = async (req, res) => {
   // get information about user login 
   const user = req.user
   const getUser = await User.findOne({ _id: user.userId })
-
   // get user who receive money
   const getReceiver = await User.findOne({ phone: numberPhone })
   if(otpTransaction !== getUser.otpTransaction){
     throw new badRequestError("Your otp enter is not valid. Please check otp again")
   }
+  // getUser.otpTransaction = ""
   let usernameFee = ""
+  const transactionFee = money * 0.05
+  const minusBalance = getUser.money - (getUser.money+transactionFee)
   if (userBearFee === "Me") {
-    getUser.money = getUser.money - (money * 0.05)
+    if(minusBalance < 0)
+    throw new badRequestError("Your balance is not enough for transfer money and pay fee transfer")
+    getUser.money = getUser.money - transactionFee
     usernameFee = getUser.username
+    
   }
-  else {
-    money = money - (money * 0.05)
+  else if(userBearFee !== "Me") {
+    getReceiver.money = money - transactionFee
     usernameFee = getReceiver.username
   }
   // check user balance transfer money 
@@ -178,7 +183,7 @@ const transferMoney = async (req, res) => {
   // - money of user transfer and + money to balance of user receive
   // must check money > 5 000 000 admin must allow
   if (money >= 5000000) {
-    const history = await History.create({
+    const historyProcessing = await History.create({
       type: "TRANSFER",
       money: money,
       message: message,
@@ -186,13 +191,16 @@ const transferMoney = async (req, res) => {
       status: "PROCESSING",
       fromUser: getUser.username,
       toUser: getReceiver.username,
-      feeTransfer: money * 0.05,
+      feeTransfer: transactionFee,
       userBearFee: usernameFee,
     })
-    return res.status(StatusCodes.OK).json({ msg: 'Transfer money more than 5 000 000 please wait admin allow', user: getUser, receiver: getReceiver, history: history });
+    getUser.otpTransaction = ""
+    getUser.save()
+    getReceiver.save()
+    return res.status(StatusCodes.OK).json({ msg: 'Transfer money more than 5 000 000 please wait admin allow', user: getUser, receiver: getReceiver, history: historyProcessing });
   }
 
-
+  getUser.otpTransaction = ""
   getUser.money -= money
   getUser.save()
   getReceiver.money += money
@@ -212,7 +220,12 @@ const transferMoney = async (req, res) => {
     feeTransfer: money * 0.05,
     userBearFee: usernameFee,
   })
-
+  sendEmailBalance({
+    name: getReceiver.name,
+    email: getReceiver.email,
+    balance: getReceiver.money,
+    history: history,
+  })
   res.status(StatusCodes.OK).json({ msg: 'Transfer money success', user: getUser, receiver: getReceiver, history: history });
 
 }
@@ -239,7 +252,14 @@ const updateStatus = async (req, res) => {
     getUser.save()
     getReceiver.money += money
     getReceiver.save()
+    sendEmailBalance({
+      name: getReceiver.name,
+      email: getReceiver.email,
+      balance: getReceiver.money,
+      history: getHistory,
+    })
   }
+
   res.status(StatusCodes.OK).json({ msg: "Update status success", history: getHistory })
 }
 export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney, updateStatus };

@@ -44,7 +44,7 @@ const transferProcess = async (req, res, next) => {
         email: getUser.email,
         otpTransaction: otp.toString()
     })
-    next()
+    return; //next()
 }
 
 export {transferProcess}

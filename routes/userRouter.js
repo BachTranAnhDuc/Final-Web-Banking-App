@@ -26,11 +26,13 @@ router
 
 router.route('/recharge').post(authenticateUser, authorizePermissions(['user']),validateCard,validateMoneyRecharge,rechargeMoney); // this function will recharge money
 
-//transfer money
-router.route('/transfer').post(authenticateUser, authorizePermissions(['user']),transferProcess, transferMoney);
+//transfer money/*  */
+router.route('/transfer').post(authenticateUser, authorizePermissions(['user']),transferProcess,/* transferMoney */);
+
+router.route('/transfer/enterOtp').post(authenticateUser, authorizePermissions(['user']),transferMoney);
 
 // update status history for transfer 
-router.route("/updateStatus").post(authenticateUser, authorizePermissions(['admin']),updateStatus)
+router.route("/updateStatus/:id").post(authenticateUser, authorizePermissions(['admin']),updateStatus)
 
 
 export default router;
