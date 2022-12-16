@@ -22,6 +22,9 @@ const CardSchema = new mongoose.Schema({
     maxRecharge: {
         type: Number,
     },
+    canWithdraw:{
+        type:Boolean,
+    }
 })
 
 
