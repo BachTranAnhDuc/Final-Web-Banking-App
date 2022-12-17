@@ -60,6 +60,8 @@ import Countdown from 'react-countdown';
 
 import CloseIcon from '@mui/icons-material/Close';
 
+// import { LoadingButton } from '@mui/lab';
+
 const initState = {
   phone: '',
   email: '',
@@ -75,7 +77,16 @@ const ForgotPassword = () => {
   const [values, setValues] = useState(initState);
   const [validValues, setValidValues] = useState(initValidInput);
 
-  const { actionForgotPage, forgotPage, showToast } = useGlobalContext();
+  const {
+    actionForgotPage,
+    forgotPage,
+    showToast,
+    sendOtpForgotPwd,
+    isLoadingForm,
+    confirmOtpForgotPwd,
+    forgotUserTemp,
+    confirmPwdForgotPwd,
+  } = useGlobalContext();
 
   const validateUsername = (value) => {
     let error;
@@ -83,9 +94,9 @@ const ForgotPassword = () => {
     if (!value) {
       error = 'This is required';
     }
-    if (value.length !== 6) {
-      error = 'Username must equal 6 characters';
-    }
+    // if (value.length !== 6) {
+    //   error = 'Username must equal 6 characters';
+    // }
     return error;
   };
   const validatePhone = (value) => {
@@ -94,9 +105,9 @@ const ForgotPassword = () => {
     if (!value) {
       error = 'This is required';
     }
-    if (value.length < 8) {
-      error = 'Phone must at least 8 characters';
-    }
+    // if (value.length < 8) {
+    //   error = 'Phone must at least 8 characters';
+    // }
     return error;
   };
   const validateOTP = (value) => {
@@ -169,7 +180,13 @@ const ForgotPassword = () => {
               }}
             >
               <Formik
-                initialValues={{ username: '', phone: '', otp: '' }}
+                initialValues={{
+                  username: '',
+                  phone: '',
+                  otp: '',
+                  pwd: '',
+                  confirmPwd: '',
+                }}
                 // validationSchema={validationSchema}
                 onSubmit={async (values, actions) => {
                   console.log(values);
@@ -198,7 +215,7 @@ const ForgotPassword = () => {
                                   {...field}
                                   id="username"
                                   name="username"
-                                  label="Username"
+                                  label="Email"
                                   value={props.values.username}
                                   onChange={props.handleChange}
                                   error={
@@ -301,24 +318,142 @@ const ForgotPassword = () => {
                             display: 'grid',
                             gridTemplateRows: 'repeat(2, max-content)',
                             rowGap: '0.8rem',
-                            backgroundColor: 'blue',
+                            // backgroundColor: 'blue',
                             height: '100%',
                           }}
-                        ></Box>
-                      )}
-                    </Form>
+                        >
+                          <Field name="pwd">
+                            {({ field, form, meta }) => (
+                              <FormControl>
+                                <RedditTextField
+                                  variant="filled"
+                                  style={{ marginTop: 11 }}
+                                  {...field}
+                                  id="pwd"
+                                  name="pwd"
+                                  label="New password"
+                                  value={props.values.pwd}
+                                  onChange={props.handleChange}
+                                  error={
+                                    props.touched.pwd &&
+                                    Boolean(props.errors.pwd)
+                                  }
+                                  aria-describedby="component-helper-text"
+                                />
+                                <FormHelperText
+                                  id="component-helper-text"
+                                  sx={{
+                                    fontSize: '1.2rem',
+                                    color: 'var(--color-tertiary-dark-2)',
+                                  }}
+                                >
+                                  {props.touched.pwd && props.errors.pwd}
+                                </FormHelperText>
+                              </FormControl>
+                            )}
+                          </Field>
 
-                    <ButtonGroup
-                      disableElevation
-                      variant="contained"
-                      aria-label="Disabled elevation buttons"
-                      sx={{
-                        justifySelf: 'end',
-                        alignSelf: 'end',
-                        gap: '1.2rem',
-                      }}
-                    >
-                      <Button
+                          <Field name="confirmPwd">
+                            {({ field, form, meta }) => (
+                              <FormControl>
+                                <RedditTextField
+                                  variant="filled"
+                                  style={{ marginTop: 11 }}
+                                  {...field}
+                                  id="confirmPwd"
+                                  name="confirmPwd"
+                                  label="Confirm password"
+                                  value={props.values.confirmPwd}
+                                  onChange={props.handleChange}
+                                  error={
+                                    props.touched.confirmPwd &&
+                                    Boolean(props.errors.confirmPwd)
+                                  }
+                                  aria-describedby="component-helper-text"
+                                />
+                                <FormHelperText
+                                  id="component-helper-text"
+                                  sx={{
+                                    fontSize: '1.2rem',
+                                    color: 'var(--color-tertiary-dark-2)',
+                                  }}
+                                >
+                                  {props.touched.confirmPwd &&
+                                    props.errors.confirmPwd}
+                                </FormHelperText>
+                              </FormControl>
+                            )}
+                          </Field>
+                        </Box>
+                      )}
+
+                      <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                        sx={{
+                          justifySelf: 'end',
+                          alignSelf: 'end',
+                          gap: '1.2rem',
+                        }}
+                      >
+                        {forgotPage?.numPage === 1 && (
+                          <LoadingButton
+                            variant="contained"
+                            loading={isLoadingForm}
+                            type="button"
+                            onClick={() => {
+                              showToast('Step 1', 3000, 'success');
+
+                              // console.log(props.values.pwd);
+
+                              sendOtpForgotPwd({
+                                email: props.values.username,
+                                phone: props.values.phone,
+                              });
+                            }}
+                          >
+                            Send OTP
+                          </LoadingButton>
+                        )}
+
+                        {forgotPage?.numPage === 2 && (
+                          <LoadingButton
+                            variant="contained"
+                            loading={isLoadingForm}
+                            type="button"
+                            onClick={() => {
+                              showToast('Step 2 send otp');
+
+                              confirmOtpForgotPwd({
+                                email: forgotUserTemp?.email,
+                                phone: forgotUserTemp?.phone,
+                                otpForgotPass: props.values.otp,
+                              });
+                            }}
+                          >
+                            Send
+                          </LoadingButton>
+                        )}
+                        {forgotPage?.numPage === 3 && (
+                          <LoadingButton
+                            variant="contained"
+                            loading={isLoadingForm}
+                            type="button"
+                            onClick={() => {
+                              showToast('Step 3 enter pwd');
+                              confirmPwdForgotPwd({
+                                email: forgotUserTemp?.email,
+                                phone: forgotUserTemp?.phone,
+                                password: props.values.pwd,
+                                confirmPassword: props.values.confirmPwd,
+                              });
+                            }}
+                          >
+                            Reset
+                          </LoadingButton>
+                        )}
+                        {/* <Button
                         type="button"
                         onClick={() => {
                           handleClickBack(true);
@@ -343,8 +478,9 @@ const ForgotPassword = () => {
                         }}
                       >
                         Next
-                      </Button>
-                    </ButtonGroup>
+                      </Button> */}
+                      </ButtonGroup>
+                    </Form>
                   </>
                 )}
               </Formik>

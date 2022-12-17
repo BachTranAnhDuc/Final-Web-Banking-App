@@ -53,6 +53,15 @@ import {
   BUY_CARD_ERROR,
   GET_HISTORY_BY_USER,
   GET_HISTORY_BY_ID,
+  SEND_OTP_FORGOT_BEGIN,
+  SEND_OTP_FORGOT_SUCCESS,
+  SEND_OTP_FORGOT_ERROR,
+  CONFIRM_OTP_FORGOT_BEGIN,
+  CONFIRM_OTP_FORGOT_SUCCESS,
+  CONFIRM_OTP_FORGOT_ERROR,
+  CONFIRM_PWD_FORGOT_BEGIN,
+  CONFIRM_PWD_FORGOT_SUCCESS,
+  CONFIRM_PWD_FORGOT_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -406,6 +415,38 @@ const reducer = (state, action) => {
 
   if (action.type === GET_HISTORY_BY_ID) {
     return { ...state, historyById: action.payload };
+  }
+
+  if (action.type === SEND_OTP_FORGOT_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === SEND_OTP_FORGOT_SUCCESS) {
+    return { ...state, isLoadingForm: false, forgotUserTemp: action.payload };
+  }
+  if (action.type === SEND_OTP_FORGOT_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === CONFIRM_OTP_FORGOT_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+
+  if (action.type === CONFIRM_OTP_FORGOT_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === CONFIRM_OTP_FORGOT_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === CONFIRM_PWD_FORGOT_BEGIN) {
+    return { ...state };
+  }
+  if (action.type === CONFIRM_PWD_FORGOT_SUCCESS) {
+    return { ...state };
+  }
+  if (action.type === CONFIRM_PWD_FORGOT_ERROR) {
+    return { ...state };
   }
 };
 

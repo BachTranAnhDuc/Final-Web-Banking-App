@@ -74,7 +74,7 @@ const UserSchema = new mongoose.Schema({
   },
   identify: {
     type: String,
-    emum: ['success', 'fail', 'processing', 'watting'],
+    emum: ['success', 'fail', 'processing', 'waiting'],
     default: 'processing',
   },
   otpForgotPass: {

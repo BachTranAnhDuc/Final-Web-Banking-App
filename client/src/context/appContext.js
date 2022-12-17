@@ -61,6 +61,14 @@ import {
   BUY_CARD_SUCCESS,
   GET_HISTORY_BY_USER,
   GET_HISTORY_BY_ID,
+  SEND_OTP_FORGOT_BEGIN,
+  SEND_OTP_FORGOT_ERROR,
+  SEND_OTP_FORGOT_SUCCESS,
+  CONFIRM_OTP_FORGOT_BEGIN,
+  CONFIRM_OTP_FORGOT_SUCCESS,
+  CONFIRM_OTP_FORGOT_ERROR,
+  CONFIRM_PWD_FORGOT_BEGIN,
+  CONFIRM_PWD_FORGOT_SUCCESS,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -169,6 +177,9 @@ const defaultState = {
   dataHistoryByUser: [],
   historyById: null,
   buyCardData: [],
+  forgotUserTemp: {},
+
+  historyAllUsers: [],
 };
 
 const AppContext = React.createContext();
@@ -1476,6 +1487,122 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const sendOtpForgotPwd = ({ email, phone }) => {
+    dispatch({ type: SEND_OTP_FORGOT_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post(`/api/v1/auth/forgotPassword`, {
+          email,
+          phone,
+        });
+
+        console.log(res);
+
+        actionForgotPage({
+          numPage: 1,
+          isOK: true,
+          type: 'plus',
+          length: 3,
+        });
+
+        dispatch({ type: SEND_OTP_FORGOT_SUCCESS, payload: { email, phone } });
+      } catch (error) {
+        console.log(error);
+
+        const { response } = error;
+
+        const { data } = response;
+
+        const { msg } = data;
+
+        showToast(msg, 3000, 'error');
+
+        dispatch({ type: SEND_OTP_FORGOT_ERROR });
+      }
+    }, 1000);
+  };
+
+  const confirmOtpForgotPwd = ({ email, phone, otpForgotPass }) => {
+    dispatch({ type: CONFIRM_OTP_FORGOT_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post('/api/v1/auth/enterOTP', {
+          email,
+          phone,
+          otpForgotPass,
+        });
+
+        console.log(res);
+
+        actionForgotPage({
+          numPage: 2,
+          isOK: true,
+          type: 'plus',
+          length: 3,
+        });
+
+        dispatch({ type: CONFIRM_OTP_FORGOT_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+
+        console.log(data);
+
+        const { msg } = data;
+
+        showToast(msg, 4000, 'error');
+
+        dispatch({ type: CONFIRM_OTP_FORGOT_ERROR });
+      }
+    }, 1000);
+  };
+
+  const confirmPwdForgotPwd = ({ password, confirmPassword, email, phone }) => {
+    dispatch({ type: CONFIRM_PWD_FORGOT_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post('/api/v1/auth/changePwd', {
+          password,
+          confirmPassword,
+          email,
+          phone,
+        });
+
+        console.log(res);
+
+        dispatch({ type: CONFIRM_PWD_FORGOT_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+
+        const { msg } = data;
+
+        showToast(msg, 4000, 'error');
+      }
+    }, 1000);
+  };
+
+  const getAllHistoryUsers = async () => {
+    try {
+      const res = await axios.get('/api/v1/history/getAllHistory');
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+
+      const { response } = error;
+
+      const { data } = error;
+
+      console.log(data);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -1521,6 +1648,10 @@ const AppProvider = ({ children }) => {
         buyCardApp,
         getHistoryByUser,
         getHistoryById,
+        sendOtpForgotPwd,
+        confirmPwdForgotPwd,
+        confirmOtpForgotPwd,
+        getall
       }}
     >
       {children}

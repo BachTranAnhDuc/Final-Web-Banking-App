@@ -10,6 +10,7 @@ import {
   transferMoney,
   withdrawMoney,
   buyMobileCard,
+  getUserByPhone,
 } from '../controllers/userController.js';
 import { unauthorizedError } from '../error/index.js';
 import { authenticateUser, authorizePermissions } from '../middleware/index.js';
@@ -74,4 +75,6 @@ router
 router
   .route('/buyMobileCard')
   .post(authenticateUser, authorizePermissions(['user']), buyMobileCard);
+
+router.route("/getUserByPhone/:phone").get(getUserByPhone);
 export default router;

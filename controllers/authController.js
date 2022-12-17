@@ -369,6 +369,7 @@ const enterOTPForgotPass = async (req, res) => {
   // true
   user.otpForgotPass = '';
   user.save();
+  req.userResetPassword = user
   res
     .status(StatusCodes.OK)
     .json({ msg: 'OTP Forgot password is true, redirect to change password' });
@@ -426,7 +427,7 @@ const verifyEmail = async (req, res) => {
   user.verifiedDate = Date.now();
   // user.verificationToken = '';
 
-  await user.save();
+  user.save();
 
   res.status(StatusCodes.OK).json({ msg: 'Email Verified' });
 };
@@ -492,6 +493,20 @@ const checkPwd = async (req, res, next) => {
   }
 };
 
+const changePassword = async(req,res)=>{
+  const {password, confirmPassword, email,phone} = req.body 
+  const user = await User.findOne({email: email, phone: phone})
+  if(password !== confirmPassword)
+    throw new badRequestError("Password and confirm password")
+  const getUser = await User.findOne({_id: user._id})
+  if(!getUser)
+    throw new notFoundError("User not found")
+  
+  getUser.password = password
+  getUser.save()
+  return res.status(StatusCodes.OK).json({msg: "Change Password success", user: getUser})
+}
+
 export {
   login,
   register,
@@ -503,6 +518,7 @@ export {
   enterOTPForgotPass,
   uploadUserImage1,
   checkPwd,
+  changePassword
 };
 
 // admin: 620277
