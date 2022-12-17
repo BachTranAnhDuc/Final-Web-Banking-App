@@ -27,6 +27,8 @@ import {
   ButtonGroup,
 } from '@mui/material';
 
+import { LoadingButton } from '@mui/lab';
+
 import {
   Modal,
   ModalClose,
@@ -109,6 +111,8 @@ const Recharge = () => {
     confirmDigitalCard,
     isConfirmDigitalCard,
     showToast,
+    rechargeMoneyApp,
+    isLoadingForm,
   } = useGlobalContext();
 
   const validateMoney = (value) => {
@@ -160,9 +164,9 @@ const Recharge = () => {
     if (!value) {
       error = 'This is required';
     }
-    if (value !== '123456') {
-      error = 'Password is not correct';
-    }
+    // if (value !== '123456') {
+    //   error = 'Password is not correct';
+    // }
 
     return error;
   };
@@ -234,13 +238,21 @@ const Recharge = () => {
               idCard: '',
               dateEnd: '',
               cvv: '',
-              password: '',
             }}
             // validationSchema={validationSchema}
             onSubmit={async (values, actions) => {
               console.log('submit here');
               // actions.setFieldValue('idCard', otp);
+              console.log('submit recharge form here');
               console.log(values);
+
+              rechargeMoneyApp({
+                money: values.money,
+                idCard: values.idCard,
+                dateEnd: values.dateEnd,
+                cvv: values.cvv,
+                // password: values.password,
+              });
             }}
           >
             {(props) => (
@@ -470,125 +482,23 @@ const Recharge = () => {
                       {bankPage.numPage !== 1 && (
                         <Button onClick={() => handleClickBack()}>Back</Button>
                       )}
-                      <Button
+                      <LoadingButton
+                        loading={isLoadingForm}
+                        variant="contained"
+                        type="submit"
                         onClick={() => {
-                          // console.log(props.errors.money === undefined);
-
-                          // if (props.errors.money !== undefined) {
-                          //   showToast(props.errors.money, 3000, 'error');
-                          //   handleClickNext(props.errors.money === undefined);
-                          // } else if (props.errors.phone !== undefined) {
-                          //   showToast(props.errors.phone, 3000, 'error');
-                          //   handleClickNext(false);
-                          // } else {
-                          //   handleClickNext(true);
-                          // }
-
-                          console.log(props.values.dateEnd);
-
-                          if (
-                            props.errors.idCard !== undefined ||
-                            props.errors.cvv !== undefined ||
-                            props.errors.dateEnd !== undefined
-                          ) {
-                            showToast(
-                              `PLease provide all values!`,
-                              3000,
-                              'error'
-                            );
-                          } else {
-                            if (
-                              props.values.idCard === '123456' &&
-                              props.values.cvv === '123' &&
-                              props.values.dateEnd === '2023-01-01'
-                            ) {
-                              setOpen('plain');
-                            } else {
-                              showToast(`Not correct card!`, 3000, 'error');
-                            }
-                          }
+                          // setOpen('plain');
 
                           // handleClickNext(true);
+
+                          props.submitForm();
                         }}
                       >
-                        Next
-                      </Button>
+                        Submit
+                      </LoadingButton>
                     </>
                   )}
                 </ButtonGroup>
-                <Modal open={!!open} onClose={() => setOpen('')}>
-                  <ModalDialog
-                    aria-labelledby="variant-modal-title"
-                    aria-describedby="variant-modal-description"
-                    variant={open || undefined}
-                    sx={{
-                      width: '40rem',
-                      height: '24rem',
-                      padding: '3.2rem 4.4rem',
-                      display: 'grid',
-                      gridTemplateRows: 'repeat(max-content) min-content',
-                      gap: '1.6rem 0',
-                    }}
-                  >
-                    <ModalClose />
-                    <Typography
-                      id="variant-modal-title"
-                      component="h2"
-                      level="inherit"
-                      fontSize="1.6rem"
-                      mb="0.25em"
-                    >
-                      Modal Dialog
-                    </Typography>
-                    {/* <Typography
-                      id="variant-modal-description"
-                      textColor="inherit"
-                    >
-                      This is a `{open}` modal dialog.
-                    </Typography> */}
-                    <Field name="password" validate={validatePassword}>
-                      {({ field, form, meta }) => (
-                        <FormControl>
-                          <MUIInputCustom02
-                            {...field}
-                            id="password"
-                            name="password"
-                            label="Password"
-                            value={props.values.password}
-                            onChange={props.handleChange}
-                            error={
-                              props.touched.password &&
-                              Boolean(props.errors.password)
-                            }
-                          />
-                          <FormHelperText
-                            id="component-helper-text"
-                            sx={{
-                              fontSize: '1.2rem',
-                              color: 'var(--color-tertiary-dark-2)',
-                            }}
-                          >
-                            {props.touched.password && props.errors.password}
-                          </FormHelperText>
-                        </FormControl>
-                      )}
-                    </Field>
-
-                    <MUIButtonCustom02
-                      type="button"
-                      onClick={() => {
-                        if (props.values.password === '123456') {
-                          handleClickNext(true);
-                          setOpen('');
-                        } else {
-                          showToast('Password is not correct!', 4000, 'error');
-                        }
-                      }}
-                    >
-                      Confirm
-                    </MUIButtonCustom02>
-                  </ModalDialog>
-                </Modal>
               </Form>
             )}
           </Formik>

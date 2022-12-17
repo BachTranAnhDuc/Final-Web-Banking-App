@@ -39,6 +39,12 @@ import {
   NUM_PAGE_REGISTER,
   GET_ALL_USERS,
   GET_SINGLE_USER,
+  RECHARGE_BEGIN,
+  RECHARGE_SUCCESS,
+  RECHARGE_ERROR,
+  TRANSFER_BEGIN,
+  TRANSFER_SUCCESS,
+  TRANSFER_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -336,6 +342,30 @@ const reducer = (state, action) => {
     const { msg, user } = action.payload;
 
     return { ...state, userById: user };
+  }
+
+  if (action.type === RECHARGE_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+
+  if (action.type === RECHARGE_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === RECHARGE_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === TRANSFER_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+
+  if (action.type === TRANSFER_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === TRANSFER_ERROR) {
+    return { ...state, isLoadingForm: false };
   }
 };
 

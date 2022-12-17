@@ -36,6 +36,8 @@ import {
   ChipDelete,
 } from '@mui/joy';
 
+import { LoadingButton } from '@mui/lab';
+
 import { pink } from '@mui/material/colors';
 
 import { FaLinux, FaGithub } from 'react-icons/fa';
@@ -111,6 +113,9 @@ const Transfer = () => {
     bankPage,
     confirmMoneyInput,
     isCorrectMoney,
+    transferMoneyApp,
+    isLoadingForm,
+    transferSendOtp,
   } = useGlobalContext();
 
   const validateMoney = (value) => {
@@ -229,7 +234,7 @@ const Transfer = () => {
                 money: '',
                 note: '',
                 otp: '',
-                fee: 'me',
+                fee: 'Me',
                 phone: '',
               }}
               // validationSchema={validationSchema}
@@ -237,6 +242,14 @@ const Transfer = () => {
                 console.log('submit here');
                 // actions.setFieldValue('idCard', otp);
                 console.log(values);
+
+                transferMoneyApp({
+                  money: values.money,
+                  numberPhone: values.phone,
+                  message: values.note,
+                  userBearFee: values.fee,
+                  otpTransaction: values.otp,
+                });
               }}
             >
               {(props) => (
@@ -434,8 +447,8 @@ const Transfer = () => {
                                 row
                                 sx={{ gap: 2, mt: 1 }}
                               >
-                                <Radio value="me" label="Me" />
-                                <Radio value="friend" label="Friend" />
+                                <Radio value="Me" label="Me" />
+                                <Radio value="Friend" label="Friend" />
                               </RadioGroup>
                             </FormControl>
                           </div>
@@ -496,7 +509,15 @@ const Transfer = () => {
                                 <Button onClick={() => handleClickBack()}>
                                   Back
                                 </Button>
-                                <Button type="submit">Submit</Button>
+                                <LoadingButton
+                                  loading={isLoadingForm}
+                                  type="submit"
+                                  onClick={() => {
+                                    // props.submitForm();
+                                  }}
+                                >
+                                  Submit
+                                </LoadingButton>
                               </>
                             )}
                           </ButtonGroup>
@@ -517,7 +538,7 @@ const Transfer = () => {
                     aria-label="Disabled elevation buttons"
                     sx={{ justifySelf: 'end', alignSelf: 'end', gap: '1.2rem' }}
                   >
-                    {bankPage.numPage < 4 && (
+                    {bankPage.numPage < 3 && (
                       <>
                         {bankPage.numPage !== 1 && (
                           <Button onClick={() => handleClickBack()}>
@@ -541,6 +562,31 @@ const Transfer = () => {
                         >
                           Next
                         </Button>
+                      </>
+                    )}
+                    {bankPage.numPage === 3 && (
+                      <>
+                        {bankPage.numPage !== 1 && (
+                          <Button onClick={() => handleClickBack()}>
+                            Back
+                          </Button>
+                        )}
+                        <LoadingButton
+                          loading={isLoadingForm}
+                          type="button"
+                          onClick={() => {
+                            console.log(props.values.fee, props.values.money);
+
+                            transferSendOtp({
+                              money: props.values.money,
+                              numberPhone: props.values.phone,
+                              message: props.values.note,
+                              userBearFee: props.values.fee,
+                            });
+                          }}
+                        >
+                          Send
+                        </LoadingButton>
                       </>
                     )}
                   </ButtonGroup>

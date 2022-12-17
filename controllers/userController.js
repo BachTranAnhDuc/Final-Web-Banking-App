@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/User.js';
 import Card from '../models/Card.js';
-import History from '../models/History.js'
+import History from '../models/History.js';
 import uniqueRandom from 'unique-random';
-import sendEmailBalance from '../utils/sendEmailBalance.js'
+import sendEmailBalance from '../utils/sendEmailBalance.js';
 import {
   errorHandler,
   notFound,
@@ -12,7 +12,6 @@ import {
   unauthenticationError,
   unauthorizedError,
 } from '../error/index.js';
-
 
 const getAllUsers = async (req, res) => {
   const users = await User.find({});
@@ -59,17 +58,21 @@ const identifyUser = async (req, res) => {
 // if input number card valid && (date expire wrong || cvv wrong) => through error in each case
 // save information in transaction history
 const rechargeMoney = async (req, res) => {
-  const { numberCard, dateExpire, cvvNumber, money, password } = req.body
+  const { numberCard, dateExpire, cvvNumber, money } = req.body;
   // const isCardNumberExist = await Card.findOne({numberCard: numberCard})
   // const isDateExist = await Card.findOne({numberCard: numberCard,dateExpire: dateExpire})
   // const isCVVExist = await Card.findOne({numberCard: numberCard, dateExpire: dateExpire, cvvNumber: cvvNumber})
-  const user = req.user
-  const getUser = await User.findOne({ _id: user.userId })
+  const user = req.user;
+  const getUser = await User.findOne({ _id: user.userId });
 
-  const isMatch = await getUser.comparePassword(password)
-  if(isMatch !== true) {
-    throw new badRequestError("Your password is incorrect!")
+  if (!getUser) {
+    throw new badRequestError('Cannot find this user');
   }
+
+  // const isMatch = await getUser.comparePassword(password);
+  // if (isMatch !== true) {
+  //   throw new badRequestError('Your password is incorrect!');
+  // }
   // VALIDATION INPUT
   // if(numberCard.length !== 6){
   //   throw new badRequestError("Number Card must be 6 characters")
@@ -109,30 +112,28 @@ const rechargeMoney = async (req, res) => {
   // if(numberCard === "333333"){
   //   throw new badRequestError("this number card is card out of money")
   // }
-  if (!getUser) {
-    throw new badRequestError("Cannot find this user")
-  }
 
-  getUser.money += money
-  getUser.save() // update the user balance
-
+  getUser.money += money;
+  getUser.save(); // update the user balance
 
   //-------------------------------------------------------
   // save action recharge money to history
 
   const history = await History.create({
-    type: "RECHARGE",
+    type: 'RECHARGE',
     money: money,
-    message: "",
+    message: '',
     date: Date.now(),
-    status: "SUCCESS",
+    status: 'SUCCESS',
     fromUser: getUser.username,
     toUser: getUser.username,
     feeTransfer: 0,
-    userBearFee: "",
-  })
-  res.status(StatusCodes.OK).json({ msg: 'Recharge success', user: getUser, history: history });
-}
+    userBearFee: '',
+  });
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Recharge success', user: getUser, history: history });
+};
 //---------------------------------------------------------------------
 // transfer money from user to another user and save to history
 // have fee transfer 5% money transfer
@@ -144,30 +145,32 @@ const transferMoney = async (req, res) => {
   //        message of user transfer money
   //        user bear fee transfer 5% money transfer
   const { money, numberPhone, message, userBearFee, otpTransaction } = req.body;
-  // get information about user login 
-  const user = req.user
-  const getUser = await User.findOne({ _id: user.userId })
+  // get information about user login
+  const user = req.user;
+  const getUser = await User.findOne({ _id: user.userId });
   // get user who receive money
-  const getReceiver = await User.findOne({ phone: numberPhone })
-  if(otpTransaction !== getUser.otpTransaction){
-    throw new badRequestError("Your otp enter is not valid. Please check otp again")
+  const getReceiver = await User.findOne({ phone: numberPhone });
+  if (otpTransaction !== getUser.otpTransaction) {
+    throw new badRequestError(
+      'Your otp enter is not valid. Please check otp again'
+    );
   }
   // getUser.otpTransaction = ""
-  let usernameFee = ""
-  const transactionFee = money * 0.05
-  const minusBalance = getUser.money - (getUser.money+transactionFee)
-  if (userBearFee === "Me") {
-    if(minusBalance < 0)
-    throw new badRequestError("Your balance is not enough for transfer money and pay fee transfer")
-    getUser.money = getUser.money - transactionFee
-    usernameFee = getUser.username
-    
+  let usernameFee = '';
+  const transactionFee = money * 0.05;
+  const minusBalance = getUser.money - (getUser.money + transactionFee);
+  if (userBearFee === 'Me') {
+    if (minusBalance < 0)
+      throw new badRequestError(
+        'Your balance is not enough for transfer money and pay fee transfer'
+      );
+    getUser.money = getUser.money - transactionFee;
+    usernameFee = getUser.username;
+  } else if (userBearFee !== 'Me') {
+    getReceiver.money = money - transactionFee;
+    usernameFee = getReceiver.username;
   }
-  else if(userBearFee !== "Me") {
-    getReceiver.money = money - transactionFee
-    usernameFee = getReceiver.username
-  }
-  // check user balance transfer money 
+  // check user balance transfer money
   /* if (getUser.money < money) {
     const history = await History.create({
       type: "Transfer",
@@ -183,206 +186,254 @@ const transferMoney = async (req, res) => {
     return res.status(StatusCodes.OK).json({ msg: 'Transfer money fail your balance not have enough money to transfer', user: getUser, receiver: getReceiver, history: history });
   } */
 
-
   // else execute process transfer money
   // check user bear to fee transfer
   // - money of user transfer and + money to balance of user receive
   // must check money > 5 000 000 admin must allow
   if (money >= 5000000) {
     const historyProcessing = await History.create({
-      type: "TRANSFER",
+      type: 'TRANSFER',
       money: money,
       message: message,
       date: Date.now(),
-      status: "PROCESSING",
+      status: 'PROCESSING',
       fromUser: getUser.username,
       toUser: getReceiver.username,
       feeTransfer: transactionFee,
       userBearFee: usernameFee,
-    })
-    getUser.otpTransaction = ""
-    getUser.save()
-    getReceiver.save()
-    return res.status(StatusCodes.OK).json({ msg: 'Transfer money more than 5 000 000 please wait admin allow', user: getUser, receiver: getReceiver, history: historyProcessing });
+    });
+    getUser.otpTransaction = '';
+    getUser.save();
+    getReceiver.save();
+    return res.status(StatusCodes.OK).json({
+      msg: 'Transfer money more than 5 000 000 please wait admin allow',
+      user: getUser,
+      receiver: getReceiver,
+      history: historyProcessing,
+    });
   }
 
-  getUser.otpTransaction = ""
-  getUser.money -= money
-  getUser.save()
-  getReceiver.money += money
-  getReceiver.save()
+  getUser.otpTransaction = '';
+  getUser.money -= money;
+  getUser.save();
+  getReceiver.money += money;
+  getReceiver.save();
 
   //-------------------------------------------------------
   // save action recharge money to history
 
   const history = await History.create({
-    type: "TRANSFER",
+    type: 'TRANSFER',
     money: money,
     message: message,
     date: Date.now(),
-    status: "SUCCESS",
+    status: 'SUCCESS',
     fromUser: getUser.username,
     toUser: getReceiver.username,
     feeTransfer: money * 0.05,
     userBearFee: usernameFee,
-  })
+  });
   sendEmailBalance({
     name: getReceiver.name,
     email: getReceiver.email,
     balance: getReceiver.money,
     history: history,
-  })
-  res.status(StatusCodes.OK).json({ msg: 'Transfer money success', user: getUser, receiver: getReceiver, history: history });
-
-}
+  });
+  res.status(StatusCodes.OK).json({
+    msg: 'Transfer money success',
+    user: getUser,
+    receiver: getReceiver,
+    history: history,
+  });
+};
 
 // This function for admin to allow transfer greater than 5 000 000
 const updateStatus = async (req, res) => {
-  const idHistory = req.params.id
-  const status = req.body.status
+  const idHistory = req.params.id;
+  const status = req.body.status;
 
-  const getHistory = await History.findOne({ _id: idHistory })
-  const preStatus = getHistory.status
+  const getHistory = await History.findOne({ _id: idHistory });
+  const preStatus = getHistory.status;
   if (!getHistory)
-    throw new badRequestError(`Cannot find history ${idHistory}`)
-  getHistory.status = status
-  getHistory.save()
-  const money = getHistory.money
+    throw new badRequestError(`Cannot find history ${idHistory}`);
+  getHistory.status = status;
+  getHistory.save();
+  const money = getHistory.money;
   // when admin update status success to allow this transfer will complete final stage
   // history status will change to SUCCESS and execute process transfer to balance of user
-  if (preStatus === 'PROCESSING' && getHistory.status === "SUCCESS") {
+  if (preStatus === 'PROCESSING' && getHistory.status === 'SUCCESS') {
     // get two user in transaction money of this history
-    const getTransfer = await User.findOne({ username: getHistory.fromUser })
-    const getReceiver = await User.findOne({ username: getHistory.toUser })
-    getTransfer.money -= money
-    getTransfer.save()
-    getReceiver.money += money
-    getReceiver.save()
+    const getTransfer = await User.findOne({ username: getHistory.fromUser });
+    const getReceiver = await User.findOne({ username: getHistory.toUser });
+    getTransfer.money -= money;
+    getTransfer.save();
+    getReceiver.money += money;
+    getReceiver.save();
     sendEmailBalance({
       name: getReceiver.name,
       email: getReceiver.email,
       balance: getReceiver.money,
       history: getHistory,
-    })
+    });
   }
 
-  res.status(StatusCodes.OK).json({ msg: "Update status success", history: getHistory })
-}
-
-
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Update status success', history: getHistory });
+};
 
 //----------------------------------------------------------------
 // withdraw money from username bank account to card
 // processing function withdraw money
 const withdrawMoney = async (req, res) => {
-  const {money,message, password} = req.body
-  const user = req.user
-  const getUser = await User.findOne({ _id: user.userId })
-  const isMatch = await getUser.comparePassword(password)
-  if(isMatch !== true) {
-    throw new badRequestError("Your password is incorrect!")
+  const { money, message, password } = req.body;
+  const user = req.user;
+  const getUser = await User.findOne({ _id: user.userId });
+  const isMatch = await getUser.comparePassword(password);
+  if (isMatch !== true) {
+    throw new badRequestError('Your password is incorrect!');
   }
-  if(getUser.money < (money + (money * 0.05))){
-    throw new badRequestError("Your money in balance is not enough to execute this transaction")
+  if (getUser.money < money + money * 0.05) {
+    throw new badRequestError(
+      'Your money in balance is not enough to execute this transaction'
+    );
   }
-  if(money >= 5000000){
+  if (money >= 5000000) {
     const historyProcessing = await History.create({
-      type: "WITHDRAW",
+      type: 'WITHDRAW',
       money: money,
       message: message,
       date: Date.now(),
-      status: "PROCESSING",
+      status: 'PROCESSING',
       fromUser: getUser.username,
-      toUser: "",
+      toUser: '',
       feeTransfer: money * 0.05,
       userBearFee: getUser.username,
-    })
-    return res.status(StatusCodes.OK).json({ msg: 'Transfer money more than 5 000 000 please wait admin allow', user: getUser, history: historyProcessing }); 
+    });
+    return res.status(StatusCodes.OK).json({
+      msg: 'Transfer money more than 5 000 000 please wait admin allow',
+      user: getUser,
+      history: historyProcessing,
+    });
   }
-  getUser.money -= (money + (money * 0.05))
-  getUser.save()
+  getUser.money -= money + money * 0.05;
+  getUser.save();
 
   const history = await History.create({
-      type: "WITHDRAW",
-      money: money,
-      message: message,
-      date: Date.now(),
-      status: "SUCCESS",
-      fromUser: getUser.username,
-      toUser: "",
-      feeTransfer: money * 0.05,
-      userBearFee: getUser.username,
-  })
+    type: 'WITHDRAW',
+    money: money,
+    message: message,
+    date: Date.now(),
+    status: 'SUCCESS',
+    fromUser: getUser.username,
+    toUser: '',
+    feeTransfer: money * 0.05,
+    userBearFee: getUser.username,
+  });
 
-  res.status(StatusCodes.OK).json({ msg: "Withdraw Money success",user: getUser, history: history })
-}
-
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Withdraw Money success', user: getUser, history: history });
+};
 
 // update status for withdraw money transaction
-const updateStatusWithdrawMoney = async(req,res) => {
-  const idHistory = req.params.id
-  const status = req.body.status
-  const getHistory = await History.findOne({_id: idHistory, type: 'WITHDRAW'})
+const updateStatusWithdrawMoney = async (req, res) => {
+  const idHistory = req.params.id;
+  const status = req.body.status;
+  const getHistory = await History.findOne({
+    _id: idHistory,
+    type: 'WITHDRAW',
+  });
   if (!getHistory)
-    throw new badRequestError(`Cannot find history ${idHistory}`)
-  const preStatus = getHistory.status
-  getHistory.status = status
-  getHistory.save()
+    throw new badRequestError(`Cannot find history ${idHistory}`);
+  const preStatus = getHistory.status;
+  getHistory.status = status;
+  getHistory.save();
 
-  if (preStatus === 'PROCESSING' && getHistory.status === "SUCCESS") {
-    const getUser = await User.findOne({username: getHistory.fromUser})
-    getUser.money -= (getHistory.money + getHistory.feeTransfer)
-    getUser.save()
-    return res.status(StatusCodes.OK).json({ msg: "Withdraw Money success",user: getUser, history: getHistory })
+  if (preStatus === 'PROCESSING' && getHistory.status === 'SUCCESS') {
+    const getUser = await User.findOne({ username: getHistory.fromUser });
+    getUser.money -= getHistory.money + getHistory.feeTransfer;
+    getUser.save();
+    return res.status(StatusCodes.OK).json({
+      msg: 'Withdraw Money success',
+      user: getUser,
+      history: getHistory,
+    });
   }
-  return res.status(StatusCodes.OK).json({ msg: "Update status transaction success", history: getHistory })
-}
-
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Update status transaction success', history: getHistory });
+};
 
 // ---------------------------------------------------------------------
 // Buy card Function card have 10 number 11111: Viettel, 22222: Mobifone, 33333: Vinaphone
-const buyMobileCard = async (req,res) => {
-  const {amount, nameCard, price, password} = req.body;
-  const cardCatogries = {"Viettel":"11111","Mobifone":"11111","Vinaphone":"33333"}
-  if(amount > 5)
-    throw new badRequestError("The amount of card must <= 5!")
-  const user = req.user
-  const money = price*amount;
+const buyMobileCard = async (req, res) => {
+  const { amount, nameCard, price, password } = req.body;
+  const cardCatogries = {
+    Viettel: '11111',
+    Mobifone: '11111',
+    Vinaphone: '33333',
+  };
+  if (amount > 5) throw new badRequestError('The amount of card must <= 5!');
+  const user = req.user;
+  const money = price * amount;
   const feeTransaction = money * 0;
-  const getUser = await User.findOne({ _id: user.userId })
-  const isMatch = await getUser.comparePassword(password)
-  if(isMatch !== true) {
-    throw new badRequestError("Your password is incorrect!")
+  const getUser = await User.findOne({ _id: user.userId });
+  const isMatch = await getUser.comparePassword(password);
+  if (isMatch !== true) {
+    throw new badRequestError('Your password is incorrect!');
   }
-  if(getUser.money < (money + feeTransaction)){
-    throw new badRequestError("Your money in balance is not enough to buy")
+  if (getUser.money < money + feeTransaction) {
+    throw new badRequestError('Your money in balance is not enough to buy');
   }
   /* getUser.money -= (money + feeTransaction)
   getUser.save() */
   const randomNumber = uniqueRandom(100000, 999999);
-  let inforCard = []
+  let inforCard = [];
   for (let i = 0; i < amount; i++) {
-      let random = randomNumber()
-      let numberCard = cardCatogries[nameCard]+ random.toString()
-      inforCard.push({nameCard: nameCard,price: price,numberCard: numberCard})
+    let random = randomNumber();
+    let numberCard = cardCatogries[nameCard] + random.toString();
+    inforCard.push({
+      nameCard: nameCard,
+      price: price,
+      numberCard: numberCard,
+    });
   }
-  
-  
-  let message = "YOUR IMFORMATION CARD \n"
+
+  let message = 'YOUR IMFORMATION CARD \n';
   for (let i = 0; i < inforCard.length; i++) {
-    message += "Name Card: " + inforCard[i].nameCard + " , Number Card: " + inforCard[i].numberCard + "\n"
+    message +=
+      'Name Card: ' +
+      inforCard[i].nameCard +
+      ' , Number Card: ' +
+      inforCard[i].numberCard +
+      '\n';
   }
   const history = await History.create({
-      type: "BUY MOBILE CARD",
-      money: money,
-      message: message,
-      date: Date.now(),
-      status: "SUCCESS",
-      fromUser: getUser.username,
-      toUser: "",
-      feeTransfer: feeTransaction,
-      userBearFee: getUser.username,
-  })
-  return res.status(StatusCodes.OK).json({ msg: "Buy mobile Card success", getUser: getUser, history: history})
-}
-export { getAllUsers, getUser, identifyUser, rechargeMoney, transferMoney, updateStatus, withdrawMoney, updateStatusWithdrawMoney,buyMobileCard };
+    type: 'BUY MOBILE CARD',
+    money: money,
+    message: message,
+    date: Date.now(),
+    status: 'SUCCESS',
+    fromUser: getUser.username,
+    toUser: '',
+    feeTransfer: feeTransaction,
+    userBearFee: getUser.username,
+  });
+  return res.status(StatusCodes.OK).json({
+    msg: 'Buy mobile Card success',
+    getUser: getUser,
+    history: history,
+  });
+};
+export {
+  getAllUsers,
+  getUser,
+  identifyUser,
+  rechargeMoney,
+  transferMoney,
+  updateStatus,
+  withdrawMoney,
+  updateStatusWithdrawMoney,
+  buyMobileCard,
+};

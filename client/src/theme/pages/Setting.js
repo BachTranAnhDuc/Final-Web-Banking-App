@@ -441,11 +441,11 @@ const SettingStyled = styled.main`
     padding: 2rem 4rem;
     margin-top: 2rem;
 
-    display: grid;
+    /* display: grid;
 
     grid-template-rows: repeat(2, max-content);
 
-    gap: 3.6rem;
+    gap: 3.6rem; */
   }
 
   .setting-password__form-controls {
