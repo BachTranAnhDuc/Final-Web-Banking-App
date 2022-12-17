@@ -123,6 +123,46 @@ const getHistoryByUserLogin = async (req, res) => {
   });
 };
 
+// get History by history follow user id
+const getHistoryOfOneUser = async (req, res) => {
+  const { id } = req.params;
+  const getUser = await User.findOne({ _id: id });
+  if (!getUser) {
+    throw new badRequestError(`Can not find user: ${getUser}`);
+  }
+  const history = await History.find({
+    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }]});
+
+  if (!history) {
+    throw new badRequestError(`Can not find any history with id: ${id}`);
+  }
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: `Get history ${id} success`, history: history });
+};
+
+// get History by history object id: _id
+const getHistoryOfOneUserSort = async (req, res) => {
+  const { id } = req.params;
+  const getUser = await User.findOne({ _id: id });
+  if (!getUser) {
+    throw new badRequestError(`Can not find user: ${getUser}`);
+  }
+  
+  const history = await History.find({
+    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }]
+  }).sort({"date":-1});
+
+  if (!history) {
+    throw new badRequestError(`Can not find any history with id: ${id}`);
+  }
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Get history  sort  success', history: history });
+};
+
 export {
   getAllHistory,
   getHistory,
@@ -131,4 +171,6 @@ export {
   getHistoryByFromUser,
   getHistoryByToUser,
   getHistoryByUserLogin,
+  getHistoryOfOneUser,
+  getHistoryOfOneUserSort
 };
