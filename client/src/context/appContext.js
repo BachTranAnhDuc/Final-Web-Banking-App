@@ -60,6 +60,7 @@ import {
   BUY_CARD_ERROR,
   BUY_CARD_SUCCESS,
   GET_HISTORY_BY_USER,
+  GET_HISTORY_BY_ID,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -165,6 +166,9 @@ const defaultState = {
   users: [],
   userById: null,
   historyByUser: [],
+  dataHistoryByUser: [],
+  historyById: null,
+  buyCardData: [],
 };
 
 const AppContext = React.createContext();
@@ -1404,7 +1408,13 @@ const AppProvider = ({ children }) => {
           isOK: true,
         });
 
-        dispatch({ type: BUY_CARD_SUCCESS });
+        const { data } = res;
+
+        const { dataCard } = data;
+
+        // dt = {nameCard: '', numberCard: ''}
+
+        dispatch({ type: BUY_CARD_SUCCESS, payload: dataCard });
       } catch (error) {
         const { response } = error;
         const { data } = response;
@@ -1427,7 +1437,40 @@ const AppProvider = ({ children }) => {
 
       console.log(history);
 
-      dispatch({ type: GET_HISTORY_BY_USER, payload: history });
+      const dataHistoryDisplay = history.map((el) => {
+        return {
+          key: el._id,
+          type: el.type,
+          money: el.money,
+          date: el.date,
+          status: el.status,
+          description: '',
+        };
+      });
+
+      dispatch({
+        type: GET_HISTORY_BY_USER,
+        payload: history,
+        payloadData: dataHistoryDisplay,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getHistoryById = async (idHistory) => {
+    try {
+      const res = await axios.get(`/api/v1/history/getHistory/${idHistory}`);
+
+      console.log('Get history by id here');
+
+      const { data } = res;
+
+      console.log(data);
+
+      const { history } = data;
+
+      dispatch({ type: GET_HISTORY_BY_ID, payload: history });
     } catch (error) {
       console.log(error);
     }
@@ -1477,6 +1520,7 @@ const AppProvider = ({ children }) => {
         withDrawApp,
         buyCardApp,
         getHistoryByUser,
+        getHistoryById,
       }}
     >
       {children}

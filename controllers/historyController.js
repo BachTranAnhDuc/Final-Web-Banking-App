@@ -61,12 +61,10 @@ const getHistoryByStatus = async (req, res) => {
     );
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      msg: `Get history with status: ${status} success`,
-      history: history,
-    });
+  res.status(StatusCodes.OK).json({
+    msg: `Get history with status: ${status} success`,
+    history: history,
+  });
 };
 
 // get all history have username of fromUser
@@ -80,12 +78,10 @@ const getHistoryByFromUser = async (req, res) => {
     );
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      msg: `Get history have transaction from User: ${fromUser} success`,
-      history: history,
-    });
+  res.status(StatusCodes.OK).json({
+    msg: `Get history have transaction from User: ${fromUser} success`,
+    history: history,
+  });
 };
 
 // get all history have username of toUser
@@ -99,33 +95,32 @@ const getHistoryByToUser = async (req, res) => {
     );
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      msg: `Get history have transaction to User: ${toUser} success`,
-      history: history,
-    });
+  res.status(StatusCodes.OK).json({
+    msg: `Get history have transaction to User: ${toUser} success`,
+    history: history,
+  });
 };
 
 const getHistoryByUserLogin = async (req, res) => {
   const user = req.user;
-
+  const getUser = await User.findOne({ _id: user.userId });
+  if (!getUser) {
+    throw new badRequestError(`Can not find user: ${getUser}`);
+  }
   const history = await History.find({
-    $or: [{ $fromUser: user.username }, { $toUser: user.username }],
+    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }],
   });
 
   if (!history) {
     throw new badRequestError(
-      `Can not find any history have transaction user: ${user.username}`
+      `Can not find any history have transaction user: ${getUser.username}`
     );
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      msg: `Get history have transaction user: ${user.username} success`,
-      history: history,
-    });
+  return res.status(StatusCodes.OK).json({
+    msg: `Get history have transaction user: ${getUser.username} success`,
+    history: history,
+  });
 };
 
 export {

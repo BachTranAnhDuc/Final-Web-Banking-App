@@ -73,7 +73,8 @@ const defaultTitle = () => 'Here is title';
 const defaultFooter = () => 'Here is footer';
 
 const History = () => {
-  const { getHistoryByUser } = useGlobalContext();
+  const { getHistoryByUser, dataHistoryByUser, getHistoryById, historyById } =
+    useGlobalContext();
 
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -103,22 +104,22 @@ const History = () => {
       filters: [
         {
           text: 'Transfer',
-          value: 'transfer',
+          value: 'TRANSFER',
         },
         {
           text: 'Recharge',
-          value: 'recharge',
+          value: 'RECHARGE',
         },
         {
           text: 'Withdraw',
-          value: 'withdraw',
+          value: 'WITHDRAW',
         },
         {
           text: 'Buy-card',
-          value: 'buy-card',
+          value: 'BUY MOBILE CARD',
         },
       ],
-      onFilter: (value, record) => record.type.indexOf(value) === 0,
+      onFilter: (value, record) => record.type === value,
     },
     {
       title: 'Money',
@@ -128,15 +129,17 @@ const History = () => {
     {
       title: 'Date/Time',
       dataIndex: 'date',
-      sorter: (a, b) => a.age - b.age,
+      sorter: (dateA, dateB) => new Date(dateA.date) - new Date(dateB.date),
+      // return new Date(b.date) - new Date(a.date);
     },
     {
       title: 'Status',
       key: 'status',
       dataIndex: 'status',
+      // sorter: (a, b) => a.money - b.money,
       render: (_, { status }) => (
         <>
-          {status.map((tag) => {
+          {/* {status.map((tag) => {
             let color = tag.length > 5 ? 'geekblue' : 'green';
             if (tag === 'success') {
               color = 'green';
@@ -150,7 +153,15 @@ const History = () => {
                 {tag.toUpperCase()}
               </Tag>
             );
-          })}
+          })} */}
+
+          {status === 'SUCCESS' ? (
+            <Tag color={'green'}>{status}</Tag>
+          ) : status === 'PROCESSING' ? (
+            <Tag color={'yellow'}>{status}</Tag>
+          ) : (
+            <Tag color={'red'}>{status}</Tag>
+          )}
         </>
       ),
     },
@@ -168,6 +179,8 @@ const History = () => {
               // console.log(e);
               console.log(key);
               setOpen(true);
+
+              getHistoryById(key);
             }}
             startDecorator={<OpenInNew />}
             variant="soft"
@@ -350,7 +363,7 @@ const History = () => {
             position: [top, bottom],
           }}
           columns={tableColumns}
-          dataSource={hasData ? data : []}
+          dataSource={hasData ? dataHistoryByUser : []}
           scroll={scroll}
         />
       </section>
@@ -370,7 +383,7 @@ const History = () => {
           }}
         >
           <ModalClose />
-          <HeadingPrimary>This is heading</HeadingPrimary>
+          <HeadingPrimary>Detail history</HeadingPrimary>
           <Divider orientation="horizontal" sx={{ marginBottom: '1.6rem' }} />
           <Tabs
             aria-label="Icon tabs"
@@ -436,18 +449,27 @@ const History = () => {
             >
               <Box
                 sx={{
-                  backgroundColor: 'orange',
+                  // backgroundColor: 'orange',
                   height: '100%',
                   padding: '1.6rem 3.2rem',
                 }}
               >
-                <Descriptions title="Information">
-                  <Descriptions.Item label="ID">13434343434</Descriptions.Item>
-                  <Descriptions.Item label="To">Zhou Maomao</Descriptions.Item>
-                  <Descriptions.Item label="Money">
-                    100,000vnd
+                <Descriptions title={'Information'}>
+                  <Descriptions.Item label="ID">
+                    {historyById?._id}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Status">Success</Descriptions.Item>
+                  <Descriptions.Item label="From">
+                    {historyById?.fromUser}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="To">
+                    {historyById?.toUser}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Money">
+                    {historyById?.money}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Status">
+                    {historyById?.status}
+                  </Descriptions.Item>
                 </Descriptions>
               </Box>
             </TabPanel>
@@ -457,7 +479,7 @@ const History = () => {
             >
               <Box
                 sx={{
-                  backgroundColor: 'orange',
+                  // backgroundColor: 'orange',
                   height: '100%',
                   padding: '1.6rem 3.2rem',
                 }}
@@ -469,10 +491,7 @@ const History = () => {
                     100,000vnd
                   </Descriptions.Item> */}
                   <Descriptions.Item label="Text">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Quam eos, ad modi dicta placeat esse praesentium voluptates?
-                    Ipsam quisquam iusto dolor perferendis autem, illum dolore
-                    ipsum animi praesentium, assumenda dolores.
+                    {historyById?.message}
                   </Descriptions.Item>
                 </Descriptions>
               </Box>

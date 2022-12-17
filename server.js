@@ -26,6 +26,7 @@ import connectDB from './db/connect.js';
 import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 import historyRouter from './routes/historyRouter.js';
+import adminRouter from './routes/adminRouter.js';
 // error
 import errorHandler from './middleware/error-handle.js';
 import notFound from './middleware/not-found.js';
@@ -56,6 +57,8 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/history', historyRouter);
+app.use('/api/v1/admin', adminRouter);
+
 
 app.use(notFound);
 app.use(errorHandler);

@@ -52,6 +52,7 @@ import {
   BUY_CARD_SUCCESS,
   BUY_CARD_ERROR,
   GET_HISTORY_BY_USER,
+  GET_HISTORY_BY_ID,
 } from './action';
 
 const reducer = (state, action) => {
@@ -389,14 +390,22 @@ const reducer = (state, action) => {
     return { ...state, isLoadingForm: true };
   }
   if (action.type === BUY_CARD_SUCCESS) {
-    return { ...state, isLoadingForm: false };
+    return { ...state, isLoadingForm: false, buyCardData: action.payload };
   }
   if (action.type === BUY_CARD_ERROR) {
     return { ...state, isLoadingForm: false };
   }
 
   if (action.type === GET_HISTORY_BY_USER) {
-    return { ...state, historyByUser: action.payload };
+    return {
+      ...state,
+      historyByUser: action.payload,
+      dataHistoryByUser: action.payloadData,
+    };
+  }
+
+  if (action.type === GET_HISTORY_BY_ID) {
+    return { ...state, historyById: action.payload };
   }
 };
 

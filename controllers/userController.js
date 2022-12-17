@@ -305,7 +305,7 @@ const withdrawMoney = async (req, res) => {
     const historyProcessing = await History.create({
       type: 'WITHDRAW',
       money: money,
-      message: message,
+      message: message.toString(),
       date: Date.now(),
       status: 'PROCESSING',
       fromUser: getUser.username,
@@ -326,7 +326,7 @@ const withdrawMoney = async (req, res) => {
   const history = await History.create({
     type: 'WITHDRAW',
     money: money,
-    message: message,
+    message: message.toString(),
     date: Date.now(),
     status: 'SUCCESS',
     fromUser: getUser.username,
@@ -343,7 +343,7 @@ const withdrawMoney = async (req, res) => {
   });
 };
 
-// update status for withdraw money transaction
+/* // update status for withdraw money transaction
 const updateStatusWithdrawMoney = async (req, res) => {
   const idHistory = req.params.id;
   const status = req.body.status;
@@ -370,7 +370,7 @@ const updateStatusWithdrawMoney = async (req, res) => {
   return res
     .status(StatusCodes.OK)
     .json({ msg: 'Update status transaction success', history: getHistory });
-};
+}; */
 
 // ---------------------------------------------------------------------
 // Buy card Function card have 10 number 11111: Viettel, 22222: Mobifone, 33333: Vinaphone
@@ -453,8 +453,6 @@ export {
   identifyUser,
   rechargeMoney,
   transferMoney,
-  updateStatus,
   withdrawMoney,
-  updateStatusWithdrawMoney,
   buyMobileCard,
 };

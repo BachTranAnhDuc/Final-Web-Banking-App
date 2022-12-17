@@ -121,6 +121,7 @@ const BuyCard = () => {
     confirmPwdBuy,
     isLoadingForm,
     buyCardApp,
+    buyCardData,
   } = useGlobalContext();
 
   const [openModalMUI, setOpenModalMUI] = React.useState(false);
@@ -429,7 +430,7 @@ const BuyCard = () => {
                             Type
                           </h2>
                           <span className="buy-card__shop--body__content-span">
-                            Viettel
+                            {props.values.nameCard}
                           </span>
                         </div>
                         <div className="buy-card__shop--body__content-control">
@@ -437,7 +438,7 @@ const BuyCard = () => {
                             Value
                           </h2>
                           <span className="buy-card__shop--body__content-span">
-                            100000vnd
+                            {props.values.typeCard} vnd
                           </span>
                         </div>
                         <div className="buy-card__shop--body__content-control">
@@ -445,7 +446,7 @@ const BuyCard = () => {
                             Amount
                           </h2>
                           <span className="buy-card__shop--body__content-span">
-                            4
+                            {Number(props.values.numberCard)}
                           </span>
                         </div>
                         <div className="buy-card__shop--body__content-control">
@@ -453,7 +454,8 @@ const BuyCard = () => {
                             Total
                           </h2>
                           <span className="buy-card__shop--body__content-span">
-                            400000vnd
+                            {Number(props.values.numberCard) *
+                              Number(props.values.typeCard)}
                           </span>
                         </div>
                       </div>
@@ -463,8 +465,50 @@ const BuyCard = () => {
               )}
 
               {bankPage.numPage === 3 && (
-                <Box sx={{ height: '100%' }}>
-                  <h2 className="heading--secondary">buy-card success</h2>
+                <Box
+                  sx={{
+                    padding: '1.2rem 2.4rem',
+                    height: '100%',
+                    display: 'grid',
+                    gap: '1.6rem 0',
+                    gridTemplateRows: 'max-content 1fr',
+                  }}
+                >
+                  <h2
+                    className="heading--secondary"
+                    sx={{ fontSize: '1.6rem' }}
+                  >
+                    Buy-Card success
+                  </h2>
+
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gap: '1.2rem 0',
+
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                    }}
+                  >
+                    {buyCardData.map((el) => {
+                      return (
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            // gridTemplateColumns: 'repeat(2, 1fr)',
+                            gridTemplateColumns: 'max-content 1fr',
+
+                            alignItems: 'center',
+                            gap: '0 1.2rem',
+                          }}
+                        >
+                          <h2 sx={{ fontSize: '1.4rem' }}>{el?.nameCard}</h2>
+                          <p sx={{ color: 'var(--color-primary)' }}>
+                            {el?.numberCard}
+                          </p>
+                        </Box>
+                      );
+                    })}
+                  </Box>
                 </Box>
               )}
 

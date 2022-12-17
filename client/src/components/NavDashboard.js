@@ -134,20 +134,22 @@ const NavDashboard = () => {
                 <span>HISTORY</span>
               </NavLink>
             </li>
-            <li className="nav-dash__list--item">
-              <NavLink
-                to={'/dashboard/manage'}
-                className={({ isActive }) =>
-                  isActive ? 'nav-link nav-link__active' : 'nav-link'
-                }
-                onClick={() => {
-                  getAllUsers();
-                  switchPage();
-                }}
-              >
-                <span>ACCOUNT</span>
-              </NavLink>
-            </li>
+            {user?.role === 'admin' && (
+              <li className="nav-dash__list--item">
+                <NavLink
+                  to={'/dashboard/manage'}
+                  className={({ isActive }) =>
+                    isActive ? 'nav-link nav-link__active' : 'nav-link'
+                  }
+                  onClick={() => {
+                    getAllUsers();
+                    switchPage();
+                  }}
+                >
+                  <span>ACCOUNT</span>
+                </NavLink>
+              </li>
+            )}
           </ul>
         </div>
 
