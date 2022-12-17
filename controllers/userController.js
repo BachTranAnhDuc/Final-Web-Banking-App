@@ -146,6 +146,7 @@ const transferMoney = async (req, res) => {
   //        user bear fee transfer 5% money transfer
   const { money, numberPhone, message, userBearFee, otpTransaction } = req.body;
   // get information about user login
+  money = Number(money)
   const user = req.user;
   const getUser = await User.findOne({ _id: user.userId });
   // get user who receive money
