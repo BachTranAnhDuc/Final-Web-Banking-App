@@ -102,21 +102,6 @@ const getHistoryByToUser = async (req, res) => {
 };
 
 const getHistoryByUserLogin = async (req, res) => {
-  // const user = req.user;
-  // const getUser = await User.findOne({ _id: user.userId });
-  // if (!getUser) {
-  //   throw new badRequestError(`Can not find user: ${getUser}`);
-  // }
-  // const history = await History.find({
-  //   $or: [{ fromUser: getUser.username }, { toUser: getUser.username }],
-  // });
-    const user = req.user
-    const getUser = await User.findOne({_id:user.userId})
-    if (!getUser) {
-        throw new badRequestError(`Can not find user: ${getUser}`);
-        }
-    const history =  await History.find({ $or: [{ "fromUser": getUser.username }, { "toUser": getUser.username }] })
-
   const user = req.user;
   const getUser = await User.findOne({ _id: user.userId });
   if (!getUser) {
