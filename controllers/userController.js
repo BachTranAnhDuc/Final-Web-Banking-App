@@ -210,6 +210,7 @@ const transferMoney = async (req, res) => {
       user: getUser,
       receiver: getReceiver,
       history: historyProcessing,
+      status: 'waiting',
     });
   }
 
@@ -244,6 +245,7 @@ const transferMoney = async (req, res) => {
     user: getUser,
     receiver: getReceiver,
     history: history,
+    status: 'success',
   });
 };
 
