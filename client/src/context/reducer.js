@@ -72,6 +72,9 @@ import {
   GET_ALL_USER_WITH_CONDITION_BEGIN,
   GET_ALL_USER_WITH_CONDITION_SUCCESS,
   GET_ALL_USER_WITH_CONDITION_ERROR,
+  UPDATE_IDENTIFY_USER_BEGIN,
+  UPDATE_IDENTIFY_USER_SUCCESS,
+  UPDATE_IDENTIFY_USER_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -493,6 +496,16 @@ const reducer = (state, action) => {
   }
   if (action.type === GET_ALL_USER_WITH_CONDITION_ERROR) {
     return { ...state };
+  }
+
+  if (action.type === UPDATE_IDENTIFY_USER_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === UPDATE_IDENTIFY_USER_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+  if (action.type === UPDATE_IDENTIFY_USER_ERROR) {
+    return { ...state, isLoadingForm: false };
   }
 };
 

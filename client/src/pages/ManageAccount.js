@@ -56,6 +56,8 @@ import {
 } from '../theme/components/Buttons';
 import { useGlobalContext } from '../context/appContext';
 
+import Sheet from '@mui/joy/Sheet';
+
 const data = [];
 for (let i = 1; i <= 20; i++) {
   data.push({
@@ -74,8 +76,19 @@ const defaultTitle = () => 'Here is title';
 const defaultFooter = () => 'Here is footer';
 
 const ManageAccount = () => {
-  const { users, userById, getSingleUser, getAllUserWithCondition } =
-    useGlobalContext();
+  const {
+    users,
+    userById,
+    getSingleUser,
+    getAllUserWithCondition,
+    getHistoryById,
+    historyById,
+  } = useGlobalContext();
+
+  const [openNestedCancel, setOpenNestedCancel] = React.useState(false);
+  const [openNestedWaiting, setOpenNestedWaiting] = React.useState(false);
+  const [openNestedSuccess, setOpenNestedSuccess] = React.useState(false);
+  const [openNestedBlockPwd, setOpenNestedBlockPwd] = React.useState(false);
 
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -148,6 +161,7 @@ const ManageAccount = () => {
               console.log(key);
               getSingleUser(key);
               setOpen(true);
+              getHistoryById(key);
             }}
             startDecorator={<OpenInNew />}
             variant="soft"
@@ -670,7 +684,314 @@ const ManageAccount = () => {
                   padding: '1.6rem 3.2rem',
                 }}
               >
-                Your account is blocked
+                {userById?.identify === 'processing' && (
+                  <Box>
+                    <p>your account is processing</p>
+
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        setOpenNestedWaiting(true);
+                      }}
+                    >
+                      Waiting
+                    </LoadingButton>
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        console.log('Open modal cancel');
+                        setOpenNestedCancel(true);
+                      }}
+                    >
+                      Cancel
+                    </LoadingButton>
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        console.log('Open modal success');
+                        setOpenNestedSuccess(true);
+                      }}
+                    >
+                      Success
+                    </LoadingButton>
+                  </Box>
+                )}
+                {userById?.identify === 'success' && (
+                  <Box>
+                    <p>your account is success</p>
+                  </Box>
+                )}
+                {userById?.identify === 'waiting' && (
+                  <Box>
+                    <p>your account is waiting</p>
+
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        console.log('Open modal cancel');
+                        setOpenNestedCancel(true);
+                      }}
+                    >
+                      Cancel
+                    </LoadingButton>
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        console.log('Open modal success');
+                        setOpenNestedSuccess(true);
+                      }}
+                    >
+                      Success
+                    </LoadingButton>
+                  </Box>
+                )}
+                {userById?.identify === 'fail' && (
+                  <Box>
+                    <p>your account is fail</p>
+
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        setOpenNestedWaiting(true);
+                      }}
+                    >
+                      Waiting
+                    </LoadingButton>
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        console.log('Open modal success');
+                        setOpenNestedSuccess(true);
+                      }}
+                    >
+                      Success
+                    </LoadingButton>
+                  </Box>
+                )}
+                {userById?.loginFail === 6 && (
+                  <Box>
+                    <p>This account is block because login fail more 6 times</p>
+
+                    <LoadingButton
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        setOpenNestedBlockPwd(true);
+                        console.log('Open modal block');
+                      }}
+                    >
+                      Unlock
+                    </LoadingButton>
+                  </Box>
+                )}
+
+                {/* Nested modal for success */}
+                <Modal
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-desc"
+                  open={openNestedSuccess}
+                  onClose={() => setOpenNestedSuccess(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: '20000',
+                  }}
+                >
+                  <Sheet
+                    variant="outlined"
+                    sx={{
+                      maxWidth: 500,
+                      borderRadius: 'md',
+                      p: 3,
+                      boxShadow: 'lg',
+                      display: 'grid',
+                      // backgroundColor: 'orange',
+                    }}
+                  >
+                    <ModalClose
+                      variant="outlined"
+                      sx={{
+                        top: 'calc(-1/4 * var(--IconButton-size))',
+                        right: 'calc(-1/4 * var(--IconButton-size))',
+                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+                        borderRadius: '50%',
+                        bgcolor: 'background.body',
+                      }}
+                    />
+                    <LoadingButton type="button" onClick={() => {}}>
+                      Confirm
+                    </LoadingButton>
+                    <LoadingButton type="button">Close</LoadingButton>
+                  </Sheet>
+                </Modal>
+                {/* Nested modal for success */}
+                <Modal
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-desc"
+                  open={openNestedCancel}
+                  onClose={() => setOpenNestedCancel(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: '20000',
+                  }}
+                >
+                  <Sheet
+                    variant="outlined"
+                    sx={{
+                      maxWidth: 500,
+                      borderRadius: 'md',
+                      p: 3,
+                      boxShadow: 'lg',
+                      display: 'grid',
+                      // backgroundColor: 'orange',
+                    }}
+                  >
+                    <ModalClose
+                      variant="outlined"
+                      sx={{
+                        top: 'calc(-1/4 * var(--IconButton-size))',
+                        right: 'calc(-1/4 * var(--IconButton-size))',
+                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+                        borderRadius: '50%',
+                        bgcolor: 'background.body',
+                      }}
+                    />
+                    <LoadingButton type="button" onClick={() => {}}>
+                      Confirm
+                    </LoadingButton>
+                    <LoadingButton type="button">Close</LoadingButton>
+                  </Sheet>
+                </Modal>
+                {/* Nested modal for success */}
+                <Modal
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-desc"
+                  open={openNestedWaiting}
+                  onClose={() => setOpenNestedWaiting(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: '20000',
+                  }}
+                >
+                  <Sheet
+                    variant="outlined"
+                    sx={{
+                      maxWidth: 500,
+                      borderRadius: 'md',
+                      p: 3,
+                      boxShadow: 'lg',
+                      display: 'grid',
+                      // backgroundColor: 'orange',
+                    }}
+                  >
+                    <ModalClose
+                      variant="outlined"
+                      sx={{
+                        top: 'calc(-1/4 * var(--IconButton-size))',
+                        right: 'calc(-1/4 * var(--IconButton-size))',
+                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+                        borderRadius: '50%',
+                        bgcolor: 'background.body',
+                      }}
+                    />
+                    <LoadingButton type="button" onClick={() => {}}>
+                      Confirm
+                    </LoadingButton>
+                    <LoadingButton type="button">Close</LoadingButton>
+                  </Sheet>
+                </Modal>
+                {/* Nested modal for success */}
+                <Modal
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-desc"
+                  open={openNestedBlockPwd}
+                  onClose={() => setOpenNestedBlockPwd(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: '20000',
+                  }}
+                >
+                  <Sheet
+                    variant="outlined"
+                    sx={{
+                      maxWidth: 500,
+                      borderRadius: 'md',
+                      p: 3,
+                      boxShadow: 'lg',
+                      display: 'grid',
+                      // backgroundColor: 'orange',
+                    }}
+                  >
+                    <ModalClose
+                      variant="outlined"
+                      sx={{
+                        top: 'calc(-1/4 * var(--IconButton-size))',
+                        right: 'calc(-1/4 * var(--IconButton-size))',
+                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+                        borderRadius: '50%',
+                        bgcolor: 'background.body',
+                      }}
+                    />
+                    <LoadingButton type="button" onClick={() => {}}>
+                      Confirm
+                    </LoadingButton>
+                    <LoadingButton type="button">Close</LoadingButton>
+                  </Sheet>
+                </Modal>
+                {/* Nested modal for success */}
+                <Modal
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-desc"
+                  open={openNestedWaiting}
+                  onClose={() => setOpenNestedWaiting(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: '20000',
+                  }}
+                >
+                  <Sheet
+                    variant="outlined"
+                    sx={{
+                      maxWidth: 500,
+                      borderRadius: 'md',
+                      p: 3,
+                      boxShadow: 'lg',
+                      display: 'grid',
+                      // backgroundColor: 'orange',
+                    }}
+                  >
+                    <ModalClose
+                      variant="outlined"
+                      sx={{
+                        top: 'calc(-1/4 * var(--IconButton-size))',
+                        right: 'calc(-1/4 * var(--IconButton-size))',
+                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+                        borderRadius: '50%',
+                        bgcolor: 'background.body',
+                      }}
+                    />
+                    <LoadingButton type="button" onClick={() => {}}>
+                      Confirm
+                    </LoadingButton>
+                    <LoadingButton type="button">Close</LoadingButton>
+                  </Sheet>
+                </Modal>
               </Box>
             </TabPanel>
           </Tabs>

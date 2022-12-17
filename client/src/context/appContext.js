@@ -79,6 +79,9 @@ import {
   GET_ALL_USER_WITH_CONDITION_ERROR,
   GET_ALL_USER_WITH_CONDITION_SUCCESS,
   GET_ALL_USER_WITH_CONDITION_BEGIN,
+  UPDATE_IDENTIFY_USER_BEGIN,
+  UPDATE_IDENTIFY_USER_ERROR,
+  UPDATE_IDENTIFY_USER_SUCCESS,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -1778,6 +1781,23 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
+  const updateIdentifyUser = async () => {
+    dispatch({ type: UPDATE_IDENTIFY_USER_BEGIN });
+
+    setTimeout(() => {
+      try {
+        dispatch({ type: UPDATE_IDENTIFY_USER_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+        console.log(data);
+
+        dispatch({ type: UPDATE_IDENTIFY_USER_ERROR });
+      }
+    }, 1000);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -1830,6 +1850,7 @@ const AppProvider = ({ children }) => {
         allowTransferMoney,
         allowWithdrawMoney,
         getAllUserWithCondition,
+        updateIdentifyUser,
       }}
     >
       {children}
