@@ -12,6 +12,7 @@ import {
   firstLogin,
   enterOTPForgotPass,
   uploadUserImage1,
+  changePassword
 } from '../controllers/authController.js';
 
 import { unauthorizedError } from '../error/index.js';
@@ -25,5 +26,6 @@ router.route('/first-login').post(authenticateUser, firstLogin);
 router.route('/upload').post(uploadUserImage1);
 router.route('/forgotPassword').post(forgotPassword); // this function will random OTP and send this OTP to user
 router.route('/enterOTP').post(enterOTPForgotPass); // this function get OTP input and check in database this OTP is valid then change pass
+router.route("/changePwd").post(changePassword)
 
 export default router;

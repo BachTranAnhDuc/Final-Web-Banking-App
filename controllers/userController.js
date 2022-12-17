@@ -447,6 +447,16 @@ const buyMobileCard = async (req, res) => {
     dataCard: messageWeb,
   });
 };
+
+const getUserByPhone = async(req,res)=>{
+  const phone = req.params.phone;
+  const getUser = await User.findOne({phone:phone})
+  if(!getUser)
+    throw new notFoundError('Can not find user');
+
+  return res.status(StatusCodes.OK).json({msg: 'Get information about user by phone', getUser: getUser})
+}
+
 export {
   getAllUsers,
   getUser,
@@ -455,4 +465,5 @@ export {
   transferMoney,
   withdrawMoney,
   buyMobileCard,
+  getUserByPhone,
 };

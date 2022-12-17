@@ -41,7 +41,7 @@ const updateStatusWithdrawMoney = async (req, res) => {
     }
     return res
         .status(StatusCodes.OK)
-        .json({ msg: 'Update status transaction success', history: getHistory });
+        .json({ msg: 'Update status withdraw success', history: getHistory });
 };
 
 // This function for admin to allow transfer greater than 5 000 000
@@ -74,27 +74,71 @@ const updateStatus = async (req, res) => {
         });
     }
 
-    res
+    return res
         .status(StatusCodes.OK)
-        .json({ msg: 'Update status success', history: getHistory });
+        .json({ msg: 'Update transfer money status success', history: getHistory });
 };
 
 const getAllUsersProcessing = async(req, res) => {
-    const allUser = await User.find({$or:[{identify: "processing"},{isVerified: false}]})
+    const allUser = await User.find({$or:[{"identify": "processing"},{"isVerified": false}]}).sort({"verifiedDate":1})
     if(!allUser){
         throw new badRequestError("Cannot find all user wait processing")
     }
 
-    res.status(StatusCodes.OK).json({msg: 'Get all users wait processing success', allUser: allUser})
+    return res.status(StatusCodes.OK).json({msg: 'Get all users wait processing success', allUser: allUser})
 }
 
-const getAllUsers = async(req, res) => {
-    const allUser = await User.find({identify: "processing"})
+const getAllUsersActive = async(req, res) => {
+    const allUser = await User.find({$and:[{"identify": "success"},{"isVerified": true}]}).sort({"verifiedDate":1})
     if(!allUser){
-        throw new badRequestError("Cannot find all user processing")
+        throw new badRequestError("Cannot find all user active")
     }
 
-    res.status(StatusCodes.OK).json({msg: 'Get all processing users success', allUser: allUser})
+    return res.status(StatusCodes.OK).json({msg: 'Get all active users success', allUser: allUser})
 }
 
-export {updateStatus, updateStatusWithdrawMoney, getAllUsersProcessing}
+const getAllUsersBlock = async(req, res) => {
+    const allUser = await User.find({identify:"fail"}).sort({"verifiedDate":1})
+    if(!allUser){
+        throw new badRequestError("Cannot find all user block")
+    }
+
+    return res.status(StatusCodes.OK).json({msg: 'Get all block users success', allUser: allUser})
+}
+
+const getAllUsersBlockPassword = async(req, res) => {
+    const allUser = await User.find({loginFail: 6}).sort({"verifiedDate":1})
+    if(!allUser){
+        throw new badRequestError("Cannot find all user block")
+    }
+
+    return res.status(StatusCodes.OK).json({msg: 'Get all block users success', allUser: allUser})
+}
+
+
+// update identify for user processing "processing" to "success", "fail", "waiting"
+const updateIdentifyUser = async(req, res) => {
+    const idUser = req.params.id
+    const identify = req.body.identify
+    const getUser = await User.findOne({_id: idUser})
+    if(!getUser)
+        throw new NotFoundError(`Can not found this user ${idUser}`)
+    getUser.identify = identify
+    getUser.save()
+    return res.status(StatusCodes.OK).json({ msg:"Update identify for user success", user: getUser })
+}
+
+// unlock account for user block by enter wrong password 6 times
+
+const unlockUserWrongPassword = async (req,res)=> {
+    const idUser = req.params.id
+    const isUnlock = req.body
+    const getUser = await User.findOne({_id: idUser})
+    if(!getUser)
+        throw new NotFoundError(`Can not found this user ${idUser}`)
+    getUser.loginFail = 0
+    getUser.save()
+    return res.status(StatusCodes.OK).json({ msg:"Unlock user success", user: getUser })
+}
+
+export {updateStatus, updateStatusWithdrawMoney, getAllUsersProcessing, getAllUsersActive, getAllUsersBlock, getAllUsersBlockPassword,updateIdentifyUser, unlockUserWrongPassword}

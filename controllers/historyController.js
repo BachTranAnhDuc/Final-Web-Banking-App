@@ -90,7 +90,7 @@ const getHistoryByUserLogin = async (req, res) => {
     if (!getUser) {
         throw new badRequestError(`Can not find user: ${getUser}`);
         }
-    const history = await History.find({ $or: [{ "fromUser": getUser.username }, { "toUser": getUser.username }] })
+    const history = await (await History.find({ $or: [{ "fromUser": getUser.username }, { "toUser": getUser.username }] }))
 
     if (!history) {
         throw new badRequestError(`Can not find any history have transaction user: ${getUser.username}`);
