@@ -47,6 +47,12 @@ import {
   NUM_PAGE_REGISTER,
   GET_ALL_USERS,
   GET_SINGLE_USER,
+  RECHARGE_BEGIN,
+  RECHARGE_ERROR,
+  RECHARGE_SUCCESS,
+  TRANSFER_BEGIN,
+  TRANSFER_SUCCESS,
+  TRANSFER_ERROR,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -1179,6 +1185,133 @@ const AppProvider = ({ children }) => {
     dispatch({ type: IS_ALERT });
   };
 
+  const rechargeMoneyApp = async ({ money, idCard, dateEnd, cvv }) => {
+    dispatch({ type: RECHARGE_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post(`/api/v1/user/recharge`, {
+          money,
+          numberCard: idCard,
+          dateExpire: dateEnd,
+          cvvNumber: cvv,
+        });
+
+        console.log(res);
+
+        actionBankPage({
+          numPage: 2,
+          name: 'recharge',
+          length: 3,
+          actionType: 'plus',
+          isOK: true,
+        });
+
+        dispatch({ type: RECHARGE_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+
+        const { msg } = data;
+
+        console.log(data);
+
+        showToast(msg, 5000, 'error');
+
+        dispatch({ type: RECHARGE_ERROR });
+      }
+    }, 1000);
+  };
+
+  const transferMoneyApp = async ({
+    money,
+    numberPhone,
+    message,
+    userBearFee,
+    otpTransaction,
+  }) => {
+    dispatch({ type: TRANSFER_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post(`/api/v1/user/transfer/enterOtp`, {
+          money: Number(money),
+          numberPhone,
+          message,
+          userBearFee,
+          otpTransaction,
+        });
+
+        console.log(res);
+
+        actionBankPage({
+          numPage: 4,
+          name: 'transfer',
+          length: 5,
+          actionType: 'plus',
+          isOK: true,
+        });
+
+        dispatch({ type: TRANSFER_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+
+        // console.log(data);
+
+        const { msg } = data;
+
+        console.log('Catch error otp here');
+
+        showToast(msg, 4000, 'error');
+
+        dispatch({ type: TRANSFER_ERROR });
+      }
+    }, 1000);
+  };
+
+  const transferSendOtp = async ({
+    money: money,
+    numberPhone,
+    message,
+    userBearFee,
+  }) => {
+    dispatch({ type: TRANSFER_BEGIN });
+
+    try {
+      setTimeout(async () => {
+        const res = await axios.post('/api/v1/user/transfer', {
+          money: Number(money),
+          numberPhone,
+          message,
+          userBearFee,
+        });
+
+        console.log(res);
+
+        actionBankPage({
+          numPage: 3,
+          name: 'transfer',
+          length: 5,
+          actionType: 'plus',
+          isOK: true,
+        });
+
+        dispatch({ type: TRANSFER_SUCCESS });
+      }, 1000);
+    } catch (error) {
+      const { response } = error;
+
+      const { data } = response;
+
+      console.log(data);
+
+      dispatch({ type: TRANSFER_ERROR });
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -1217,6 +1350,9 @@ const AppProvider = ({ children }) => {
         actionRegisterPage,
         getAllUsers,
         getSingleUser,
+        rechargeMoneyApp,
+        transferMoneyApp,
+        transferSendOtp,
       }}
     >
       {children}

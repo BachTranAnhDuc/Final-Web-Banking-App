@@ -60,12 +60,11 @@ const data = [];
 for (let i = 1; i <= 20; i++) {
   data.push({
     key: i,
-    name: `Transfer ${i}`,
-    email: Number(`${i}2`),
-    username: '12-12-2021',
-    fail: `${i}`,
+    type: `Transfer ${i}`,
+    money: Number(`${i}2`),
+    from: 'quochung',
+    to: `anhduc`,
     identify: ['success'],
-    description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
   });
 }
 const defaultExpandable = {
@@ -230,6 +229,162 @@ const ManageAccount = () => {
     tableLayout,
   };
 
+  //
+  const [borderedHistory, setBorderedHistory] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [sizeHistory, setSizeHistory] = useState('large');
+  const [expandableHistory, setExpandableHistory] = useState(defaultExpandable);
+  const [showTitleHistory, setShowTitleHistory] = useState(true);
+  const [showHeaderHistory, setShowHeaderHistory] = useState(true);
+  const [showfooterHistory, setShowFooterHistory] = useState(true);
+  const [rowSelectionHistory, setRowSelectionHistory] = useState({});
+  const [hasDataHistory, setHasDataHistory] = useState(users ? true : false);
+  const [tableLayoutHistory, setTableLayoutHistory] = useState(undefined);
+  const [topHistory, setTopHistory] = useState('none');
+  const [bottomHistory, setBottomHistory] = useState('bottomRight');
+  const [ellipsisHistory, setEllipsisHistory] = useState(false);
+  const [yScrollHistory, setYScrollHistory] = useState(false);
+  const [xScrollHistory, setXScrollHistory] = useState(undefined);
+
+  const [testHistory, setTestHistory] = useState('');
+
+  const [openHistory, setOpenHistory] = React.useState(false);
+
+  const columnsHistory = [
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+    },
+    {
+      title: 'Money',
+      dataIndex: 'money',
+      width: 100,
+    },
+    {
+      title: 'From',
+      dataIndex: 'from',
+    },
+    {
+      title: 'To',
+      dataIndex: 'to',
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (_, { status }) => (
+        <Tag
+          color={
+            status === 'success'
+              ? 'green'
+              : status === 'processing'
+              ? 'yellow'
+              : 'red'
+          }
+        >
+          {status}
+        </Tag>
+      ),
+    },
+    // {
+    //   title: 'Action',
+    //   key: 'action',
+    //   dataIndex: '',
+    //   key: 'x',
+    //   sorter: true,
+    //   render: ({ key }) => (
+    //     <Space size="middle">
+    //       <Button
+    //         component="a"
+    //         onClick={(e) => {
+    //           // console.log(e);
+    //           console.log(key);
+    //           getSingleUser(key);
+    //           setOpen(true);
+    //         }}
+    //         startDecorator={<OpenInNew />}
+    //         variant="soft"
+    //         color="info"
+    //       >
+    //         <Space>
+    //           View Detail
+    //           <DownOutlined />
+    //         </Space>
+    //       </Button>
+    //     </Space>
+    //   ),
+    // },
+  ];
+
+  const handleBorderChangeHistory = (enable) => {
+    setBorderedHistory(enable);
+  };
+  const handleLoadingChangeHistory = (enable) => {
+    setLoadingHistory(enable);
+  };
+  const handleSizeChangeHistory = (e) => {
+    setSizeHistory(e.target.value);
+  };
+  const handleTableLayoutChangeHistory = (e) => {
+    setTableLayoutHistory(e.target.value);
+  };
+  const handleExpandChangeHistory = (enable) => {
+    setExpandableHistory(enable ? defaultExpandable : undefined);
+  };
+  const handleEllipsisChangeHistory = (enable) => {
+    setEllipsisHistory(enable);
+  };
+  const handleTitleChangeHistory = (enable) => {
+    setShowTitleHistory(enable);
+  };
+  const handleHeaderChangeHistory = (enable) => {
+    setShowHeaderHistory(enable);
+  };
+  const handleFooterChangeHistory = (enable) => {
+    setShowFooterHistory(enable);
+  };
+  const handleRowSelectionChangeHistory = (enable) => {
+    setRowSelectionHistory(enable ? {} : undefined);
+  };
+  const handleYScrollChangeHistory = (enable) => {
+    setYScrollHistory(enable);
+  };
+  const handleXScrollChangeHistory = (e) => {
+    setXScrollHistory(e.target.value);
+  };
+  const handleDataChangeHistory = (newHasData) => {
+    setHasDataHistory(newHasData);
+  };
+  const scrollHistory = {};
+  if (yScrollHistory) {
+    scrollHistory.y = 50;
+  }
+  if (xScrollHistory) {
+    scrollHistory.x = '12rem';
+  }
+  const tableColumnsHistory = columnsHistory.map((item) => ({
+    ...item,
+    ellipsisHistory,
+  }));
+  if (xScrollHistory === 'fixed') {
+    tableColumnsHistory[0].fixed = true;
+    tableColumnsHistory[tableColumnsHistory.length - 1].fixed = 'right';
+  }
+
+  const tablePropsHistory = {
+    borderedHistory,
+    loadingHistory,
+    sizeHistory,
+    expandableHistory,
+    titleHistory: showTitleHistory ? defaultTitle : undefined,
+    showHeaderHistory,
+    footerHistory: showfooterHistory ? defaultFooter : undefined,
+    rowSelectionHistory,
+    scrollHistory,
+    tableLayoutHistory,
+  };
+
   return (
     <ManageAccountStyled>
       <section className="section-manageAccount">
@@ -337,8 +492,8 @@ const ManageAccount = () => {
           aria-describedby="variant-modal-description"
           // variant={open || undefined}
           sx={{
-            width: '72rem',
-            height: '40rem',
+            width: '100rem',
+            height: '52rem',
             padding: '3.2rem 4.8rem',
             display: 'grid',
             gridTemplateRows: 'repeat(2, max-content) 1fr',
@@ -350,7 +505,7 @@ const ManageAccount = () => {
           <Divider orientation="horizontal" sx={{ marginBottom: '1.6rem' }} />
           <Tabs
             aria-label="Icon tabs"
-            defaultValue={0}
+            defaultValue={1}
             orientation="vertical"
             // sx={{ display: 'grid' }}
           >
@@ -412,8 +567,8 @@ const ManageAccount = () => {
             >
               <Box
                 sx={{
-                  backgroundColor: 'orange',
-                  height: '100%',
+                  // backgroundColor: 'orange',
+                  // height: '100%',
                   padding: '1.6rem 3.2rem',
                 }}
               >
@@ -429,32 +584,39 @@ const ManageAccount = () => {
                   </Descriptions.Item>
                   <Descriptions.Item label="Status">Success</Descriptions.Item>
                 </Descriptions>
+
+                <Box>If your account is block</Box>
               </Box>
             </TabPanel>
             <TabPanel
               value={1}
-              sx={{ padding: '1.6rem 2.4rem', fontSize: '1.4rem' }}
+              sx={{
+                padding: '1.6rem 2.4rem',
+                fontSize: '1.4rem',
+                // overflow: 'scroll',
+              }}
             >
               <Box
                 sx={{
-                  backgroundColor: 'orange',
+                  // backgroundColor: 'orange',
                   height: '100%',
                   padding: '1.6rem 3.2rem',
                 }}
               >
-                <Descriptions title="Message">
-                  {/* <Descriptions.Item label="ID">13434343434</Descriptions.Item>
-                  <Descriptions.Item label="To">Zhou Maomao</Descriptions.Item>
-                  <Descriptions.Item label="Money">
-                    100,000vnd
-                  </Descriptions.Item> */}
-                  <Descriptions.Item label="Text">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Quam eos, ad modi dicta placeat esse praesentium voluptates?
-                    Ipsam quisquam iusto dolor perferendis autem, illum dolore
-                    ipsum animi praesentium, assumenda dolores.
-                  </Descriptions.Item>
-                </Descriptions>
+                <Table
+                  {...tablePropsHistory}
+                  pagination={{
+                    position: [top, bottom],
+                  }}
+                  columns={tableColumnsHistory}
+                  dataSource={hasDataHistory ? data : []}
+                  // scroll={scrollHistory}
+                  // sx={{ height: '12rem' }}
+                  scroll={{
+                    x: '12rem',
+                    y: 200,
+                  }}
+                />
               </Box>
             </TabPanel>
             <TabPanel
@@ -463,12 +625,12 @@ const ManageAccount = () => {
             >
               <Box
                 sx={{
-                  backgroundColor: 'orange',
+                  // backgroundColor: 'orange',
                   height: '100%',
                   padding: '1.6rem 3.2rem',
                 }}
               >
-                <b>Third</b> tab panel
+                Your account is blocked
               </Box>
             </TabPanel>
           </Tabs>

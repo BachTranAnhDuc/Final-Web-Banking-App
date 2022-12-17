@@ -14,7 +14,7 @@ const NavLanding = styled.section`
 
     align-items: center;
 
-    position: fixed;
+    /* position: fixed; */
   }
 
   .nav-logo {
