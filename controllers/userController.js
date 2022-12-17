@@ -146,7 +146,7 @@ const transferMoney = async (req, res) => {
   //        user bear fee transfer 5% money transfer
   const { money, numberPhone, message, userBearFee, otpTransaction } = req.body;
   // get information about user login
-  money = Number(money)
+  // money = Number(money)
   const user = req.user;
   const getUser = await User.findOne({ _id: user.userId });
   // get user who receive money
@@ -289,13 +289,13 @@ const updateStatus = async (req, res) => {
 // withdraw money from username bank account to card
 // processing function withdraw money
 const withdrawMoney = async (req, res) => {
-  const { money, message, password } = req.body;
+  const { money, message } = req.body;
   const user = req.user;
   const getUser = await User.findOne({ _id: user.userId });
-  const isMatch = await getUser.comparePassword(password);
-  if (isMatch !== true) {
-    throw new badRequestError('Your password is incorrect!');
-  }
+  // const isMatch = await getUser.comparePassword(password);
+  // if (isMatch !== true) {
+  //   throw new badRequestError('Your password is incorrect!');
+  // }
   if (getUser.money < money + money * 0.05) {
     throw new badRequestError(
       'Your money in balance is not enough to execute this transaction'
@@ -314,9 +314,10 @@ const withdrawMoney = async (req, res) => {
       userBearFee: getUser.username,
     });
     return res.status(StatusCodes.OK).json({
-      msg: 'Transfer money more than 5 000 000 please wait admin allow',
+      msg: 'Withdraw money more than 5 000 000 please wait admin allow',
       user: getUser,
       history: historyProcessing,
+      status: 'waiting',
     });
   }
   getUser.money -= money + money * 0.05;
@@ -334,9 +335,12 @@ const withdrawMoney = async (req, res) => {
     userBearFee: getUser.username,
   });
 
-  res
-    .status(StatusCodes.OK)
-    .json({ msg: 'Withdraw Money success', user: getUser, history: history });
+  res.status(StatusCodes.OK).json({
+    msg: 'Withdraw Money success',
+    user: getUser,
+    history: history,
+    status: 'success',
+  });
 };
 
 // update status for withdraw money transaction
@@ -371,7 +375,7 @@ const updateStatusWithdrawMoney = async (req, res) => {
 // ---------------------------------------------------------------------
 // Buy card Function card have 10 number 11111: Viettel, 22222: Mobifone, 33333: Vinaphone
 const buyMobileCard = async (req, res) => {
-  const { amount, nameCard, price, password } = req.body;
+  const { amount, nameCard, price } = req.body;
   const cardCatogries = {
     Viettel: '11111',
     Mobifone: '11111',
@@ -382,15 +386,15 @@ const buyMobileCard = async (req, res) => {
   const money = price * amount;
   const feeTransaction = money * 0;
   const getUser = await User.findOne({ _id: user.userId });
-  const isMatch = await getUser.comparePassword(password);
-  if (isMatch !== true) {
-    throw new badRequestError('Your password is incorrect!');
-  }
+  // const isMatch = await getUser.comparePassword(password);
+  // if (isMatch !== true) {
+  //   throw new badRequestError('Your password is incorrect!');
+  // }
   if (getUser.money < money + feeTransaction) {
     throw new badRequestError('Your money in balance is not enough to buy');
   }
-  /* getUser.money -= (money + feeTransaction)
-  getUser.save() */
+  getUser.money -= money + feeTransaction;
+  getUser.save();
   const randomNumber = uniqueRandom(100000, 999999);
   let inforCard = [];
   for (let i = 0; i < amount; i++) {
@@ -412,6 +416,19 @@ const buyMobileCard = async (req, res) => {
       inforCard[i].numberCard +
       '\n';
   }
+
+  let messageWeb = [];
+
+  for (let i = 0; i < inforCard.length; i++) {
+    messageWeb = [
+      ...messageWeb,
+      {
+        nameCard: inforCard[i].nameCard,
+        numberCard: inforCard[i].numberCard,
+      },
+    ];
+  }
+
   const history = await History.create({
     type: 'BUY MOBILE CARD',
     money: money,
@@ -427,6 +444,7 @@ const buyMobileCard = async (req, res) => {
     msg: 'Buy mobile Card success',
     getUser: getUser,
     history: history,
+    dataCard: messageWeb,
   });
 };
 export {

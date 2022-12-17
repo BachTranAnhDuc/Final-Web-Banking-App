@@ -31,6 +31,8 @@ import {
   ButtonGroup,
 } from '@mui/material';
 
+import { LoadingButton } from '@mui/lab';
+
 import {
   Modal,
   ModalClose,
@@ -117,6 +119,8 @@ const BuyCard = () => {
     actionBankPage,
     bankPage,
     confirmPwdBuy,
+    isLoadingForm,
+    buyCardApp,
   } = useGlobalContext();
 
   const [openModalMUI, setOpenModalMUI] = React.useState(false);
@@ -205,13 +209,18 @@ const BuyCard = () => {
             nameCard: '',
             typeCard: '',
             numberCard: '1',
-            password: '',
           }}
           // validationSchema={validationSchema}
           onSubmit={async (values, actions) => {
             console.log('submit here');
             // actions.setFieldValue('idCard', otp);
             console.log(values);
+
+            buyCardApp({
+              amount: values.numberCard,
+              nameCard: values.nameCard,
+              price: values.typeCard,
+            });
           }}
         >
           {(props) => (
@@ -241,7 +250,7 @@ const BuyCard = () => {
                         // backgroundColor: 'red',
                       }}
                     >
-                      {['Viettel', 'MobiFone', 'VinaPhone'].map((name) => {
+                      {['Viettel', 'Mobifone', 'Vinaphone'].map((name) => {
                         const checked = selectedCardName === name;
                         return (
                           <Chip
@@ -301,48 +310,46 @@ const BuyCard = () => {
                         // backgroundColor: 'orange',
                       }}
                     >
-                      {['10,000d', '20,000d', '50,000d', '100,000d'].map(
-                        (name) => {
-                          const checked = selectedCardType === name;
-                          return (
-                            <Chip
-                              key={name}
-                              variant={checked ? 'soft' : 'plain'}
+                      {['10000', '20000', '50000', '100000'].map((name) => {
+                        const checked = selectedCardType === name;
+                        return (
+                          <Chip
+                            key={name}
+                            variant={checked ? 'soft' : 'plain'}
+                            color={checked ? 'primary' : 'neutral'}
+                            sx={{ padding: '1.2rem 2.4rem' }}
+                            // endDecorator={checked && <ChipDelete />}
+                            startDecorator={
+                              checked && (
+                                <CheckIcon
+                                  sx={{
+                                    zIndex: 1,
+                                    pointerEvents: 'none',
+                                  }}
+                                />
+                              )
+                            }
+                          >
+                            <Radio
+                              sx={{ fontSize: '1.2rem' }}
+                              variant="outlined"
                               color={checked ? 'primary' : 'neutral'}
-                              sx={{ padding: '1.2rem 2.4rem' }}
-                              // endDecorator={checked && <ChipDelete />}
-                              startDecorator={
-                                checked && (
-                                  <CheckIcon
-                                    sx={{
-                                      zIndex: 1,
-                                      pointerEvents: 'none',
-                                    }}
-                                  />
-                                )
-                              }
-                            >
-                              <Radio
-                                sx={{ fontSize: '1.2rem' }}
-                                variant="outlined"
-                                color={checked ? 'primary' : 'neutral'}
-                                disableIcon
-                                overlay
-                                label={name}
-                                value={name}
-                                checked={checked}
-                                onChange={(event) => {
-                                  if (event.target.checked) {
-                                    setSelectedCardType(name);
-                                    props.setFieldValue('typeCard', name);
-                                    // props.handleChange();
-                                  }
-                                }}
-                              />
-                            </Chip>
-                          );
-                        }
-                      )}
+                              disableIcon
+                              overlay
+                              label={name}
+                              value={name}
+                              checked={checked}
+                              onChange={(event) => {
+                                if (event.target.checked) {
+                                  setSelectedCardType(name);
+                                  props.setFieldValue('typeCard', name);
+                                  // props.handleChange();
+                                }
+                              }}
+                            />
+                          </Chip>
+                        );
+                      })}
                     </RadioGroup>
                   </Box>
 
@@ -505,94 +512,17 @@ const BuyCard = () => {
                     {bankPage.numPage !== 1 && (
                       <Button onClick={() => handleClickBack()}>Back</Button>
                     )}
-                    <Button
-                      onClick={() => {
-                        // console.log(props.errors.money === undefined);
-
-                        // if (props.errors.money !== undefined) {
-                        //   showToast(props.errors.money, 3000, 'error');
-                        //   handleClickNext(props.errors.money === undefined);
-                        // } else if (props.errors.phone !== undefined) {
-                        //   showToast(props.errors.phone, 3000, 'error');
-                        //   handleClickNext(false);
-                        // } else {
-                        //   handleClickNext(true);
-                        // }
-                        setOpen('plain');
-
-                        // handleClickNext(true);
-                      }}
+                    <LoadingButton
+                      loading={isLoadingForm}
+                      type="submit"
+                      variant="contained"
+                      onClick={() => {}}
                     >
-                      Next
-                    </Button>
+                      Buy
+                    </LoadingButton>
                   </>
                 )}
               </ButtonGroup>
-              <Modal
-                open={!!open}
-                onClose={() => setOpen('')}
-                // sx={{ width: '20rem' }}
-              >
-                <ModalDialog
-                  aria-labelledby="variant-modal-title"
-                  aria-describedby="variant-modal-description"
-                  variant={open || undefined}
-                  sx={{
-                    width: '40rem',
-                    height: '24rem',
-                    padding: '3.2rem 4.4rem',
-                    display: 'grid',
-                    gridTemplateRows: 'repeat(max-content) min-content',
-                    gap: '1.6rem 0',
-                  }}
-                >
-                  <ModalClose />
-                  <Typography
-                    id="variant-modal-title"
-                    component="h2"
-                    level="inherit"
-                    fontSize="1.6rem"
-                    mb="0.25em"
-                  >
-                    Modal Dialog
-                  </Typography>
-                  {/* <Typography
-                      id="variant-modal-description"
-                      textColor="inherit"
-                    >
-                      This is a `{open}` modal dialog.
-                    </Typography> */}
-                  <Field name="password">
-                    {({ field, form, meta }) => (
-                      <FormControl>
-                        <MUIInputCustom02
-                          {...field}
-                          id="password"
-                          name="password"
-                          label="Password"
-                          value={props.values.password}
-                          onChange={props.handleChange}
-                          error={
-                            props.touched.password &&
-                            Boolean(props.errors.password)
-                          }
-                        />
-                        <FormHelperText
-                          id="component-helper-text"
-                          sx={{
-                            fontSize: '1.2rem',
-                            color: 'var(--color-tertiary-dark-2)',
-                          }}
-                        >
-                          {props.touched.password && props.errors.password}
-                        </FormHelperText>
-                      </FormControl>
-                    )}
-                  </Field>
-
-                  <MUIButtonCustom02 type="button">Confirm</MUIButtonCustom02>
-                </ModalDialog>
-              </Modal>
             </Form>
           )}
         </Formik>

@@ -488,10 +488,8 @@ const Recharge = () => {
                         type="submit"
                         onClick={() => {
                           // setOpen('plain');
-
                           // handleClickNext(true);
-
-                          props.submitForm();
+                          // props.submitForm();
                         }}
                       >
                         Submit

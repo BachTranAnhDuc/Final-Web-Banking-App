@@ -53,6 +53,12 @@ import {
   TRANSFER_BEGIN,
   TRANSFER_SUCCESS,
   TRANSFER_ERROR,
+  WITH_DRAW_BEGIN,
+  WITH_DRAW_SUCCESS,
+  WITH_DRAW_ERROR,
+  BUY_CARD_BEGIN,
+  BUY_CARD_ERROR,
+  BUY_CARD_SUCCESS,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -1245,6 +1251,10 @@ const AppProvider = ({ children }) => {
 
         console.log(res);
 
+        const { data } = res;
+
+        const { msg, status } = res;
+
         actionBankPage({
           numPage: 4,
           name: 'transfer',
@@ -1267,6 +1277,8 @@ const AppProvider = ({ children }) => {
 
         showToast(msg, 4000, 'error');
 
+        console.log(data);
+
         dispatch({ type: TRANSFER_ERROR });
       }
     }, 1000);
@@ -1280,8 +1292,9 @@ const AppProvider = ({ children }) => {
   }) => {
     dispatch({ type: TRANSFER_BEGIN });
 
-    try {
-      setTimeout(async () => {
+    setTimeout(async () => {
+      try {
+        console.log('Catch not enough money here');
         const res = await axios.post('/api/v1/user/transfer', {
           money: Number(money),
           numberPhone,
@@ -1300,16 +1313,105 @@ const AppProvider = ({ children }) => {
         });
 
         dispatch({ type: TRANSFER_SUCCESS });
-      }, 1000);
-    } catch (error) {
-      const { response } = error;
+      } catch (error) {
+        const { response } = error;
 
-      const { data } = response;
+        const { data } = response;
 
-      console.log(data);
+        const { msg } = data;
 
-      dispatch({ type: TRANSFER_ERROR });
-    }
+        // console.log(data);
+
+        showToast(msg, 4000, 'error');
+
+        dispatch({ type: TRANSFER_ERROR });
+      }
+    }, 1000);
+  };
+
+  const withDrawApp = async ({
+    money,
+    numberCard,
+    dateExpire,
+    cvvNumber,
+    message,
+  }) => {
+    dispatch({ type: WITH_DRAW_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post('/api/v1/user/withdraw', {
+          money: Number(money),
+          numberCard,
+          dateExpire,
+          cvvNumber,
+          message,
+        });
+
+        const { data } = res;
+
+        console.log(data);
+
+        const { status, msg } = data;
+
+        actionBankPage({
+          numPage: 2,
+          name: 'withdraw',
+          length: 3,
+          actionType: 'plus',
+          isOK: true,
+        });
+
+        dispatch({ type: WITH_DRAW_SUCCESS });
+      } catch (error) {
+        console.log(error);
+
+        const { response } = error;
+
+        const { data } = response;
+
+        console.log(data);
+
+        const { msg, status } = data;
+
+        showToast(msg, 4000, 'error');
+
+        dispatch({ type: WITH_DRAW_ERROR });
+      }
+    }, 1000);
+  };
+
+  const buyCardApp = ({ amount, nameCard, price }) => {
+    dispatch({ type: BUY_CARD_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post('/api/v1/user/buyMobileCard', {
+          amount: Number(amount),
+          nameCard,
+          price: Number(price),
+        });
+
+        console.log(res);
+
+        actionBankPage({
+          numPage: 2,
+          name: 'buy-card',
+          length: 3,
+          actionType: 'plus',
+          isOK: true,
+        });
+
+        dispatch({ type: BUY_CARD_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+        const { data } = response;
+
+        console.log(data);
+
+        dispatch({ type: BUY_CARD_ERROR });
+      }
+    }, 1000);
   };
 
   return (
@@ -1353,6 +1455,8 @@ const AppProvider = ({ children }) => {
         rechargeMoneyApp,
         transferMoneyApp,
         transferSendOtp,
+        withDrawApp,
+        buyCardApp,
       }}
     >
       {children}
