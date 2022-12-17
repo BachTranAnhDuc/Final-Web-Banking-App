@@ -8,9 +8,7 @@ import {
   identifyUser,
   rechargeMoney,
   transferMoney,
-  updateStatus,
   withdrawMoney,
-  updateStatusWithdrawMoney,
   buyMobileCard,
 } from '../controllers/userController.js';
 import { unauthorizedError } from '../error/index.js';
@@ -60,11 +58,6 @@ router
   .route('/transfer/enterOtp')
   .post(authenticateUser, authorizePermissions(['user']), transferMoney);
 
-// update status history for transfer
-router
-  .route('/updateStatus/:id')
-  .post(authenticateUser, authorizePermissions(['admin']), updateStatus);
-
 //withdraw money
 router
   .route('/withdraw')
@@ -75,13 +68,7 @@ router
     withdrawMoney
   );
 
-router
-  .route('/updateStatusWithdrawMoney/:id')
-  .post(
-    authenticateUser,
-    authorizePermissions(['admin']),
-    updateStatusWithdrawMoney
-  );
+
 
 // buy mobile card
 router

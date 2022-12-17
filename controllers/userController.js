@@ -146,7 +146,7 @@ const transferMoney = async (req, res) => {
   //        user bear fee transfer 5% money transfer
   const { money, numberPhone, message, userBearFee, otpTransaction } = req.body;
   // get information about user login
-  money = Number(money)
+  // money = Number(money)
   const user = req.user;
   const getUser = await User.findOne({ _id: user.userId });
   // get user who receive money
@@ -287,13 +287,9 @@ const updateStatus = async (req, res) => {
 // withdraw money from username bank account to card
 // processing function withdraw money
 const withdrawMoney = async (req, res) => {
-  const { money, message, password } = req.body;
+  const { money, message} = req.body;
   const user = req.user;
   const getUser = await User.findOne({ _id: user.userId });
-  const isMatch = await getUser.comparePassword(password);
-  if (isMatch !== true) {
-    throw new badRequestError('Your password is incorrect!');
-  }
   if (getUser.money < money + money * 0.05) {
     throw new badRequestError(
       'Your money in balance is not enough to execute this transaction'
@@ -303,7 +299,7 @@ const withdrawMoney = async (req, res) => {
     const historyProcessing = await History.create({
       type: 'WITHDRAW',
       money: money,
-      message: message,
+      message: message.toString(),
       date: Date.now(),
       status: 'PROCESSING',
       fromUser: getUser.username,
@@ -323,7 +319,7 @@ const withdrawMoney = async (req, res) => {
   const history = await History.create({
     type: 'WITHDRAW',
     money: money,
-    message: message,
+    message: message.toString(),
     date: Date.now(),
     status: 'SUCCESS',
     fromUser: getUser.username,
@@ -337,7 +333,7 @@ const withdrawMoney = async (req, res) => {
     .json({ msg: 'Withdraw Money success', user: getUser, history: history });
 };
 
-// update status for withdraw money transaction
+/* // update status for withdraw money transaction
 const updateStatusWithdrawMoney = async (req, res) => {
   const idHistory = req.params.id;
   const status = req.body.status;
@@ -364,12 +360,12 @@ const updateStatusWithdrawMoney = async (req, res) => {
   return res
     .status(StatusCodes.OK)
     .json({ msg: 'Update status transaction success', history: getHistory });
-};
+}; */
 
 // ---------------------------------------------------------------------
 // Buy card Function card have 10 number 11111: Viettel, 22222: Mobifone, 33333: Vinaphone
 const buyMobileCard = async (req, res) => {
-  const { amount, nameCard, price, password } = req.body;
+  const { amount, nameCard, price} = req.body;
   const cardCatogries = {
     Viettel: '11111',
     Mobifone: '11111',
@@ -380,10 +376,6 @@ const buyMobileCard = async (req, res) => {
   const money = price * amount;
   const feeTransaction = money * 0;
   const getUser = await User.findOne({ _id: user.userId });
-  const isMatch = await getUser.comparePassword(password);
-  if (isMatch !== true) {
-    throw new badRequestError('Your password is incorrect!');
-  }
   if (getUser.money < money + feeTransaction) {
     throw new badRequestError('Your money in balance is not enough to buy');
   }
@@ -433,8 +425,6 @@ export {
   identifyUser,
   rechargeMoney,
   transferMoney,
-  updateStatus,
   withdrawMoney,
-  updateStatusWithdrawMoney,
   buyMobileCard,
 };
