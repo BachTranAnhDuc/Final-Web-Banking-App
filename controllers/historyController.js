@@ -86,14 +86,17 @@ const getHistoryByToUser = async(req,res) =>{
 
 const getHistoryByUserLogin = async (req, res) => {
     const user = req.user
-
-    const history = await History.find({ $or: [{ $fromUser: user.username }, { $toUser: user.username }] })
+    const getUser = await User.findOne({_id:user.userId})
+    if (!getUser) {
+        throw new badRequestError(`Can not find user: ${getUser}`);
+        }
+    const history = await History.find({ $or: [{ "fromUser": getUser.username }, { "toUser": getUser.username }] })
 
     if (!history) {
-        throw new badRequestError(`Can not find any history have transaction user: ${user.username}`);
+        throw new badRequestError(`Can not find any history have transaction user: ${getUser.username}`);
         }
     
-        res.status(StatusCodes.OK).json({ msg: `Get history have transaction user: ${user.username} success`, history: history });
+        res.status(StatusCodes.OK).json({ msg: `Get history have transaction user: ${getUser.username} success`, history: history });
 }
 
 export {getAllHistory,getHistory, getHistoryByType,getHistoryByStatus,getHistoryByFromUser,getHistoryByToUser, getHistoryByUserLogin}

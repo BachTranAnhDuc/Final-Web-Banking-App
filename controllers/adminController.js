@@ -80,7 +80,7 @@ const updateStatus = async (req, res) => {
 };
 
 const getAllUsersProcessing = async(req, res) => {
-    const allUser = await User.find({identify: "processing"})
+    const allUser = await User.find({$or:[{identify: "processing"},{isVerified: false}]})
     if(!allUser){
         throw new badRequestError("Cannot find all user wait processing")
     }
