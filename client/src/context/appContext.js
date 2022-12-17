@@ -69,6 +69,7 @@ import {
   CONFIRM_OTP_FORGOT_ERROR,
   CONFIRM_PWD_FORGOT_BEGIN,
   CONFIRM_PWD_FORGOT_SUCCESS,
+  GET_ALL_HISTORY_USERS,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -180,6 +181,7 @@ const defaultState = {
   forgotUserTemp: {},
 
   historyAllUsers: [],
+  historyAllUsersData: [],
 };
 
 const AppContext = React.createContext();
@@ -1592,6 +1594,22 @@ const AppProvider = ({ children }) => {
       const res = await axios.get('/api/v1/history/getAllHistory');
 
       console.log(res);
+
+      const { data } = res;
+
+      const { histories } = data;
+
+      const reHis = histories.map((el) => {
+        return {
+          key: el._id,
+          type: el.type,
+          money: el.money,
+          date: el.date,
+          status: el.status,
+        };
+      });
+
+      dispatch({ type: GET_ALL_HISTORY_USERS, payload: { reHis, histories } });
     } catch (error) {
       console.log(error);
 
@@ -1651,7 +1669,7 @@ const AppProvider = ({ children }) => {
         sendOtpForgotPwd,
         confirmPwdForgotPwd,
         confirmOtpForgotPwd,
-        getall
+        getAllHistoryUsers,
       }}
     >
       {children}

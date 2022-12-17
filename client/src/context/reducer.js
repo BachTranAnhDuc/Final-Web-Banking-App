@@ -62,6 +62,7 @@ import {
   CONFIRM_PWD_FORGOT_BEGIN,
   CONFIRM_PWD_FORGOT_SUCCESS,
   CONFIRM_PWD_FORGOT_ERROR,
+  GET_ALL_HISTORY_USERS,
 } from './action';
 
 const reducer = (state, action) => {
@@ -447,6 +448,12 @@ const reducer = (state, action) => {
   }
   if (action.type === CONFIRM_PWD_FORGOT_ERROR) {
     return { ...state };
+  }
+
+  if (action.type === GET_ALL_HISTORY_USERS) {
+    const { reHis, histories } = action.payload;
+
+    return { ...state, historyAllUsers: histories, historyAllUsersData: reHis };
   }
 };
 

@@ -36,9 +36,16 @@ import TabPanel from '@mui/joy/TabPanel';
 import Divider from '@mui/joy/Divider';
 import { DefaultParagraph } from '../theme/base/Typography';
 import { HeadingPrimary } from '../theme/base/Typography';
+import Popover from '@mui/material/Popover';
+import Sheet from '@mui/joy/Sheet';
+
 import { Descriptions } from 'antd';
+
+// import LoadingButton from '@mui/lab/LoadingButton';
 // import { DataGrid } from '@mui/x-data-grid';
 // import { useMovieData } from '@mui/x-data-grid-generator';
+
+// import { Button, Popover } from 'antd';
 
 import {
   DefaultButton,
@@ -54,6 +61,10 @@ import {
   MUIButtonLoading01,
 } from '../theme/components/Buttons';
 import { useGlobalContext } from '../context/appContext';
+
+function randomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 const data = [];
 for (let i = 1; i <= 20; i++) {
@@ -73,8 +84,16 @@ const defaultTitle = () => 'Here is title';
 const defaultFooter = () => 'Here is footer';
 
 const History = () => {
-  const { getHistoryByUser, dataHistoryByUser, getHistoryById, historyById } =
-    useGlobalContext();
+  const {
+    getHistoryByUser,
+    dataHistoryByUser,
+    getHistoryById,
+    historyById,
+    getAllHistoryUsers,
+    historyAllUsers,
+    historyAllUsersData,
+    user,
+  } = useGlobalContext();
 
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -95,6 +114,8 @@ const History = () => {
   const [test, setTest] = useState('');
 
   const [open, setOpen] = React.useState(false);
+
+  const [openNested, setOpenNested] = React.useState(false);
 
   const columns = [
     {
@@ -265,6 +286,9 @@ const History = () => {
 
   useEffect(() => {
     getHistoryByUser();
+    if (user.role === 'admin') {
+      getAllHistoryUsers();
+    }
   }, []);
 
   return (
@@ -363,7 +387,7 @@ const History = () => {
             position: [top, bottom],
           }}
           columns={tableColumns}
-          dataSource={hasData ? dataHistoryByUser : []}
+          dataSource={hasData ? historyAllUsersData : []}
           scroll={scroll}
         />
       </section>
@@ -381,6 +405,12 @@ const History = () => {
             gridTemplateRows: 'repeat(2, max-content) 1fr',
             // gap: '1.6rem 0',
           }}
+          // {...(random && {
+          //   sx: {
+          //     top: `${randomBetween(25, 75)}%`,
+          //     left: `${randomBetween(25, 75)}%`,
+          //   },
+          // })}
         >
           <ModalClose />
           <HeadingPrimary>Detail history</HeadingPrimary>
@@ -502,12 +532,59 @@ const History = () => {
             >
               <Box
                 sx={{
-                  backgroundColor: 'orange',
+                  // backgroundColor: 'orange',
                   height: '100%',
                   padding: '1.6rem 3.2rem',
                 }}
               >
-                <b>Third</b> tab panel
+                <Button
+                  variant="contained"
+                  type="button"
+                  onClick={(event) => {
+                    setOpenNested(true);
+                    console.log('Open nested modal here');
+                  }}
+                >
+                  Open Nested
+                </Button>
+
+                <Modal
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-desc"
+                  open={openNested}
+                  onClose={() => setOpenNested(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: '20000',
+                  }}
+                >
+                  <Sheet
+                    variant="outlined"
+                    sx={{
+                      maxWidth: 500,
+                      borderRadius: 'md',
+                      p: 3,
+                      boxShadow: 'lg',
+                      display: 'grid',
+                      // backgroundColor: 'orange',
+                    }}
+                  >
+                    <ModalClose
+                      variant="outlined"
+                      sx={{
+                        top: 'calc(-1/4 * var(--IconButton-size))',
+                        right: 'calc(-1/4 * var(--IconButton-size))',
+                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+                        borderRadius: '50%',
+                        bgcolor: 'background.body',
+                      }}
+                    />
+                    <LoadingButton type="button">Update</LoadingButton>
+                    <LoadingButton type="button">Close</LoadingButton>
+                  </Sheet>
+                </Modal>
               </Box>
             </TabPanel>
           </Tabs>
