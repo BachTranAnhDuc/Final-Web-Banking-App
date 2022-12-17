@@ -158,7 +158,7 @@ const transferMoney = async (req, res) => {
   // getUser.otpTransaction = ""
   let usernameFee = '';
   const transactionFee = money * 0.05;
-  const minusBalance = getUser.money - (getUser.money + transactionFee);
+  const minusBalance = getUser.money - (money + transactionFee);
   if (userBearFee === 'Me') {
     if (minusBalance < 0)
       throw new badRequestError(
