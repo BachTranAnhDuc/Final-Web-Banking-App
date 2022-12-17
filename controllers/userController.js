@@ -146,6 +146,7 @@ const transferMoney = async (req, res) => {
   //        user bear fee transfer 5% money transfer
   const { money, numberPhone, message, userBearFee, otpTransaction } = req.body;
   // get information about user login
+  money = Number(money)
   const user = req.user;
   const getUser = await User.findOne({ _id: user.userId });
   // get user who receive money
@@ -158,7 +159,7 @@ const transferMoney = async (req, res) => {
   // getUser.otpTransaction = ""
   let usernameFee = '';
   const transactionFee = money * 0.05;
-  const minusBalance = getUser.money - (getUser.money + transactionFee);
+  const minusBalance = getUser.money - (money + transactionFee);
   if (userBearFee === 'Me') {
     if (minusBalance < 0)
       throw new badRequestError(

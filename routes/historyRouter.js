@@ -9,7 +9,9 @@ import {getAllHistory,
     getHistoryByType,
     getHistoryByStatus,
     getHistoryByFromUser,
-    getHistoryByToUser} from '../controllers/historyController.js'
+    getHistoryByToUser,
+    getHistoryByUserLogin
+} from '../controllers/historyController.js'
 
 router.route("/getAllHistory").get(authenticateUser, authorizePermissions(['admin']),getAllHistory)
 
@@ -22,6 +24,9 @@ router.route("/getHistoryByStatus/:status").get(authenticateUser,getHistoryBySta
 router.route("/getHistoryByFromUser/:fromUser").get(authenticateUser,getHistoryByFromUser)
 
 router.route("/getHistoryByToUser/:toUser").get(authenticateUser,getHistoryByToUser)
+
+router.route("/getHistoryByUserLogin").get(authenticateUser, authorizePermissions(['user']),getHistoryByUserLogin)
+
 
 
 export default router;

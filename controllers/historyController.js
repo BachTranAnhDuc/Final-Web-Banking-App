@@ -84,4 +84,16 @@ const getHistoryByToUser = async(req,res) =>{
         res.status(StatusCodes.OK).json({ msg: `Get history have transaction to User: ${toUser} success`, history: history });
 }
 
-export {getAllHistory,getHistory, getHistoryByType,getHistoryByStatus,getHistoryByFromUser,getHistoryByToUser}
+const getHistoryByUserLogin = async (req, res) => {
+    const user = req.user
+
+    const history = await History.find({ $or: [{ $fromUser: user.username }, { $toUser: user.username }] })
+
+    if (!history) {
+        throw new badRequestError(`Can not find any history have transaction user: ${user.username}`);
+        }
+    
+        res.status(StatusCodes.OK).json({ msg: `Get history have transaction user: ${user.username} success`, history: history });
+}
+
+export {getAllHistory,getHistory, getHistoryByType,getHistoryByStatus,getHistoryByFromUser,getHistoryByToUser, getHistoryByUserLogin}
