@@ -74,6 +74,8 @@ import FaceIcon from '@mui/icons-material/Face';
 
 import CheckIcon from '@mui/icons-material/Check';
 
+import { LoadingButton } from '@mui/lab';
+
 // import { SteppBank } from '../../components';
 
 const steps = [
@@ -109,6 +111,8 @@ const Withdraw = () => {
     confirmDigitalCard,
     isConfirmDigitalCard,
     showToast,
+    isLoadingForm,
+    withDrawApp,
   } = useGlobalContext();
 
   const validateMoney = (value) => {
@@ -224,13 +228,20 @@ const Withdraw = () => {
               idCard: '',
               dateEnd: '',
               cvv: '',
-              password: '',
             }}
             // validationSchema={validationSchema}
             onSubmit={async (values, actions) => {
               console.log('submit here');
               // actions.setFieldValue('idCard', otp);
               console.log(values);
+
+              withDrawApp({
+                money: values.money,
+                numberCard: values.idCard,
+                dateExpire: values.dateEnd,
+                cvvNumber: values.cvv,
+                message: values.note,
+              });
             }}
           >
             {(props) => (
@@ -469,94 +480,19 @@ const Withdraw = () => {
                       {bankPage.numPage !== 1 && (
                         <Button onClick={() => handleClickBack()}>Back</Button>
                       )}
-                      <Button
+                      <LoadingButton
+                        type="submit"
+                        loading={isLoadingForm}
                         onClick={() => {
-                          // console.log(props.errors.money === undefined);
-
-                          // if (props.errors.money !== undefined) {
-                          //   showToast(props.errors.money, 3000, 'error');
-                          //   handleClickNext(props.errors.money === undefined);
-                          // } else if (props.errors.phone !== undefined) {
-                          //   showToast(props.errors.phone, 3000, 'error');
-                          //   handleClickNext(false);
-                          // } else {
-                          //   handleClickNext(true);
-                          // }
-                          setOpen('plain');
-
+                          // setOpen('plain');
                           // handleClickNext(true);
                         }}
                       >
-                        Next
-                      </Button>
+                        Submit
+                      </LoadingButton>
                     </>
                   )}
                 </ButtonGroup>
-                <Modal
-                  open={!!open}
-                  onClose={() => setOpen('')}
-                  // sx={{ width: '20rem' }}
-                >
-                  <ModalDialog
-                    aria-labelledby="variant-modal-title"
-                    aria-describedby="variant-modal-description"
-                    variant={open || undefined}
-                    sx={{
-                      width: '40rem',
-                      height: '24rem',
-                      padding: '3.2rem 4.4rem',
-                      display: 'grid',
-                      gridTemplateRows: 'repeat(max-content) min-content',
-                      gap: '1.6rem 0',
-                    }}
-                  >
-                    <ModalClose />
-                    <Typography
-                      id="variant-modal-title"
-                      component="h2"
-                      level="inherit"
-                      fontSize="1.6rem"
-                      mb="0.25em"
-                    >
-                      Modal Dialog
-                    </Typography>
-                    {/* <Typography
-                      id="variant-modal-description"
-                      textColor="inherit"
-                    >
-                      This is a `{open}` modal dialog.
-                    </Typography> */}
-                    <Field name="password">
-                      {({ field, form, meta }) => (
-                        <FormControl>
-                          <MUIInputCustom02
-                            {...field}
-                            id="password"
-                            name="password"
-                            label="Password"
-                            value={props.values.password}
-                            onChange={props.handleChange}
-                            error={
-                              props.touched.password &&
-                              Boolean(props.errors.password)
-                            }
-                          />
-                          <FormHelperText
-                            id="component-helper-text"
-                            sx={{
-                              fontSize: '1.2rem',
-                              color: 'var(--color-tertiary-dark-2)',
-                            }}
-                          >
-                            {props.touched.password && props.errors.password}
-                          </FormHelperText>
-                        </FormControl>
-                      )}
-                    </Field>
-
-                    <MUIButtonCustom02 type="button">Confirm</MUIButtonCustom02>
-                  </ModalDialog>
-                </Modal>
               </Form>
             )}
           </Formik>

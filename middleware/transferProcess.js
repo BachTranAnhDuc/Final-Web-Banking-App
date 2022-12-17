@@ -15,7 +15,7 @@ import {
 } from '../error/index.js';
 //this function will get all information about transfer
 // and will send OTP email to user transfer
-const transferProcess = async (req, res, next) => {
+const transferProcess = async (req, res) => {
   const { money, numberPhone, message, userBearFee } = req.body;
   // get information about user login
   const user = req.user;
@@ -38,6 +38,7 @@ const transferProcess = async (req, res, next) => {
     throw new badRequestError(
       'Transfer money fail your balance not have enough money to transfer'
     );
+    // return res.status(StatusCodes.OK).json({ msg: 'Send otp success' });
   }
   const randomOTP = uniqueRandom(100000, 999999);
   const otp = randomOTP();

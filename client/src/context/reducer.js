@@ -45,6 +45,12 @@ import {
   TRANSFER_BEGIN,
   TRANSFER_SUCCESS,
   TRANSFER_ERROR,
+  WITH_DRAW_BEGIN,
+  WITH_DRAW_SUCCESS,
+  WITH_DRAW_ERROR,
+  BUY_CARD_BEGIN,
+  BUY_CARD_SUCCESS,
+  BUY_CARD_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -365,6 +371,26 @@ const reducer = (state, action) => {
   }
 
   if (action.type === TRANSFER_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === WITH_DRAW_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === WITH_DRAW_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+  if (action.type === WITH_DRAW_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === BUY_CARD_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === BUY_CARD_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+  if (action.type === BUY_CARD_ERROR) {
     return { ...state, isLoadingForm: false };
   }
 };
