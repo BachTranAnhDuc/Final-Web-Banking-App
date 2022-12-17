@@ -82,6 +82,10 @@ import {
   UPDATE_IDENTIFY_USER_BEGIN,
   UPDATE_IDENTIFY_USER_ERROR,
   UPDATE_IDENTIFY_USER_SUCCESS,
+  GET_HISTORY_BY_USER_ID,
+  CHANGE_PASSWORD_BEGIN,
+  CHANGE_PASSWORD_ERROR,
+  CHANGE_PASSWORD_SUCCESS,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -186,8 +190,10 @@ const defaultState = {
   // get all users
   users: [],
   userById: null,
+
   historyByUser: [],
   dataHistoryByUser: [],
+
   historyById: null,
   buyCardData: [],
   forgotUserTemp: {},
@@ -1486,6 +1492,44 @@ const AppProvider = ({ children }) => {
       console.log(error);
     }
   };
+  const getHistoryByUserId = async (idUser) => {
+    try {
+      const res = await axios.get(
+        `/api/v1/history/getHistoryByOneUserSort/${idUser}`
+      );
+
+      console.log('get all history by user id here');
+      console.log(res);
+
+      const { data } = res;
+      const { history } = data;
+
+      console.log(history);
+
+      const dataHistoryDisplay = history.map((el) => {
+        return {
+          key: el._id,
+          type: el.type,
+          money: el.money,
+          date: el.date,
+          status: el.status,
+          description: '',
+        };
+      });
+
+      console.log('----');
+
+      console.log(dataHistoryDisplay);
+
+      dispatch({
+        type: GET_HISTORY_BY_USER_ID,
+        payload: history,
+        payloadData: dataHistoryDisplay,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getHistoryById = async (idHistory) => {
     try {
@@ -1781,11 +1825,49 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
-  const updateIdentifyUser = async () => {
+  const updateIdentifyUser = async (typeIdentify, idUser) => {
     dispatch({ type: UPDATE_IDENTIFY_USER_BEGIN });
 
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
+        if (typeIdentify === 'cancel') {
+          const res = await axios.post(
+            `/api/v1/admin/updateIdentifyUser/${idUser}`,
+            {
+              identify: 'fail',
+            }
+          );
+
+          console.log(res);
+        }
+        if (typeIdentify === 'success') {
+          const res = await axios.post(
+            `/api/v1/admin/updateIdentifyUser/${idUser}`,
+            {
+              identify: 'success',
+            }
+          );
+
+          console.log(res);
+        }
+        if (typeIdentify === 'waiting') {
+          const res = await axios.post(
+            `/api/v1/admin/updateIdentifyUser/${idUser}`,
+            {
+              identify: 'waiting',
+            }
+          );
+
+          console.log(res);
+        }
+
+        if (typeIdentify === 'block') {
+          const res = await axios.post(
+            `/api/v1/admin/unlockUserWrongPassword/${idUser}`
+          );
+
+          console.log(res);
+        }
         dispatch({ type: UPDATE_IDENTIFY_USER_SUCCESS });
       } catch (error) {
         const { response } = error;
@@ -1796,6 +1878,36 @@ const AppProvider = ({ children }) => {
         dispatch({ type: UPDATE_IDENTIFY_USER_ERROR });
       }
     }, 1000);
+  };
+
+  const changePassword = async ({ password, confirmPassword, oldPassword }) => {
+    dispatch({ type: CHANGE_PASSWORD_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post(
+          '/api/v1/auth/changeNewPasswordAfterLogin',
+          { password, confirmPassword, oldPassword }
+        );
+
+        console.log(res);
+
+        showToast('Change password success', 4000, 'success');
+
+        dispatch({ type: CHANGE_PASSWORD_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+        const { data } = response;
+
+        console.log(data);
+
+        const { msg } = data;
+
+        showToast(msg, 4000, 'error');
+
+        dispatch({ type: CHANGE_PASSWORD_ERROR });
+      }
+    }, 1500);
   };
 
   return (
@@ -1851,6 +1963,9 @@ const AppProvider = ({ children }) => {
         allowWithdrawMoney,
         getAllUserWithCondition,
         updateIdentifyUser,
+        updateIdentifyUser,
+        getHistoryByUserId,
+        changePassword,
       }}
     >
       {children}

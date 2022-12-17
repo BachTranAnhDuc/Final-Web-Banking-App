@@ -75,6 +75,10 @@ import {
   UPDATE_IDENTIFY_USER_BEGIN,
   UPDATE_IDENTIFY_USER_SUCCESS,
   UPDATE_IDENTIFY_USER_ERROR,
+  GET_HISTORY_BY_USER_ID,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_ERROR,
+  CHANGE_PASSWORD_BEGIN,
 } from './action';
 
 const reducer = (state, action) => {
@@ -505,6 +509,25 @@ const reducer = (state, action) => {
     return { ...state, isLoadingForm: false };
   }
   if (action.type === UPDATE_IDENTIFY_USER_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === GET_HISTORY_BY_USER_ID) {
+    // const { history, dataHistoryDisplay } = action.payload;
+    return {
+      ...state,
+      historyByUser: action.payload,
+      dataHistoryByUser: action.payloadData,
+    };
+  }
+
+  if (action.type === CHANGE_PASSWORD_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === CHANGE_PASSWORD_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+  if (action.type === CHANGE_PASSWORD_ERROR) {
     return { ...state, isLoadingForm: false };
   }
 };

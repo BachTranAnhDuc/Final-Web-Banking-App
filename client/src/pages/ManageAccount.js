@@ -83,6 +83,10 @@ const ManageAccount = () => {
     getAllUserWithCondition,
     getHistoryById,
     historyById,
+    updateIdentifyUser,
+    getHistoryByUserId,
+    dataHistoryByUser,
+    historyByUser,
   } = useGlobalContext();
 
   const [openNestedCancel, setOpenNestedCancel] = React.useState(false);
@@ -160,8 +164,9 @@ const ManageAccount = () => {
               // console.log(e);
               console.log(key);
               getSingleUser(key);
+              getHistoryByUserId(key);
               setOpen(true);
-              getHistoryById(key);
+              // getHistoryById(key);
             }}
             startDecorator={<OpenInNew />}
             variant="soft"
@@ -277,12 +282,8 @@ const ManageAccount = () => {
       width: 100,
     },
     {
-      title: 'From',
-      dataIndex: 'from',
-    },
-    {
-      title: 'To',
-      dataIndex: 'to',
+      title: 'Date',
+      dataIndex: 'date',
     },
     {
       title: 'Status',
@@ -663,7 +664,7 @@ const ManageAccount = () => {
                     position: [top, bottom],
                   }}
                   columns={tableColumnsHistory}
-                  dataSource={hasDataHistory ? data : []}
+                  dataSource={hasDataHistory ? dataHistoryByUser : []}
                   // scroll={scrollHistory}
                   // sx={{ height: '12rem' }}
                   scroll={{
@@ -826,13 +827,18 @@ const ManageAccount = () => {
                         bgcolor: 'background.body',
                       }}
                     />
-                    <LoadingButton type="button" onClick={() => {}}>
+                    <LoadingButton
+                      type="button"
+                      onClick={() => {
+                        updateIdentifyUser('success', userById?._id);
+                      }}
+                    >
                       Confirm
                     </LoadingButton>
                     <LoadingButton type="button">Close</LoadingButton>
                   </Sheet>
                 </Modal>
-                {/* Nested modal for success */}
+                {/* Nested modal for cancel */}
                 <Modal
                   aria-labelledby="modal-title"
                   aria-describedby="modal-desc"
@@ -866,13 +872,18 @@ const ManageAccount = () => {
                         bgcolor: 'background.body',
                       }}
                     />
-                    <LoadingButton type="button" onClick={() => {}}>
+                    <LoadingButton
+                      type="button"
+                      onClick={() => {
+                        updateIdentifyUser('cancel', userById?._id);
+                      }}
+                    >
                       Confirm
                     </LoadingButton>
                     <LoadingButton type="button">Close</LoadingButton>
                   </Sheet>
                 </Modal>
-                {/* Nested modal for success */}
+                {/* Nested modal for waiting */}
                 <Modal
                   aria-labelledby="modal-title"
                   aria-describedby="modal-desc"
@@ -906,13 +917,19 @@ const ManageAccount = () => {
                         bgcolor: 'background.body',
                       }}
                     />
-                    <LoadingButton type="button" onClick={() => {}}>
+                    <LoadingButton
+                      type="button"
+                      onClick={() => {
+                        updateIdentifyUser('waiting', userById?._id);
+                        console.log('You click button confirm waiting');
+                      }}
+                    >
                       Confirm
                     </LoadingButton>
                     <LoadingButton type="button">Close</LoadingButton>
                   </Sheet>
                 </Modal>
-                {/* Nested modal for success */}
+                {/* Nested modal for block */}
                 <Modal
                   aria-labelledby="modal-title"
                   aria-describedby="modal-desc"
@@ -946,47 +963,12 @@ const ManageAccount = () => {
                         bgcolor: 'background.body',
                       }}
                     />
-                    <LoadingButton type="button" onClick={() => {}}>
-                      Confirm
-                    </LoadingButton>
-                    <LoadingButton type="button">Close</LoadingButton>
-                  </Sheet>
-                </Modal>
-                {/* Nested modal for success */}
-                <Modal
-                  aria-labelledby="modal-title"
-                  aria-describedby="modal-desc"
-                  open={openNestedWaiting}
-                  onClose={() => setOpenNestedWaiting(false)}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: '20000',
-                  }}
-                >
-                  <Sheet
-                    variant="outlined"
-                    sx={{
-                      maxWidth: 500,
-                      borderRadius: 'md',
-                      p: 3,
-                      boxShadow: 'lg',
-                      display: 'grid',
-                      // backgroundColor: 'orange',
-                    }}
-                  >
-                    <ModalClose
-                      variant="outlined"
-                      sx={{
-                        top: 'calc(-1/4 * var(--IconButton-size))',
-                        right: 'calc(-1/4 * var(--IconButton-size))',
-                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
-                        borderRadius: '50%',
-                        bgcolor: 'background.body',
+                    <LoadingButton
+                      type="button"
+                      onClick={() => {
+                        updateIdentifyUser('block', userById?._id);
                       }}
-                    />
-                    <LoadingButton type="button" onClick={() => {}}>
+                    >
                       Confirm
                     </LoadingButton>
                     <LoadingButton type="button">Close</LoadingButton>

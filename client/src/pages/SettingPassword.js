@@ -57,12 +57,14 @@ import {
   ChipDelete,
 } from '@mui/joy';
 
+import LoadingButton from '@mui/lab/LoadingButton';
+
 import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
 
 const SettingPassword = () => {
   const [next, setNext] = useState(false);
 
-  const { isLoader } = useGlobalContext();
+  const { isLoader, isLoadingForm, changePassword } = useGlobalContext();
 
   if (isLoader) {
     return (
@@ -81,42 +83,50 @@ const SettingPassword = () => {
           initialValues={{
             password: '',
             newPassword: '',
+            newPasswordConfirm: '',
           }}
           // validationSchema={validationSchema}
           onSubmit={async (values, actions) => {
             console.log('submit here');
             // actions.setFieldValue('idCard', otp);
             console.log(values);
+
+            changePassword({
+              password: values.newPassword,
+              confirmPassword: values.newPasswordConfirm,
+              oldPassword: values.password,
+            });
           }}
         >
           {(props) => (
             <>
-              <div className="setting-password__heading">
-                <h3 className="setting-password__heading-text">
-                  Change Password
-                </h3>
-
-                <div className="setting-password__group-btns">
-                  <ButtonAccountEdit
-                    className="align-self__center"
-                    type="button"
-                    onClick={() => setNext(false)}
-                  >
-                    Cancel
-                  </ButtonAccountEdit>
-                  <ButtonAccountEdit
-                    className="align-self__center"
-                    type="button"
-                  >
-                    Save
-                  </ButtonAccountEdit>
-                </div>
-              </div>
-
               <Form
                 onSubmit={props.handleSubmit}
                 className="setting-password__form"
               >
+                <div className="setting-password__heading">
+                  <h3 className="setting-password__heading-text">
+                    Change Password
+                  </h3>
+
+                  <div className="setting-password__group-btns">
+                    <LoadingButton
+                      className="align-self__center"
+
+                      // onClick={() => setNext(false)}
+                    >
+                      Cancel
+                    </LoadingButton>
+                    <LoadingButton
+                      className="align-self__center"
+                      type="submit"
+                      loading={isLoadingForm}
+                    >
+                      Save
+                    </LoadingButton>
+                  </div>
+                </div>
+
                 <Box
                   sx={{
                     width: '85%',
@@ -125,18 +135,19 @@ const SettingPassword = () => {
                     rowGap: '1.6rem',
                   }}
                 >
-                  <Field name="money">
+                  <Field name="password">
                     {({ field, form, meta }) => (
                       <FormControl>
                         <MUIInputCustom02
                           {...field}
-                          id="money"
-                          name="money"
-                          label="Money"
-                          value={props.values.money}
+                          id="password"
+                          name="password"
+                          label="Password"
+                          value={props.values.password}
                           onChange={props.handleChange}
                           error={
-                            props.touched.money && Boolean(props.errors.money)
+                            props.touched.password &&
+                            Boolean(props.errors.password)
                           }
                           aria-describedby="component-helper-text"
                         />
@@ -147,7 +158,65 @@ const SettingPassword = () => {
                             color: 'var(--color-tertiary-dark-2)',
                           }}
                         >
-                          {props.touched.money && props.errors.money}
+                          {props.touched.password && props.errors.password}
+                        </FormHelperText>
+                      </FormControl>
+                    )}
+                  </Field>
+                  <Field name="newPassword">
+                    {({ field, form, meta }) => (
+                      <FormControl>
+                        <MUIInputCustom02
+                          {...field}
+                          id="newPassword"
+                          name="newPassword"
+                          label="New password"
+                          value={props.values.newPassword}
+                          onChange={props.handleChange}
+                          error={
+                            props.touched.newPassword &&
+                            Boolean(props.errors.newPassword)
+                          }
+                          aria-describedby="component-helper-text"
+                        />
+                        <FormHelperText
+                          id="component-helper-text"
+                          sx={{
+                            fontSize: '1.2rem',
+                            color: 'var(--color-tertiary-dark-2)',
+                          }}
+                        >
+                          {props.touched.newPassword &&
+                            props.errors.newPassword}
+                        </FormHelperText>
+                      </FormControl>
+                    )}
+                  </Field>
+                  <Field name="newPasswordConfirm">
+                    {({ field, form, meta }) => (
+                      <FormControl>
+                        <MUIInputCustom02
+                          {...field}
+                          id="newPasswordConfirm"
+                          name="newPasswordConfirm"
+                          label="Confirm new password"
+                          value={props.values.newPasswordConfirm}
+                          onChange={props.handleChange}
+                          error={
+                            props.touched.newPasswordConfirm &&
+                            Boolean(props.errors.newPasswordConfirm)
+                          }
+                          aria-describedby="component-helper-text"
+                        />
+                        <FormHelperText
+                          id="component-helper-text"
+                          sx={{
+                            fontSize: '1.2rem',
+                            color: 'var(--color-tertiary-dark-2)',
+                          }}
+                        >
+                          {props.touched.newPasswordConfirm &&
+                            props.errors.newPasswordConfirm}
                         </FormHelperText>
                       </FormControl>
                     )}

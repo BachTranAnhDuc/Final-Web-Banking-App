@@ -441,6 +441,10 @@ const SettingStyled = styled.main`
     padding: 2rem 4rem;
     margin-top: 2rem;
 
+    display: grid;
+
+    gap: 2.4rem 0;
+
     /* display: grid;
 
     grid-template-rows: repeat(2, max-content);
