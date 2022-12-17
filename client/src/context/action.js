@@ -76,3 +76,5 @@ export const WITH_DRAW_ERROR = 'WITH DRAW ERROR';
 export const BUY_CARD_BEGIN = 'BUY CARD BEGIN';
 export const BUY_CARD_SUCCESS = 'BUY CARD SUCCESS';
 export const BUY_CARD_ERROR = 'BUY CARD ERROR';
+
+export const GET_HISTORY_BY_USER = 'GET HISTORY BY USER';

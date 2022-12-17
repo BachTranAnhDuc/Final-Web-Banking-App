@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { DownOutlined } from '@ant-design/icons';
 import { Form, Radio, Space, Switch, Table, Tag } from 'antd';
@@ -53,6 +53,7 @@ import {
   MUIButtonCustom04,
   MUIButtonLoading01,
 } from '../theme/components/Buttons';
+import { useGlobalContext } from '../context/appContext';
 
 const data = [];
 for (let i = 1; i <= 20; i++) {
@@ -72,6 +73,8 @@ const defaultTitle = () => 'Here is title';
 const defaultFooter = () => 'Here is footer';
 
 const History = () => {
+  const { getHistoryByUser } = useGlobalContext();
+
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [size, setSize] = useState('large');
@@ -246,6 +249,10 @@ const History = () => {
     scroll,
     tableLayout,
   };
+
+  useEffect(() => {
+    getHistoryByUser();
+  }, []);
 
   return (
     <HistoryStyled>

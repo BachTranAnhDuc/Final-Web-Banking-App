@@ -59,6 +59,7 @@ import {
   BUY_CARD_BEGIN,
   BUY_CARD_ERROR,
   BUY_CARD_SUCCESS,
+  GET_HISTORY_BY_USER,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -163,6 +164,7 @@ const defaultState = {
   // get all users
   users: [],
   userById: null,
+  historyByUser: [],
 };
 
 const AppContext = React.createContext();
@@ -1414,6 +1416,23 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
+  const getHistoryByUser = async () => {
+    try {
+      const res = await axios.get('/api/v1/history/getHistoryByUserLogin');
+
+      console.log(res);
+
+      const { data } = res;
+      const { history } = data;
+
+      console.log(history);
+
+      dispatch({ type: GET_HISTORY_BY_USER, payload: history });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -1457,6 +1476,7 @@ const AppProvider = ({ children }) => {
         transferSendOtp,
         withDrawApp,
         buyCardApp,
+        getHistoryByUser,
       }}
     >
       {children}

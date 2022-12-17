@@ -51,6 +51,7 @@ import {
   BUY_CARD_BEGIN,
   BUY_CARD_SUCCESS,
   BUY_CARD_ERROR,
+  GET_HISTORY_BY_USER,
 } from './action';
 
 const reducer = (state, action) => {
@@ -392,6 +393,10 @@ const reducer = (state, action) => {
   }
   if (action.type === BUY_CARD_ERROR) {
     return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === GET_HISTORY_BY_USER) {
+    return { ...state, historyByUser: action.payload };
   }
 };
 
