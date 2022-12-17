@@ -507,6 +507,24 @@ const changePassword = async(req,res)=>{
   return res.status(StatusCodes.OK).json({msg: "Change Password success", user: getUser})
 }
 
+const changeNewPasswordAfterLogin = async(req,res) =>{
+  const {oldPassword,password, confirmPassword} = req.body
+  const user = req.user
+  console.log(user)
+  if(password !== confirmPassword)
+    throw new badRequestError("New password and confirm password not match")
+  const getUser = await User.findOne({ _id: user.userId})
+  if(!getUser)
+    throw new notFoundError("User not found")
+  const isMatch = await getUser.comparePassword(oldPassword)
+  if(!isMatch)
+    throw new badRequestError("Your password is incorrect please enter again")
+
+  getUser.password = password
+  getUser.save()
+  return res.status(StatusCodes.OK).json({msg: "Change New Password success", user: getUser})
+}
+
 export {
   login,
   register,
@@ -518,7 +536,8 @@ export {
   enterOTPForgotPass,
   uploadUserImage1,
   checkPwd,
-  changePassword
+  changePassword,
+  changeNewPasswordAfterLogin
 };
 
 // admin: 620277
