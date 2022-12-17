@@ -93,6 +93,10 @@ const History = () => {
     historyAllUsers,
     historyAllUsersData,
     user,
+    allowTransferMoney,
+    isAllowTransfer,
+    isAllowWithdraw,
+    allowWithdrawMoney,
   } = useGlobalContext();
 
   const [bordered, setBordered] = useState(false);
@@ -116,6 +120,7 @@ const History = () => {
   const [open, setOpen] = React.useState(false);
 
   const [openNested, setOpenNested] = React.useState(false);
+  const [openNested2, setOpenNested2] = React.useState(false);
 
   const columns = [
     {
@@ -537,6 +542,13 @@ const History = () => {
                   padding: '1.6rem 3.2rem',
                 }}
               >
+                {historyById?.status === 'PROCESSING' && (
+                  <>
+                    <p>Transfer is more than 5000000vnd.</p>
+                    <p>Do you want to alow it?</p>
+                  </>
+                )}
+
                 <Button
                   variant="contained"
                   type="button"
@@ -545,7 +557,17 @@ const History = () => {
                     console.log('Open nested modal here');
                   }}
                 >
-                  Open Nested
+                  Update
+                </Button>
+                <Button
+                  variant="contained"
+                  type="button"
+                  onClick={(event) => {
+                    setOpenNested2(true);
+                    console.log('Open nested modal here');
+                  }}
+                >
+                  Cancel
                 </Button>
 
                 <Modal
@@ -581,7 +603,69 @@ const History = () => {
                         bgcolor: 'background.body',
                       }}
                     />
-                    <LoadingButton type="button">Update</LoadingButton>
+                    <LoadingButton
+                      type="button"
+                      onClick={() => {
+                        if (historyById?.type === 'WITHDRAW') {
+                          allowWithdrawMoney(historyById?._id, 'SUCCESS');
+                        }
+                        if (historyById?.type === 'TRANSFER') {
+                          allowTransferMoney(historyById?._id, 'SUCCESS');
+                        }
+                      }}
+                    >
+                      Confirm
+                    </LoadingButton>
+                    <LoadingButton type="button">Close</LoadingButton>
+                  </Sheet>
+                </Modal>
+
+                <Modal
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-desc"
+                  open={openNested2}
+                  onClose={() => setOpenNested2(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: '20000',
+                  }}
+                >
+                  <Sheet
+                    variant="outlined"
+                    sx={{
+                      maxWidth: 500,
+                      borderRadius: 'md',
+                      p: 3,
+                      boxShadow: 'lg',
+                      display: 'grid',
+                      // backgroundColor: 'orange',
+                    }}
+                  >
+                    <ModalClose
+                      variant="outlined"
+                      sx={{
+                        top: 'calc(-1/4 * var(--IconButton-size))',
+                        right: 'calc(-1/4 * var(--IconButton-size))',
+                        boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
+                        borderRadius: '50%',
+                        bgcolor: 'background.body',
+                      }}
+                    />
+                    <LoadingButton
+                      type="button"
+                      onClick={() => {
+                        if (historyById?.type === 'WITHDRAW') {
+                          allowWithdrawMoney(historyById?._id, 'CANCEL');
+                        }
+                        if (historyById?.type === 'TRANSFER') {
+                          allowTransferMoney(historyById?._id, 'CANCEL');
+                        }
+                      }}
+                    >
+                      Confirm
+                    </LoadingButton>
                     <LoadingButton type="button">Close</LoadingButton>
                   </Sheet>
                 </Modal>

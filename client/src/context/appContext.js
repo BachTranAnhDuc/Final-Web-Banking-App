@@ -70,6 +70,15 @@ import {
   CONFIRM_PWD_FORGOT_BEGIN,
   CONFIRM_PWD_FORGOT_SUCCESS,
   GET_ALL_HISTORY_USERS,
+  ALLOW_TRANSFER_MONEY_BEGIN,
+  ALLOW_TRANSFER_MONEY_SUCCESS,
+  ALLOW_TRANSFER_MONEY_ERROR,
+  ALLOW_WITHDRAW_MONEY_ERROR,
+  ALLOW_WITHDRAW_MONEY_BEGIN,
+  ALLOW_WITHDRAW_MONEY_SUCCESS,
+  GET_ALL_USER_WITH_CONDITION_ERROR,
+  GET_ALL_USER_WITH_CONDITION_SUCCESS,
+  GET_ALL_USER_WITH_CONDITION_BEGIN,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -182,6 +191,10 @@ const defaultState = {
 
   historyAllUsers: [],
   historyAllUsersData: [],
+
+  // CHECK ALLOW TRANSFER
+  isAllowTransfer: false,
+  isAllowWithdraw: false,
 };
 
 const AppContext = React.createContext();
@@ -1621,6 +1634,150 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const allowTransferMoney = async (idHis, statusInput) => {
+    dispatch({ type: ALLOW_TRANSFER_MONEY_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post(`/api/v1/admin/updateStatus/${idHis}`, {
+          status: statusInput,
+        });
+
+        console.log(res);
+
+        dispatch({ type: ALLOW_TRANSFER_MONEY_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+
+        const { msg } = data;
+
+        console.log(msg);
+        dispatch({ type: ALLOW_TRANSFER_MONEY_ERROR });
+      }
+    }, 1000);
+  };
+
+  const allowWithdrawMoney = async (idHis, statusInput) => {
+    dispatch({ type: ALLOW_WITHDRAW_MONEY_BEGIN });
+
+    setTimeout(async () => {
+      try {
+        const res = await axios.post(
+          `/api/v1/admin/updateStatusWithdrawMoney/${idHis}`,
+          {
+            status: statusInput,
+          }
+        );
+
+        console.log(res);
+
+        dispatch({ type: ALLOW_WITHDRAW_MONEY_SUCCESS });
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+
+        const { msg } = data;
+
+        console.log(msg);
+        dispatch({ type: ALLOW_WITHDRAW_MONEY_ERROR });
+      }
+    }, 1000);
+  };
+
+  const getAllUserWithCondition = async (typeCondition) => {
+    dispatch({ type: GET_ALL_USER_WITH_CONDITION_BEGIN });
+
+    setTimeout(async () => {
+      console.log('get all users witn condition here');
+      try {
+        if (typeCondition === 'UserProcessing') {
+          console.log('get all user processing here');
+          const res = await axios.get('/api/v1/admin/getAllUserProcessing');
+          console.log(res);
+
+          const { data } = res;
+
+          const { allUser } = data;
+
+          for (let i = 0; i < allUser.length; i++) {
+            allUser[i].key = allUser[i]._id;
+          }
+
+          console.log(allUser);
+          dispatch({
+            type: GET_ALL_USER_WITH_CONDITION_SUCCESS,
+            payload: allUser,
+          });
+        }
+        if (typeCondition === 'UserActive') {
+          const res = await axios.get('/api/v1/admin/getAllUserActive');
+          console.log(res);
+
+          const { data } = res;
+
+          const { allUser } = data;
+
+          for (let i = 0; i < allUser.length; i++) {
+            allUser[i].key = allUser[i]._id;
+          }
+
+          console.log(allUser);
+          dispatch({
+            type: GET_ALL_USER_WITH_CONDITION_SUCCESS,
+            payload: allUser,
+          });
+        }
+        if (typeCondition === 'UserBlock') {
+          const res = await axios.get('/api/v1/admin/getAllUserBlock');
+          console.log(res);
+
+          const { data } = res;
+
+          const { allUser } = data;
+
+          for (let i = 0; i < allUser.length; i++) {
+            allUser[i].key = allUser[i]._id;
+          }
+
+          console.log(allUser);
+          dispatch({
+            type: GET_ALL_USER_WITH_CONDITION_SUCCESS,
+            payload: allUser,
+          });
+        }
+        if (typeCondition === 'UserBlockPassword') {
+          const res = await axios.get('/api/v1/admin/getAllUsersBlockPassword');
+          console.log(res);
+
+          const { data } = res;
+
+          const { allUser } = data;
+
+          for (let i = 0; i < allUser.length; i++) {
+            allUser[i].key = allUser[i]._id;
+          }
+
+          console.log(allUser);
+          dispatch({
+            type: GET_ALL_USER_WITH_CONDITION_SUCCESS,
+            payload: allUser,
+          });
+        }
+      } catch (error) {
+        const { response } = error;
+
+        const { data } = response;
+
+        console.log(data);
+
+        dispatch({ type: GET_ALL_USER_WITH_CONDITION_ERROR });
+      }
+    }, 1000);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -1670,6 +1827,9 @@ const AppProvider = ({ children }) => {
         confirmPwdForgotPwd,
         confirmOtpForgotPwd,
         getAllHistoryUsers,
+        allowTransferMoney,
+        allowWithdrawMoney,
+        getAllUserWithCondition,
       }}
     >
       {children}

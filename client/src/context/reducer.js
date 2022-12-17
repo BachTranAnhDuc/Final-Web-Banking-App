@@ -63,6 +63,15 @@ import {
   CONFIRM_PWD_FORGOT_SUCCESS,
   CONFIRM_PWD_FORGOT_ERROR,
   GET_ALL_HISTORY_USERS,
+  ALLOW_TRANSFER_MONEY_BEGIN,
+  ALLOW_TRANSFER_MONEY_SUCCESS,
+  ALLOW_TRANSFER_MONEY_ERROR,
+  ALLOW_WITHDRAW_MONEY_BEGIN,
+  ALLOW_WITHDRAW_MONEY_SUCCESS,
+  ALLOW_WITHDRAW_MONEY_ERROR,
+  GET_ALL_USER_WITH_CONDITION_BEGIN,
+  GET_ALL_USER_WITH_CONDITION_SUCCESS,
+  GET_ALL_USER_WITH_CONDITION_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -454,6 +463,36 @@ const reducer = (state, action) => {
     const { reHis, histories } = action.payload;
 
     return { ...state, historyAllUsers: histories, historyAllUsersData: reHis };
+  }
+
+  if (action.type === ALLOW_TRANSFER_MONEY_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === ALLOW_TRANSFER_MONEY_SUCCESS) {
+    return { ...state, isLoadingForm: false, isAllowTransfer: true };
+  }
+  if (action.type === ALLOW_TRANSFER_MONEY_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === ALLOW_WITHDRAW_MONEY_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === ALLOW_WITHDRAW_MONEY_SUCCESS) {
+    return { ...state, isLoadingForm: false, isAllowWithdraw: true };
+  }
+  if (action.type === ALLOW_WITHDRAW_MONEY_ERROR) {
+    return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === GET_ALL_USER_WITH_CONDITION_BEGIN) {
+    return { ...state };
+  }
+  if (action.type === GET_ALL_USER_WITH_CONDITION_SUCCESS) {
+    return { ...state, users: action.payload };
+  }
+  if (action.type === GET_ALL_USER_WITH_CONDITION_ERROR) {
+    return { ...state };
   }
 };
 

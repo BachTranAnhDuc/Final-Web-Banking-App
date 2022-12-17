@@ -39,6 +39,7 @@ const NavDashboard = () => {
     showStyleBody,
     hideStyleBody,
     getAllUsers,
+    getAllUserWithCondition,
   } = useGlobalContext();
 
   const [display, setDisplay] = useState('arrow');
@@ -144,6 +145,7 @@ const NavDashboard = () => {
                   onClick={() => {
                     getAllUsers();
                     switchPage();
+                    // getAllUserWithCondition('UserProcessing');
                   }}
                 >
                   <span>ACCOUNT</span>

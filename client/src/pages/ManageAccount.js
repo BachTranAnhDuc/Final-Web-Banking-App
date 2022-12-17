@@ -74,7 +74,8 @@ const defaultTitle = () => 'Here is title';
 const defaultFooter = () => 'Here is footer';
 
 const ManageAccount = () => {
-  const { users, userById, getSingleUser } = useGlobalContext();
+  const { users, userById, getSingleUser, getAllUserWithCondition } =
+    useGlobalContext();
 
   const [bordered, setBordered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -475,6 +476,45 @@ const ManageAccount = () => {
             </Radio.Group>
           </Form.Item>
         </Form>
+
+        <Box>
+          <LoadingButton
+            type="button"
+            variant="contained"
+            onClick={() => {
+              getAllUserWithCondition('UserProcessing');
+            }}
+          >
+            Get all users processing
+          </LoadingButton>
+          <LoadingButton
+            type="button"
+            variant="contained"
+            onClick={() => {
+              getAllUserWithCondition('UserActive');
+            }}
+          >
+            Get all users active
+          </LoadingButton>
+          <LoadingButton
+            type="button"
+            variant="contained"
+            onClick={() => {
+              getAllUserWithCondition('UserBlock');
+            }}
+          >
+            Get all users block
+          </LoadingButton>
+          <LoadingButton
+            type="button"
+            variant="contained"
+            onClick={() => {
+              getAllUserWithCondition('UserBlockPassword');
+            }}
+          >
+            Get all users block password
+          </LoadingButton>
+        </Box>
         <Table
           {...tableProps}
           pagination={{
