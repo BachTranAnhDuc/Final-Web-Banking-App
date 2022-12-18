@@ -12,6 +12,14 @@
 
 ---
 
+## Github
+
+[Link](https://github.com/BachTranAnhDuc/Final-Web-Banking-App.git) to access github.
+
+## Link video
+
+[Video](https://drive.google.com/drive/folders/1VBgJVLETeV6aQ4CXeKnoFaTjnUuVxYEy?usp=share_link)
+
 # How to use ?
 
 You need install all package:
@@ -42,11 +50,17 @@ npm start
 
 That is result
 
-**Account**
+**Account (admin)**
 
 _Username: 420076700_
 
 _Password: 1234567_
+
+**Account (user)**
+
+_Username: 329849298_
+
+_Password: 123456_
 
 When you login you will redirect to home page:
 
