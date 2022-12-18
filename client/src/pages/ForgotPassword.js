@@ -60,6 +60,8 @@ import Countdown from 'react-countdown';
 
 import CloseIcon from '@mui/icons-material/Close';
 
+import { useNavigate } from 'react-router-dom';
+
 // import { LoadingButton } from '@mui/lab';
 
 const initState = {
@@ -76,6 +78,8 @@ const initValidInput = {
 const ForgotPassword = () => {
   const [values, setValues] = useState(initState);
   const [validValues, setValidValues] = useState(initValidInput);
+
+  const navigate = useNavigate();
 
   const {
     actionForgotPage,
@@ -137,6 +141,10 @@ const ForgotPassword = () => {
       type: 'minus',
       length: 3,
     });
+  };
+
+  const forgotPwdSuccesss = () => {
+    navigate('/new-login');
   };
 
   return (
@@ -403,7 +411,7 @@ const ForgotPassword = () => {
                             loading={isLoadingForm}
                             type="button"
                             onClick={() => {
-                              showToast('Step 1', 3000, 'success');
+                              // showToast('Step 1', 3000, 'success');
 
                               // console.log(props.values.pwd);
 
@@ -423,7 +431,7 @@ const ForgotPassword = () => {
                             loading={isLoadingForm}
                             type="button"
                             onClick={() => {
-                              showToast('Step 2 send otp');
+                              // showToast('Step 2 send otp');
 
                               confirmOtpForgotPwd({
                                 email: forgotUserTemp?.email,
@@ -441,13 +449,16 @@ const ForgotPassword = () => {
                             loading={isLoadingForm}
                             type="button"
                             onClick={() => {
-                              showToast('Step 3 enter pwd');
-                              confirmPwdForgotPwd({
-                                email: forgotUserTemp?.email,
-                                phone: forgotUserTemp?.phone,
-                                password: props.values.pwd,
-                                confirmPassword: props.values.confirmPwd,
-                              });
+                              // showToast('Step 3 enter pwd');
+                              confirmPwdForgotPwd(
+                                {
+                                  email: forgotUserTemp?.email,
+                                  phone: forgotUserTemp?.phone,
+                                  password: props.values.pwd,
+                                  confirmPassword: props.values.confirmPwd,
+                                },
+                                forgotPwdSuccesss
+                              );
                             }}
                           >
                             Reset

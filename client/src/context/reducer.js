@@ -461,13 +461,13 @@ const reducer = (state, action) => {
   }
 
   if (action.type === CONFIRM_PWD_FORGOT_BEGIN) {
-    return { ...state };
+    return { ...state, isLoadingForm: true };
   }
   if (action.type === CONFIRM_PWD_FORGOT_SUCCESS) {
-    return { ...state };
+    return { ...state, isLoadingForm: false };
   }
   if (action.type === CONFIRM_PWD_FORGOT_ERROR) {
-    return { ...state };
+    return { ...state, isLoadingForm: false };
   }
 
   if (action.type === GET_ALL_HISTORY_USERS) {

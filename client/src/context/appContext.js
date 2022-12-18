@@ -90,6 +90,7 @@ import {
   UPLOAD_CMND_BEGIN,
   UPLOAD_CMND_SUCCESS,
   UPLOAD_CMND_ERROR,
+  CONFIRM_PWD_FORGOT_ERROR,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -1679,7 +1680,10 @@ const AppProvider = ({ children }) => {
     }, 1000);
   };
 
-  const confirmPwdForgotPwd = ({ password, confirmPassword, email, phone }) => {
+  const confirmPwdForgotPwd = (
+    { password, confirmPassword, email, phone },
+    forgotPwdSuccesss
+  ) => {
     dispatch({ type: CONFIRM_PWD_FORGOT_BEGIN });
 
     setTimeout(async () => {
@@ -1693,6 +1697,8 @@ const AppProvider = ({ children }) => {
 
         console.log(res);
 
+        forgotPwdSuccesss();
+
         dispatch({ type: CONFIRM_PWD_FORGOT_SUCCESS });
       } catch (error) {
         const { response } = error;
@@ -1702,6 +1708,8 @@ const AppProvider = ({ children }) => {
         const { msg } = data;
 
         showToast(msg, 4000, 'error');
+
+        dispatch({ type: CONFIRM_PWD_FORGOT_ERROR });
       }
     }, 1000);
   };
