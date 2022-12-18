@@ -12,7 +12,7 @@ import {
 } from '../error/index.js';
 
 const getAllHistory = async (req, res) => {
-  const histories = await History.find({});
+  const histories = await History.find({}).sort({"date":-1});
 
   res
     .status(StatusCodes.OK)

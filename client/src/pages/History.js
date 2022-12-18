@@ -164,6 +164,21 @@ const History = () => {
       key: 'status',
       dataIndex: 'status',
       // sorter: (a, b) => a.money - b.money,
+      filters: [
+        {
+          text: 'Success',
+          value: 'SUCCESS',
+        },
+        {
+          text: 'Processing',
+          value: 'PROCESSING',
+        },
+        {
+          text: 'Cancel',
+          value: 'CANCEL',
+        },
+      ],
+      onFilter: (value, record) => record.status === value,
       render: (_, { status }) => (
         <>
           {/* {status.map((tag) => {

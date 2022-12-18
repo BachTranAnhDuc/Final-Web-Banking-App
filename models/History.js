@@ -16,7 +16,7 @@ const HistorySchema = new mongoose.Schema({
     },
     status:{
         type: String,
-        enum: ['PROCESSING', 'FAIL', 'SUCCESS', 'CANCEL']
+        enum: ['PROCESSING', 'SUCCESS', 'CANCEL']
     },
     fromUser:{
         type: String,
