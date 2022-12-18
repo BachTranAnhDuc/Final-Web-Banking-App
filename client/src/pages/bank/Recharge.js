@@ -113,6 +113,8 @@ const Recharge = () => {
     showToast,
     rechargeMoneyApp,
     isLoadingForm,
+    getSingleUser,
+    user,
   } = useGlobalContext();
 
   const validateMoney = (value) => {
@@ -251,8 +253,11 @@ const Recharge = () => {
                 idCard: values.idCard,
                 dateEnd: values.dateEnd,
                 cvv: values.cvv,
+                // idUser: user?.id,
                 // password: values.password,
               });
+
+              getSingleUser(user?._id);
             }}
           >
             {(props) => (

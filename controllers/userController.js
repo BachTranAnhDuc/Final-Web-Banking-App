@@ -113,7 +113,11 @@ const rechargeMoney = async (req, res) => {
   //   throw new badRequestError("this number card is card out of money")
   // }
 
-  getUser.money += money;
+  const balance = Number(getUser.money) + Number(money);
+
+  // getUser.money += money;
+
+  getUser.money = balance;
   getUser.save(); // update the user balance
 
   //-------------------------------------------------------
@@ -158,17 +162,17 @@ const transferMoney = async (req, res) => {
   }
   // getUser.otpTransaction = ""
   let usernameFee = '';
-  const transactionFee = money * 0.05;
-  const minusBalance = getUser.money - (money + transactionFee);
+  const transactionFee = Number(money) * 0.05;
+  const minusBalance = Number(getUser.money) - (Number(money) + transactionFee);
   if (userBearFee === 'Me') {
     if (minusBalance < 0)
       throw new badRequestError(
         'Your balance is not enough for transfer money and pay fee transfer'
       );
-    getUser.money = getUser.money - transactionFee;
+    getUser.money = Number(getUser.money) - transactionFee;
     usernameFee = getUser.username;
   } else if (userBearFee !== 'Me') {
-    getReceiver.money = money - transactionFee;
+    getReceiver.money = Number(money) - transactionFee;
     usernameFee = getReceiver.username;
   }
   // check user balance transfer money
@@ -216,9 +220,18 @@ const transferMoney = async (req, res) => {
   }
 
   getUser.otpTransaction = '';
-  getUser.money -= money;
+  // getUser.money -= money;
+
+  const money223 = Number(getUser.money) - Number(money);
+
+  getUser.money = money223;
+
   getUser.save();
-  getReceiver.money += money;
+
+  // getReceiver.money += money;
+
+  const money231 = Number(getReceiver.money) + Number(money);
+  getReceiver.money = money231;
   getReceiver.save();
 
   //-------------------------------------------------------
@@ -448,14 +461,15 @@ const buyMobileCard = async (req, res) => {
   });
 };
 
-const getUserByPhone = async(req,res)=>{
+const getUserByPhone = async (req, res) => {
   const phone = req.params.phone;
-  const getUser = await User.findOne({phone:phone})
-  if(!getUser)
-    throw new notFoundError('Can not find user');
+  const getUser = await User.findOne({ phone: phone });
+  if (!getUser) throw new notFoundError('Can not find user');
 
-  return res.status(StatusCodes.OK).json({msg: 'Get information about user by phone', getUser: getUser})
-}
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Get information about user by phone', getUser: getUser });
+};
 
 export {
   getAllUsers,

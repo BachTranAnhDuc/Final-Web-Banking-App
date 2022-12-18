@@ -113,6 +113,9 @@ const Withdraw = () => {
     showToast,
     isLoadingForm,
     withDrawApp,
+    getSingleUser,
+    userById,
+    user,
   } = useGlobalContext();
 
   const validateMoney = (value) => {
@@ -242,6 +245,8 @@ const Withdraw = () => {
                 cvvNumber: values.cvv,
                 message: values.note,
               });
+
+              getSingleUser(user?._id);
             }}
           >
             {(props) => (

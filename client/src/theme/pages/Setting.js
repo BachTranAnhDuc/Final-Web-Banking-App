@@ -304,20 +304,35 @@ const SettingStyled = styled.main`
 
     background-color: var(--color-white);
     border-radius: 8px;
-    padding: 2rem 4rem;
+    padding: 2.4rem 4.8rem;
 
-    /* height: 30rem; */
+    /* grid-template-columns: repeat(2, 1fr); */
+    min-height: 30rem;
 
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
       rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
     /* grid-template-columns: repeat(2, 1fr); */
+
+    /* justify-items: start; */
   }
 
   .setting-upload__container-img {
+    width: 100%;
+    height: 100%;
     justify-self: center;
     align-self: start;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+
+    justify-items: start;
+
+    /* background-color: red; */
+
+    position: relative;
+  }
+
+  .setting-upload__image {
+    height: 12rem;
   }
 
   .setting-upload__image-front {
@@ -506,7 +521,7 @@ const SettingStyled = styled.main`
     border-radius: 8px;
     padding: 2rem 4rem;
 
-    /* height: 30rem; */
+    min-height: 30rem;
 
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
       rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;

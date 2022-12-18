@@ -86,6 +86,7 @@ import {
   CHANGE_PASSWORD_BEGIN,
   CHANGE_PASSWORD_ERROR,
   CHANGE_PASSWORD_SUCCESS,
+  TO_USER_TRANSFER,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -204,6 +205,7 @@ const defaultState = {
   // CHECK ALLOW TRANSFER
   isAllowTransfer: false,
   isAllowWithdraw: false,
+  toUserTransfer: {},
 };
 
 const AppContext = React.createContext();
@@ -721,6 +723,24 @@ const AppProvider = ({ children }) => {
         payload: { numPage: 1, name: name, length: length, actionType: '' },
       });
     }
+    if (name === 'withdraw') {
+      dispatch({
+        type: NUM_PAGE_BANK,
+        payload: { numPage: 1, name: name, length: length, actionType: '' },
+      });
+    }
+    if (name === 'transfer') {
+      dispatch({
+        type: NUM_PAGE_BANK,
+        payload: { numPage: 1, name: name, length: length, actionType: '' },
+      });
+    }
+    if (name === 'recharge') {
+      dispatch({
+        type: NUM_PAGE_BANK,
+        payload: { numPage: 1, name: name, length: length, actionType: '' },
+      });
+    }
   };
 
   const confirmPwdBuy = (input) => {
@@ -815,6 +835,37 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       imageValue = null;
 
+      console.log(error);
+    }
+  };
+
+  const getSingleUser = async (inputId) => {
+    try {
+      const res = await axios.get(`/api/v1/user/${inputId}`);
+
+      const { data } = res;
+
+      const { msg, user } = data;
+
+      console.log(msg, user);
+
+      dispatch({ type: GET_SINGLE_USER, payload: { msg, user } });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getSingleUserToTransfer = async (inputPhone) => {
+    try {
+      const res = await axios.get(`/api/v1/user/getUserByPhone/${inputPhone}`);
+
+      const { data } = res;
+
+      const { msg, getUser } = data;
+
+      console.log(data);
+
+      dispatch({ type: TO_USER_TRANSFER, payload: { msg, getUser } });
+    } catch (error) {
       console.log(error);
     }
   };
@@ -1183,22 +1234,6 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const getSingleUser = async (inputId) => {
-    try {
-      const res = await axios.get(`/api/v1/user/${inputId}`);
-
-      const { data } = res;
-
-      const { msg, user } = data;
-
-      console.log(msg, user);
-
-      dispatch({ type: GET_SINGLE_USER, payload: { msg, user } });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const openSidebar = () => {
     // setIsSidebarOpen(true);
 
@@ -1269,6 +1304,22 @@ const AppProvider = ({ children }) => {
         dispatch({ type: RECHARGE_ERROR });
       }
     }, 1000);
+
+    // setTimeout(async () => {
+    //   try {
+    //     const res = await axios.get(`/api/v1/user/${idUser}`);
+
+    //     const { data } = res;
+
+    //     const { msg, user } = data;
+
+    //     console.log(msg, user);
+
+    //     dispatch({ type: GET_SINGLE_USER, payload: { msg, user } });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }, 1500);
   };
 
   const transferMoneyApp = async ({
@@ -1910,6 +1961,47 @@ const AppProvider = ({ children }) => {
     }, 1500);
   };
 
+  const uploadImageCMND = ({ imageFront, imageBack, idUser }) => {
+    // dispatch({ type: REGISTER_BEGIN });
+
+    console.log('upload begin');
+
+    // console.log(user);
+
+    setTimeout(async () => {
+      try {
+        const postUser = await axios.post(
+          '/api/v1/auth/upload',
+          { imageFront, imageBack, idUser: idUser },
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        console.log(postUser);
+        // dispatch({ type: REGISTER_SUCCESS, payload: postUser });
+
+        showToast('Upload success', 4000, 'success');
+
+        // actions.resetForm();
+      } catch (error) {
+        // dispatch({ type: REGISTER_ERROR });
+        console.log(`Cannot upload ${error}`);
+
+        const { response } = error;
+        const { data } = response;
+        // const { msg } = data;
+
+        // const { email } = user;
+
+        console.log(data);
+
+        // showToast(msg, 4000, 'error');
+      }
+    }, 100);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -1966,6 +2058,8 @@ const AppProvider = ({ children }) => {
         updateIdentifyUser,
         getHistoryByUserId,
         changePassword,
+        uploadImageCMND,
+        getSingleUserToTransfer,
       }}
     >
       {children}

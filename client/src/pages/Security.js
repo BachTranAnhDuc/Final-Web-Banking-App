@@ -7,7 +7,7 @@ import { Loader2 } from '../components';
 import SettingStyled from '../theme/pages/Setting';
 
 const Security = () => {
-  const { isLoader } = useGlobalContext();
+  const { isLoader, user } = useGlobalContext();
 
   if (isLoader) {
     return (
@@ -21,7 +21,26 @@ const Security = () => {
 
   return (
     <SettingStyled>
-      <div className="section-setting section-setting__security">Security</div>
+      <div className="section-setting section-setting__security">
+        <div>
+          <p>
+            Your account is: <span>{user?.identify}</span>
+          </p>
+
+          {user?.identify === 'processing' && (
+            <div>
+              You are processing, so you cannot access deposit and history bank
+              app, please wait your account is identify!
+            </div>
+          )}
+          {user?.identify === 'waiting' && (
+            <div>You are waiting, please update your account!</div>
+          )}
+          {user?.identify === 'success' && (
+            <div>Your account is identify, so you can use all function!</div>
+          )}
+        </div>
+      </div>
     </SettingStyled>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Loading, Toast } from '../components';
+// import { Loading, Toast } from '../components';
 
 import { useGlobalContext } from '../context/appContext';
 
@@ -10,6 +10,8 @@ import { FaUsers, FaSketch } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
 
 import DashboardStyle from '../theme/pages/Dashboard';
+
+import { Loading, Toast } from '../components';
 
 const Dashboard = () => {
   const { user, showToast, showToastSuccess, showToastError } =
@@ -91,7 +93,7 @@ const Dashboard = () => {
           <div className="dashboard__something-2--v1"></div>
         </div>
 
-        {/* <Toast></Toast> */}
+        {/* <Toast position={'top-right'}></Toast> */}
       </section>
     </DashboardStyle>
   );

@@ -79,6 +79,7 @@ import {
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_ERROR,
   CHANGE_PASSWORD_BEGIN,
+  TO_USER_TRANSFER,
 } from './action';
 
 const reducer = (state, action) => {
@@ -529,6 +530,11 @@ const reducer = (state, action) => {
   }
   if (action.type === CHANGE_PASSWORD_ERROR) {
     return { ...state, isLoadingForm: false };
+  }
+
+  if (action.type === TO_USER_TRANSFER) {
+    const { msg, getUser } = action.payload;
+    return { ...state, toUserTransfer: getUser };
   }
 };
 

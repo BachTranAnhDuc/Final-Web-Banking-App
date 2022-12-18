@@ -29,6 +29,7 @@ import {
   NewRegister,
   History,
   ManageAccount,
+  ProtectedRouteDeposit,
 } from './pages';
 import { ShareLayout, ShareLayoutDash, ShareLayoutSetting } from './components';
 
@@ -100,7 +101,14 @@ const App = () => {
                 }
               ></Route>
             </Route>
-            <Route path="deposit" element={<Bank></Bank>}>
+            <Route
+              path="deposit"
+              element={
+                <ProtectedRouteDeposit>
+                  <Bank></Bank>
+                </ProtectedRouteDeposit>
+              }
+            >
               <Route index element={<BankHome></BankHome>}></Route>
               <Route path="transfer" element={<Transfer></Transfer>}></Route>
               <Route path="recharge" element={<Recharge></Recharge>}></Route>
@@ -108,7 +116,14 @@ const App = () => {
               <Route path="buy" element={<BuyCard></BuyCard>}></Route>
             </Route>
 
-            <Route path="history" element={<History></History>}></Route>
+            <Route
+              path="history"
+              element={
+                <ProtectedRouteDeposit>
+                  <History></History>
+                </ProtectedRouteDeposit>
+              }
+            ></Route>
             <Route
               path="manage"
               element={<ManageAccount></ManageAccount>}

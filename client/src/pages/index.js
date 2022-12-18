@@ -26,6 +26,7 @@ import NewLogin from './NewLogin';
 import NewRegister from './NewRegister';
 import History from './History';
 import ManageAccount from './ManageAccount';
+import ProtectedRouteDeposit from './ProtectedRouteDeposit';
 
 export {
   Landing,
@@ -56,4 +57,5 @@ export {
   NewRegister,
   History,
   ManageAccount,
+  ProtectedRouteDeposit,
 };

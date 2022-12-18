@@ -7,7 +7,7 @@ import { Loader2 } from '../components';
 import { useGlobalContext } from '../context/appContext';
 
 const Deposit = () => {
-  const { isLoader } = useGlobalContext();
+  const { isLoader, user, userById } = useGlobalContext();
 
   if (isLoader) {
     return (
@@ -26,7 +26,7 @@ const Deposit = () => {
         <div className="deposit__context">
           <div className="deposit__context--item">
             <h3 className="deposit__label deposit__label--heading">Balance</h3>
-            <p className="deposit__text">4999 $</p>
+            <p className="deposit__text">{userById?.money}</p>
           </div>
         </div>
       </div>

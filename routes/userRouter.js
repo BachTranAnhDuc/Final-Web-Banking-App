@@ -25,7 +25,9 @@ router
   .get(authenticateUser, authorizePermissions(['admin']), getAllUsers);
 router
   .route('/:id')
-  .get(authenticateUser, authorizePermissions(['admin']), getUser);
+  //   .get(authenticateUser, authorizePermissions(['admin']), getUser);
+  // router
+  .get(authenticateUser, getUser);
 router
   .route('/identify/:id')
   .post(authenticateUser, authorizePermissions(['admin']), identifyUser);
@@ -69,12 +71,10 @@ router
     withdrawMoney
   );
 
-
-
 // buy mobile card
 router
   .route('/buyMobileCard')
   .post(authenticateUser, authorizePermissions(['user']), buyMobileCard);
 
-router.route("/getUserByPhone/:phone").get(getUserByPhone);
+router.route('/getUserByPhone/:phone').get(getUserByPhone);
 export default router;

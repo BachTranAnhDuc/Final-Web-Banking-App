@@ -225,9 +225,11 @@ const BankStyled = styled.main`
 
   .bank-body__content--container {
     border-radius: 8px;
-    background-color: var(--color-fifth);
+    background-color: var(--color-white);
 
     height: 100%;
+
+    padding: 3.2rem 6.4rem;
   }
 
   .bankbody__link:link,

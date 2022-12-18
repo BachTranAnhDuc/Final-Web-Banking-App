@@ -122,6 +122,8 @@ const BuyCard = () => {
     isLoadingForm,
     buyCardApp,
     buyCardData,
+    user,
+    getSingleUser,
   } = useGlobalContext();
 
   const [openModalMUI, setOpenModalMUI] = React.useState(false);
@@ -222,6 +224,8 @@ const BuyCard = () => {
               nameCard: values.nameCard,
               price: values.typeCard,
             });
+
+            getSingleUser(user?._id);
           }}
         >
           {(props) => (

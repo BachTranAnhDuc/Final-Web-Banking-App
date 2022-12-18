@@ -392,7 +392,14 @@ const History = () => {
             position: [top, bottom],
           }}
           columns={tableColumns}
-          dataSource={hasData ? historyAllUsersData : []}
+          // dataSource={hasData ? historyAllUsersData : []}\
+          dataSource={
+            hasData && user?.role === 'admin'
+              ? historyAllUsersData
+              : hasData && user?.role === 'user'
+              ? dataHistoryByUser
+              : []
+          }
           scroll={scroll}
         />
       </section>

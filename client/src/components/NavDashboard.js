@@ -40,6 +40,8 @@ const NavDashboard = () => {
     hideStyleBody,
     getAllUsers,
     getAllUserWithCondition,
+    showToast,
+    getSingleUser,
   } = useGlobalContext();
 
   const [display, setDisplay] = useState('arrow');
@@ -119,7 +121,11 @@ const NavDashboard = () => {
                 className={({ isActive }) =>
                   isActive ? 'nav-link nav-link__active' : 'nav-link'
                 }
-                onClick={() => switchPage()}
+                onClick={() => {
+                  switchPage();
+
+                  getSingleUser(user?._id);
+                }}
               >
                 <span>Deposit</span>
               </NavLink>
@@ -212,7 +218,11 @@ const NavDashboard = () => {
               <Avatar /> Profile
             </MenuItem>
             <MenuItem
-              onClick={(e) => handleClickToSetting('account')}
+              onClick={(e) => {
+                handleClickToSetting('account');
+
+                getSingleUser(user?._id);
+              }}
               sx={{ fontSize: '1.4rem' }}
             >
               <Avatar /> My account

@@ -308,6 +308,66 @@ const register = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  console.log('image here');
+  /* console.log(req.body); */
+
+  const { idUser } = req.body;
+
+  // const { imageFront, imageBack } = req.files;
+  // const { tempFilePath: tempFilePathFront } = imageFront;
+  // const { tempFilePath: tempFilePathBack } = imageBack;
+
+  // console.log(imageFront);
+
+  const findUser = await User.findOne({ _id: idUser });
+
+  console.log(findUser);
+
+  let imgF = '';
+  let imgB = '';
+
+  try {
+    // const up1 = await uploadImage(tempFilePathBack, rdUsername);
+    // const up2 = await uploadImage(tempFilePathFront, rdUsername);
+
+    // console.log(req);
+    console.log('image file');
+    console.log(req.file);
+    console.log('image files');
+    console.log(req.files);
+
+    const result1 = await cloudinary.v2.uploader.upload(
+      req.files.imageFront.tempFilePath,
+      {
+        use_filename: true,
+        folder: `bankist`,
+      }
+    );
+    const result2 = await cloudinary.v2.uploader.upload(
+      req.files.imageBack.tempFilePath,
+      {
+        use_filename: true,
+        folder: `bankist`,
+      }
+    );
+    fs.unlinkSync(req.files.imageFront.tempFilePath);
+    fs.unlinkSync(req.files.imageBack.tempFilePath);
+
+    imgB = result2.secure_url;
+    imgF = result1.secure_url;
+
+    console.log(imgB);
+    console.log(imgF);
+
+    findUser.imageFront = imgF;
+    findUser.imageBack = imgB;
+
+    findUser.save();
+  } catch (error) {
+    console.log('Cannot upload image');
+    console.log(error);
+  }
+
   res.status(StatusCodes.OK).json({ msg: 'Update user success' });
 };
 
@@ -369,7 +429,7 @@ const enterOTPForgotPass = async (req, res) => {
   // true
   user.otpForgotPass = '';
   user.save();
-  req.userResetPassword = user
+  req.userResetPassword = user;
   res
     .status(StatusCodes.OK)
     .json({ msg: 'OTP Forgot password is true, redirect to change password' });
@@ -493,37 +553,39 @@ const checkPwd = async (req, res, next) => {
   }
 };
 
-const changePassword = async(req,res)=>{
-  const {password, confirmPassword, email,phone} = req.body 
-  const user = await User.findOne({email: email, phone: phone})
-  if(password !== confirmPassword)
-    throw new badRequestError("Password and confirm password")
-  const getUser = await User.findOne({_id: user._id})
-  if(!getUser)
-    throw new notFoundError("User not found")
-  
-  getUser.password = password
-  getUser.save()
-  return res.status(StatusCodes.OK).json({msg: "Change Password success", user: getUser})
-}
+const changePassword = async (req, res) => {
+  const { password, confirmPassword, email, phone } = req.body;
+  const user = await User.findOne({ email: email, phone: phone });
+  if (password !== confirmPassword)
+    throw new badRequestError('Password and confirm password');
+  const getUser = await User.findOne({ _id: user._id });
+  if (!getUser) throw new notFoundError('User not found');
 
-const changeNewPasswordAfterLogin = async(req,res) =>{
-  const {oldPassword,password, confirmPassword} = req.body
-  const user = req.user
-  console.log(user)
-  if(password !== confirmPassword)
-    throw new badRequestError("New password and confirm password not match")
-  const getUser = await User.findOne({ _id: user.userId})
-  if(!getUser)
-    throw new notFoundError("User not found")
-  const isMatch = await getUser.comparePassword(oldPassword)
-  if(!isMatch)
-    throw new badRequestError("Your password is incorrect please enter again")
+  getUser.password = password;
+  getUser.save();
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Change Password success', user: getUser });
+};
 
-  getUser.password = password
-  getUser.save()
-  return res.status(StatusCodes.OK).json({msg: "Change New Password success", user: getUser})
-}
+const changeNewPasswordAfterLogin = async (req, res) => {
+  const { oldPassword, password, confirmPassword } = req.body;
+  const user = req.user;
+  console.log(user);
+  if (password !== confirmPassword)
+    throw new badRequestError('New password and confirm password not match');
+  const getUser = await User.findOne({ _id: user.userId });
+  if (!getUser) throw new notFoundError('User not found');
+  const isMatch = await getUser.comparePassword(oldPassword);
+  if (!isMatch)
+    throw new badRequestError('Your password is incorrect please enter again');
+
+  getUser.password = password;
+  getUser.save();
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: 'Change New Password success', user: getUser });
+};
 
 export {
   login,
@@ -537,7 +599,7 @@ export {
   uploadUserImage1,
   checkPwd,
   changePassword,
-  changeNewPasswordAfterLogin
+  changeNewPasswordAfterLogin,
 };
 
 // admin: 620277

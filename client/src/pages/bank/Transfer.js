@@ -116,6 +116,10 @@ const Transfer = () => {
     transferMoneyApp,
     isLoadingForm,
     transferSendOtp,
+    getSingleUser,
+    user,
+    getSingleUserToTransfer,
+    toUserTransfer,
   } = useGlobalContext();
 
   const validateMoney = (value) => {
@@ -250,6 +254,8 @@ const Transfer = () => {
                   userBearFee: values.fee,
                   otpTransaction: values.otp,
                 });
+
+                getSingleUser(user?._id);
               }}
             >
               {(props) => (
@@ -408,20 +414,20 @@ const Transfer = () => {
                         <div className="transfer-information__control">
                           <FaGithub></FaGithub>
                           <h3 className="transfer-information__heading">
-                            Name
+                            From
                           </h3>
 
                           <p className="transfer-information__text">
-                            Bach Tran Anh Duc
+                            {user?.name}
                           </p>
                         </div>
                         <div className="transfer-information__control">
                           <FaGithub></FaGithub>
-                          <h3 className="transfer-information__heading">
-                            Phone
-                          </h3>
+                          <h3 className="transfer-information__heading">To</h3>
 
-                          <p className="transfer-information__text">88888888</p>
+                          <p className="transfer-information__text">
+                            {toUserTransfer?.name}
+                          </p>
                         </div>
                         <div className="transfer-information__control">
                           <FaGithub></FaGithub>
@@ -430,7 +436,7 @@ const Transfer = () => {
                           </h3>
 
                           <p className="transfer-information__text">
-                            1000000vnd
+                            {props.values.money}
                           </p>
                         </div>
                         <div className="transfer-information__control">
@@ -538,7 +544,7 @@ const Transfer = () => {
                     aria-label="Disabled elevation buttons"
                     sx={{ justifySelf: 'end', alignSelf: 'end', gap: '1.2rem' }}
                   >
-                    {bankPage.numPage < 3 && (
+                    {bankPage.numPage === 1 && (
                       <>
                         {bankPage.numPage !== 1 && (
                           <Button onClick={() => handleClickBack()}>
@@ -548,6 +554,35 @@ const Transfer = () => {
                         <Button
                           onClick={() => {
                             console.log(props.errors.money === undefined);
+
+                            if (props.errors.money !== undefined) {
+                              showToast(props.errors.money, 3000, 'error');
+                              handleClickNext(props.errors.money === undefined);
+                            } else if (props.errors.phone !== undefined) {
+                              showToast(props.errors.phone, 3000, 'error');
+                              handleClickNext(false);
+                            } else {
+                              handleClickNext(true);
+                            }
+                          }}
+                        >
+                          Next
+                        </Button>
+                      </>
+                    )}
+                    {bankPage.numPage === 2 && (
+                      <>
+                        {bankPage.numPage !== 1 && (
+                          <Button onClick={() => handleClickBack()}>
+                            Back
+                          </Button>
+                        )}
+                        <Button
+                          onClick={() => {
+                            console.log(props.errors.money === undefined);
+
+                            console.log(props.values.phone);
+                            getSingleUserToTransfer(props.values.phone);
 
                             if (props.errors.money !== undefined) {
                               showToast(props.errors.money, 3000, 'error');

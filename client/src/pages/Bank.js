@@ -12,7 +12,8 @@ import { FaCentos } from 'react-icons/fa';
 import BankStyled from '../theme/pages/Bank';
 
 const Bank = () => {
-  const { switchSetting, isLoader, resetPageBank } = useGlobalContext();
+  const { switchSetting, isLoader, resetPageBank, getSingerUser, userById } =
+    useGlobalContext();
 
   const handleClickBuyCard = () => {
     switchSetting(1000);
@@ -47,7 +48,9 @@ const Bank = () => {
               <div className="bank-body__nav-top bg-background__bank-nav">
                 <div className="bank-body__nav--context">
                   <h2 className="bank-body__nav--heading">Your balance</h2>
-                  <span className="bank-body__nav--span">$ 100000000</span>
+                  <span className="bank-body__nav--span">
+                    {userById?.money}
+                  </span>
                 </div>
               </div>
               <div className="bank-body__nav-center">
