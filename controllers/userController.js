@@ -162,8 +162,8 @@ const transferMoney = async (req, res) => {
   }
   // getUser.otpTransaction = ""
   let usernameFee = '';
-  const transactionFee = Number(money) * 0.05;
-  const minusBalance = Number(getUser.money) - (Number(money) + transactionFee);
+  const transactionFee = money * 0.05;
+  const minusBalance = Number(getUser.money) - (money + transactionFee);
   if (userBearFee === 'Me') {
     if (minusBalance < 0)
       throw new badRequestError(
@@ -172,7 +172,9 @@ const transferMoney = async (req, res) => {
     getUser.money = Number(getUser.money) - transactionFee;
     usernameFee = getUser.username;
   } else if (userBearFee !== 'Me') {
-    getReceiver.money = Number(money) - transactionFee;
+    if(Number(getReceiver.money) < (money+transactionFee))
+      throw new badRequestError("Receiver balance is not enough for transfer money and pay fee transfer")
+    getReceiver.money = Number(getReceiver.money) - transactionFee;
     usernameFee = getReceiver.username;
   }
   // check user balance transfer money
@@ -231,7 +233,7 @@ const transferMoney = async (req, res) => {
   // getReceiver.money += money;
 
   const money231 = Number(getReceiver.money) + Number(money);
-  getReceiver.money = money231;
+  getReceiver.money = Number(money231);
   getReceiver.save();
 
   //-------------------------------------------------------
@@ -333,7 +335,8 @@ const withdrawMoney = async (req, res) => {
       status: 'waiting',
     });
   }
-  getUser.money -= money + money * 0.05;
+  const updateMoney = Number(getUser.money) - Number(money) + Number(money) *0.05
+  getUser.money = updateMoney;
   getUser.save();
 
   const history = await History.create({
@@ -406,9 +409,9 @@ const buyMobileCard = async (req, res) => {
   if (getUser.money < money + feeTransaction) {
     throw new badRequestError('Your money in balance is not enough to buy');
   }
-  getUser.money -= money + feeTransaction;
+  getUser.money = Number(getUser.money) - Number(money) + Number(feeTransaction);
   getUser.save();
-  const randomNumber = uniqueRandom(100000, 999999);
+  const randomNumber = uniqueRandom(10000, 99999);
   let inforCard = [];
   for (let i = 0; i < amount; i++) {
     let random = randomNumber();

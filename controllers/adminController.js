@@ -31,7 +31,8 @@ const updateStatusWithdrawMoney = async (req, res) => {
 
     if (preStatus === 'PROCESSING' && getHistory.status === 'SUCCESS') {
         const getUser = await User.findOne({ username: getHistory.fromUser });
-        getUser.money -= getHistory.money + getHistory.feeTransfer;
+        const updateMoney = Number(getUser.money) - Number(getHistory.money) + Number(getHistory.feeTransfer)
+        getUser.money = updateMoney;
         getUser.save();
         return res.status(StatusCodes.OK).json({
             msg: 'Withdraw Money success',
@@ -62,9 +63,11 @@ const updateStatus = async (req, res) => {
         // get two user in transaction money of this history
         const getTransfer = await User.findOne({ username: getHistory.fromUser });
         const getReceiver = await User.findOne({ username: getHistory.toUser });
-        getTransfer.money -= money;
+        const updateMoneyTransfer = Number(getTransfer.money) - Number(money)
+        getTransfer.money = updateMoneyTransfer;
         getTransfer.save();
-        getReceiver.money += money;
+        const updateMoneyReceiver = Number(getReceiver.money) + Number(money)
+        getReceiver.money = updateMoneyReceiver;
         getReceiver.save();
         sendEmailBalance({
             name: getReceiver.name,
