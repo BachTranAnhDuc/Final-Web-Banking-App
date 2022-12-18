@@ -108,7 +108,7 @@ const getHistoryByUserLogin = async (req, res) => {
     throw new badRequestError(`Can not find user: ${getUser}`);
   }
   const history = await History.find({
-    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }],
+    $or: [{ fromUser: getUser.username }, {$and:[{ toUser: getUser.username },{status: "SUCCESS"},{type: "TRANSFER"}]}],
   });
 
   if (!history) {
