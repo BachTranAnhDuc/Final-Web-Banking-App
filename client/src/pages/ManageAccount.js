@@ -87,6 +87,7 @@ const ManageAccount = () => {
     getHistoryByUserId,
     dataHistoryByUser,
     historyByUser,
+    isLoadingForm,
   } = useGlobalContext();
 
   const [openNestedCancel, setOpenNestedCancel] = React.useState(false);
@@ -404,7 +405,7 @@ const ManageAccount = () => {
   return (
     <ManageAccountStyled>
       <section className="section-manageAccount">
-        <Form
+        {/* <Form
           layout="inline"
           className="components-table-demo-control-bar"
           style={{
@@ -490,9 +491,16 @@ const ManageAccount = () => {
               <Radio.Button value="none">None</Radio.Button>
             </Radio.Group>
           </Form.Item>
-        </Form>
+        </Form> */}
 
-        <Box>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, max-content)',
+            gap: '0 1.6rem',
+            marginBottom: '2.4rem',
+          }}
+        >
           <LoadingButton
             type="button"
             variant="contained"
@@ -690,6 +698,7 @@ const ManageAccount = () => {
                     <p>your account is processing</p>
 
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -699,6 +708,7 @@ const ManageAccount = () => {
                       Waiting
                     </LoadingButton>
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -709,6 +719,7 @@ const ManageAccount = () => {
                       Cancel
                     </LoadingButton>
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -730,6 +741,7 @@ const ManageAccount = () => {
                     <p>your account is waiting</p>
 
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -740,6 +752,7 @@ const ManageAccount = () => {
                       Cancel
                     </LoadingButton>
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -756,6 +769,7 @@ const ManageAccount = () => {
                     <p>your account is fail</p>
 
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -765,6 +779,7 @@ const ManageAccount = () => {
                       Waiting
                     </LoadingButton>
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -781,6 +796,7 @@ const ManageAccount = () => {
                     <p>This account is block because login fail more 6 times</p>
 
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       variant="contained"
                       onClick={() => {
@@ -828,6 +844,7 @@ const ManageAccount = () => {
                       }}
                     />
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       onClick={() => {
                         updateIdentifyUser('success', userById?._id);
@@ -873,6 +890,7 @@ const ManageAccount = () => {
                       }}
                     />
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       onClick={() => {
                         updateIdentifyUser('cancel', userById?._id);
@@ -918,6 +936,7 @@ const ManageAccount = () => {
                       }}
                     />
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       onClick={() => {
                         updateIdentifyUser('waiting', userById?._id);
@@ -964,6 +983,7 @@ const ManageAccount = () => {
                       }}
                     />
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       onClick={() => {
                         updateIdentifyUser('block', userById?._id);

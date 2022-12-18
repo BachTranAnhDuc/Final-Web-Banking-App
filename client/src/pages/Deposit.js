@@ -26,7 +26,12 @@ const Deposit = () => {
         <div className="deposit__context">
           <div className="deposit__context--item">
             <h3 className="deposit__label deposit__label--heading">Balance</h3>
-            <p className="deposit__text">{userById?.money}</p>
+            <p className="deposit__text">
+              {Number(userById?.money).toLocaleString('vi', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </p>
           </div>
         </div>
       </div>

@@ -87,6 +87,9 @@ import {
   CHANGE_PASSWORD_ERROR,
   CHANGE_PASSWORD_SUCCESS,
   TO_USER_TRANSFER,
+  UPLOAD_CMND_BEGIN,
+  UPLOAD_CMND_SUCCESS,
+  UPLOAD_CMND_ERROR,
 } from './action';
 
 const token = localStorage.getItem('token');
@@ -1527,7 +1530,10 @@ const AppProvider = ({ children }) => {
         return {
           key: el._id,
           type: el.type,
-          money: el.money,
+          money: Number(el.money).toLocaleString('vi', {
+            style: 'currency',
+            currency: 'VND',
+          }),
           date: el.date,
           status: el.status,
           description: '',
@@ -1714,7 +1720,10 @@ const AppProvider = ({ children }) => {
         return {
           key: el._id,
           type: el.type,
-          money: el.money,
+          money: Number(el.money).toLocaleString('vi', {
+            style: 'currency',
+            currency: 'VND',
+          }),
           date: el.date,
           status: el.status,
         };
@@ -1968,6 +1977,8 @@ const AppProvider = ({ children }) => {
 
     // console.log(user);
 
+    dispatch({ type: UPLOAD_CMND_BEGIN });
+
     setTimeout(async () => {
       try {
         const postUser = await axios.post(
@@ -1984,6 +1995,8 @@ const AppProvider = ({ children }) => {
 
         showToast('Upload success', 4000, 'success');
 
+        dispatch({ type: UPLOAD_CMND_SUCCESS });
+
         // actions.resetForm();
       } catch (error) {
         // dispatch({ type: REGISTER_ERROR });
@@ -1996,6 +2009,8 @@ const AppProvider = ({ children }) => {
         // const { email } = user;
 
         console.log(data);
+
+        dispatch({ type: UPLOAD_CMND_ERROR });
 
         // showToast(msg, 4000, 'error');
       }

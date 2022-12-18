@@ -97,6 +97,7 @@ const History = () => {
     isAllowTransfer,
     isAllowWithdraw,
     allowWithdrawMoney,
+    isLoadingForm,
   } = useGlobalContext();
 
   const [bordered, setBordered] = useState(false);
@@ -289,103 +290,16 @@ const History = () => {
     tableLayout,
   };
 
-  useEffect(() => {
-    getHistoryByUser();
-    if (user.role === 'admin') {
-      getAllHistoryUsers();
-    }
-  }, []);
+  // useEffect(() => {
+  //   getHistoryByUser();
+  //   if (user.role === 'admin') {
+  //     getAllHistoryUsers();
+  //   }
+  // }, []);
 
   return (
     <HistoryStyled>
       <section className="section-history">
-        <Form
-          layout="inline"
-          className="components-table-demo-control-bar"
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          <Form.Item label="Bordered">
-            <Switch checked={bordered} onChange={handleBorderChange} />
-          </Form.Item>
-          <Form.Item label="loading">
-            <Switch checked={loading} onChange={handleLoadingChange} />
-          </Form.Item>
-          <Form.Item label="Title">
-            <Switch checked={showTitle} onChange={handleTitleChange} />
-          </Form.Item>
-          <Form.Item label="Column Header">
-            <Switch checked={showHeader} onChange={handleHeaderChange} />
-          </Form.Item>
-          <Form.Item label="Footer">
-            <Switch checked={showfooter} onChange={handleFooterChange} />
-          </Form.Item>
-          <Form.Item label="Expandable">
-            <Switch checked={!!expandable} onChange={handleExpandChange} />
-          </Form.Item>
-          <Form.Item label="Checkbox">
-            <Switch
-              checked={!!rowSelection}
-              onChange={handleRowSelectionChange}
-            />
-          </Form.Item>
-          <Form.Item label="Fixed Header">
-            <Switch checked={!!yScroll} onChange={handleYScrollChange} />
-          </Form.Item>
-          <Form.Item label="Has Data">
-            <Switch checked={!!hasData} onChange={handleDataChange} />
-          </Form.Item>
-          <Form.Item label="Ellipsis">
-            <Switch checked={!!ellipsis} onChange={handleEllipsisChange} />
-          </Form.Item>
-          <Form.Item label="Size">
-            <Radio.Group value={size} onChange={handleSizeChange}>
-              <Radio.Button value="large">Large</Radio.Button>
-              <Radio.Button value="middle">Middle</Radio.Button>
-              <Radio.Button value="small">Small</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Table Scroll">
-            <Radio.Group value={xScroll} onChange={handleXScrollChange}>
-              <Radio.Button value={undefined}>Unset</Radio.Button>
-              <Radio.Button value="scroll">Scroll</Radio.Button>
-              <Radio.Button value="fixed">Fixed Columns</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Table Layout">
-            <Radio.Group value={tableLayout} onChange={handleTableLayoutChange}>
-              <Radio.Button value={undefined}>Unset</Radio.Button>
-              <Radio.Button value="fixed">Fixed</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Pagination Top">
-            <Radio.Group
-              value={top}
-              onChange={(e) => {
-                setTop(e.target.value);
-              }}
-            >
-              <Radio.Button value="topLeft">TopLeft</Radio.Button>
-              <Radio.Button value="topCenter">TopCenter</Radio.Button>
-              <Radio.Button value="topRight">TopRight</Radio.Button>
-              <Radio.Button value="none">None</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Pagination Bottom">
-            <Radio.Group
-              value={bottom}
-              onChange={(e) => {
-                setBottom(e.target.value);
-              }}
-            >
-              <Radio.Button value="bottomLeft">BottomLeft</Radio.Button>
-              <Radio.Button value="bottomCenter">BottomCenter</Radio.Button>
-              <Radio.Button value="bottomRight">BottomRight</Radio.Button>
-              <Radio.Button value="none">None</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-        </Form>
         <Table
           {...tableProps}
           pagination={{
@@ -611,6 +525,7 @@ const History = () => {
                       }}
                     />
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       onClick={() => {
                         if (historyById?.type === 'WITHDRAW') {
@@ -661,6 +576,7 @@ const History = () => {
                       }}
                     />
                     <LoadingButton
+                      loading={isLoadingForm}
                       type="button"
                       onClick={() => {
                         if (historyById?.type === 'WITHDRAW') {

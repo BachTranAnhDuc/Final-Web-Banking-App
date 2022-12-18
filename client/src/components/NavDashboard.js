@@ -42,6 +42,8 @@ const NavDashboard = () => {
     getAllUserWithCondition,
     showToast,
     getSingleUser,
+    getHistoryByUser,
+    getAllHistoryUsers,
   } = useGlobalContext();
 
   const [display, setDisplay] = useState('arrow');
@@ -136,7 +138,13 @@ const NavDashboard = () => {
                 className={({ isActive }) =>
                   isActive ? 'nav-link nav-link__active' : 'nav-link'
                 }
-                onClick={() => switchPage()}
+                onClick={() => {
+                  switchPage();
+                  getHistoryByUser();
+                  if (user?.role === 'admin') {
+                    getAllHistoryUsers();
+                  }
+                }}
               >
                 <span>HISTORY</span>
               </NavLink>

@@ -80,6 +80,9 @@ import {
   CHANGE_PASSWORD_ERROR,
   CHANGE_PASSWORD_BEGIN,
   TO_USER_TRANSFER,
+  UPLOAD_CMND_BEGIN,
+  UPLOAD_CMND_SUCCESS,
+  UPLOAD_CMND_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -535,6 +538,16 @@ const reducer = (state, action) => {
   if (action.type === TO_USER_TRANSFER) {
     const { msg, getUser } = action.payload;
     return { ...state, toUserTransfer: getUser };
+  }
+
+  if (action.type === UPLOAD_CMND_BEGIN) {
+    return { ...state, isLoadingForm: true };
+  }
+  if (action.type === UPLOAD_CMND_SUCCESS) {
+    return { ...state, isLoadingForm: false };
+  }
+  if (action.type === UPLOAD_CMND_ERROR) {
+    return { ...state, isLoadingForm: false };
   }
 };
 

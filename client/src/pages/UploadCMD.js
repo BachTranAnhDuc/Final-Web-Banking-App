@@ -73,7 +73,14 @@ import {
 import { Formik, Form, Field, ErrorMessage, useFormik, useField } from 'formik';
 
 const UploadCMD = () => {
-  const { isLoader, user, uploadImageCMND } = useGlobalContext();
+  const {
+    isLoader,
+    user,
+    uploadImageCMND,
+    isLoadingForm,
+    getSingleUser,
+    userById,
+  } = useGlobalContext();
 
   if (isLoader) {
     return (
@@ -101,6 +108,8 @@ const UploadCMD = () => {
               imageBack: values.imageBack,
               idUser: user?._id,
             });
+
+            getSingleUser(user?._id);
           }}
         >
           {(props) => (
@@ -255,6 +264,7 @@ const UploadCMD = () => {
                   </FormControl>
                 </div>
                 <LoadingButton
+                  loading={isLoadingForm}
                   type="submit"
                   variant="contained"
                   sx={{ position: 'absolute', bottom: '0', right: '0' }}
