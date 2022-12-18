@@ -142,6 +142,7 @@ const UploadCMD = () => {
                       rowGap: '0.8rem',
                       gridTemplateColumns: '1fr 1fr',
                       alignItems: 'center',
+                      columnGap: '0.8rem',
                     }}
                   >
                     <MUIButtonCustom04 variant="contained" component="label">
@@ -174,8 +175,8 @@ const UploadCMD = () => {
                     >
                       <ImageListItem
                         sx={{
-                          width: 64,
-                          height: 64,
+                          width: 102,
+                          height: 102,
                           objectFit: 'cover',
                         }}
                       >
@@ -189,8 +190,8 @@ const UploadCMD = () => {
                       </ImageListItem>
                       <ImageListItem
                         sx={{
-                          width: 64,
-                          height: 64,
+                          width: 102,
+                          height: 102,
                           objectFit: 'cover',
                         }}
                       >
@@ -206,6 +207,7 @@ const UploadCMD = () => {
                       rowGap: '0.8rem',
                       gridTemplateColumns: '1fr 1fr',
                       alignItems: 'center',
+                      columnGap: '0.8rem',
                     }}
                   >
                     <MUIButtonCustom04 variant="contained" component="label">
@@ -238,8 +240,8 @@ const UploadCMD = () => {
                     >
                       <ImageListItem
                         sx={{
-                          width: 64,
-                          height: 64,
+                          width: 102,
+                          height: 102,
                           objectFit: 'cover',
                         }}
                       >
@@ -253,8 +255,8 @@ const UploadCMD = () => {
                       </ImageListItem>
                       <ImageListItem
                         sx={{
-                          width: 64,
-                          height: 64,
+                          width: 102,
+                          height: 102,
                           objectFit: 'cover',
                         }}
                       >

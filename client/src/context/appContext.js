@@ -93,6 +93,8 @@ import {
   CONFIRM_PWD_FORGOT_ERROR,
 } from './action';
 
+import dateFormat from 'dateformat';
+
 const token = localStorage.getItem('token');
 const user = localStorage.getItem('user');
 const isFirstLogin = localStorage.getItem('isFirstLogin');
@@ -926,6 +928,11 @@ const AppProvider = ({ children }) => {
             },
           });
         } else if (identify === 'fail') {
+          showToast(
+            'Your identify is fail, cannot login with account, please contact with 18001008',
+            4000,
+            'error'
+          );
           dispatch({
             type: LOGIN_ERROR,
             payloadMsg:
@@ -983,6 +990,10 @@ const AppProvider = ({ children }) => {
 
             // if (loginFail !== 3 && loginFail !== 6) {
             showToast('Password is not correct', 4000, 'error');
+            // }
+          }
+          if (message === 'Please verify your email') {
+            showToast('Please verify your email', 4000, 'error');
             // }
           }
 
@@ -1528,6 +1539,9 @@ const AppProvider = ({ children }) => {
       console.log(history);
 
       const dataHistoryDisplay = history.map((el) => {
+        const { date } = el;
+
+        const newDate = dateFormat(date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
         return {
           key: el._id,
           type: el.type,
@@ -1535,7 +1549,7 @@ const AppProvider = ({ children }) => {
             style: 'currency',
             currency: 'VND',
           }),
-          date: el.date,
+          date: newDate,
           status: el.status,
           description: '',
         };

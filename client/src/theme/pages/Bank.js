@@ -232,6 +232,10 @@ const BankStyled = styled.main`
     padding: 3.2rem 6.4rem;
   }
 
+  .bank-body__content--container h1 {
+    color: var(--color-primary);
+  }
+
   .bankbody__link:link,
   .bankbody__link:visited {
     text-decoration: none;

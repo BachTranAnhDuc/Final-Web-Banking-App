@@ -179,6 +179,12 @@ const DashboardStyle = styled.main`
     background-color: var(--color-white);
     width: 100%;
     height: 35rem;
+
+    padding: 2.4rem 4.8rem;
+  }
+
+  .dashboard__something-2--v1 h2 {
+    color: var(--color-primary);
   }
 `;
 

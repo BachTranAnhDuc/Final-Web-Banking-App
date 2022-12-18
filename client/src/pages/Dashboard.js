@@ -14,8 +14,13 @@ import DashboardStyle from '../theme/pages/Dashboard';
 import { Loading, Toast } from '../components';
 
 const Dashboard = () => {
-  const { user, showToast, showToastSuccess, showToastError } =
-    useGlobalContext();
+  const {
+    user,
+    showToast,
+    showToastSuccess,
+    showToastError,
+    getHistoryByUser,
+  } = useGlobalContext();
 
   const { name, identify, role, email } = user;
 
@@ -48,11 +53,11 @@ const Dashboard = () => {
               <p className="dashboard__text">Text here</p>
               <FaUsers className="dashboard__header--icon"></FaUsers>
             </div>
-            <img
+            {/* <img
               src="https://technext.github.io/purple-react/static/media/circle.953c9ca0.svg"
               alt="svg"
               className="dashboard__header--img-design"
-            />
+            /> */}
           </div>
 
           <div className="dashboard__header--container dashboard__header--container-2">
@@ -62,35 +67,38 @@ const Dashboard = () => {
               <p className="dashboard__text">Text here</p>
               <FaSketch className="dashboard__header--icon"></FaSketch>
             </div>
-            <img
+            {/* <img
               src="https://technext.github.io/purple-react/static/media/circle.953c9ca0.svg"
               alt="svg"
               className="dashboard__header--img-design"
-            />
+            /> */}
           </div>
 
           <div className="dashboard__header--container dashboard__header--container-3">
             <div className="dashboard__header--container-context">
               <h4 className="dashboard__heading">Account</h4>
               <span className="dashboard__span">View</span>
-              <p className="dashboard__text">Text here</p>
+              <p className="dashboard__text">{user?.name}</p>
               <BsFillGearFill className="dashboard__header--icon"></BsFillGearFill>
             </div>
-            <img
+            {/* <img
               src="https://technext.github.io/purple-react/static/media/circle.953c9ca0.svg"
               alt="svg"
               className="dashboard__header--img-design"
-            />
+            /> */}
           </div>
         </div>
 
-        <div className="dashboard__something-1">
+        {/* <div className="dashboard__something-1">
           <div className="dashboard__something-1--v1"></div>
           <div className="dashboard__something-1--v2"></div>
-        </div>
+        </div> */}
 
         <div className="dashboard__something-2">
-          <div className="dashboard__something-2--v1"></div>
+          <div className="dashboard__something-2--v1">
+            <h2>Hello {user?.name}!</h2>
+            <p>Have a good day!</p>
+          </div>
         </div>
 
         {/* <Toast position={'top-right'}></Toast> */}

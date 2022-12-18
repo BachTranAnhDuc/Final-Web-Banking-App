@@ -12,7 +12,7 @@ import {
 } from '../error/index.js';
 
 const getAllHistory = async (req, res) => {
-  const histories = await History.find({}).sort({"date":-1});
+  const histories = await History.find({}).sort({ date: -1 });
 
   res
     .status(StatusCodes.OK)
@@ -108,8 +108,17 @@ const getHistoryByUserLogin = async (req, res) => {
     throw new badRequestError(`Can not find user: ${getUser}`);
   }
   const history = await History.find({
-    $or: [{ fromUser: getUser.username }, {$and:[{ toUser: getUser.username },{status: "SUCCESS"},{type: "TRANSFER"}]}],
-  });
+    $or: [
+      { fromUser: getUser.username },
+      {
+        $and: [
+          { toUser: getUser.username },
+          { status: 'SUCCESS' },
+          { type: 'TRANSFER' },
+        ],
+      },
+    ],
+  }).sort({ date: -1 });
 
   if (!history) {
     throw new badRequestError(
@@ -131,7 +140,8 @@ const getHistoryOfOneUser = async (req, res) => {
     throw new badRequestError(`Can not find user: ${getUser}`);
   }
   const history = await History.find({
-    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }]});
+    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }],
+  });
 
   if (!history) {
     throw new badRequestError(`Can not find any history with id: ${id}`);
@@ -149,10 +159,10 @@ const getHistoryOfOneUserSort = async (req, res) => {
   if (!getUser) {
     throw new badRequestError(`Can not find user: ${getUser}`);
   }
-  
+
   const history = await History.find({
-    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }]
-  }).sort({"date":-1});
+    $or: [{ fromUser: getUser.username }, { toUser: getUser.username }],
+  }).sort({ date: -1 });
 
   if (!history) {
     throw new badRequestError(`Can not find any history with id: ${id}`);
@@ -172,5 +182,5 @@ export {
   getHistoryByToUser,
   getHistoryByUserLogin,
   getHistoryOfOneUser,
-  getHistoryOfOneUserSort
+  getHistoryOfOneUserSort,
 };
