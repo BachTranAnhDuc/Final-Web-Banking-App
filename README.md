@@ -18,6 +18,8 @@
 
 ## Link video
 
+If video is error, you can access this link to see video.
+
 [Video](https://drive.google.com/drive/folders/1VBgJVLETeV6aQ4CXeKnoFaTjnUuVxYEy?usp=share_link)
 
 # How to use ?
